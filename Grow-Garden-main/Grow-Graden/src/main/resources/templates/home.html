@@ -7,6 +7,76 @@
     <!-- Sidebar & Global CloudShader -->
     <nav th:replace="~{fragments/layout :: navbar('home')}"></nav>
 
+    <!-- Homepage-Specific Scroll-Driven Garden Reveal Backdrop (Scenes B & C) -->
+    <link rel="stylesheet" th:href="@{/css/garden-reveal.css}" href="/css/garden-reveal.css">
+
+    <div class="scroll-garden-reveal-container" id="scrollGardenReveal" aria-hidden="true">
+        <!-- Ambient Botanical Veil -->
+        <div class="garden-ambient-veil"></div>
+
+        <!-- Distant Forest Canopy Silhouettes (Parallax rate: 0.12) -->
+        <div class="garden-layer garden-canopy-distant">
+            <svg class="garden-svg-backdrop" viewBox="0 0 1440 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="canopyGradDistant" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#2d5e4b" stop-opacity="0.35"/>
+                        <stop offset="60%" stop-color="#1b4534" stop-opacity="0.75"/>
+                        <stop offset="100%" stop-color="#0e2a1e" stop-opacity="0.95"/>
+                    </linearGradient>
+                </defs>
+                <path fill="url(#canopyGradDistant)" d="M0,260 Q120,200 240,240 T480,210 T720,250 T960,195 T1200,240 T1440,215 L1440,400 L0,400 Z" />
+                <path fill="url(#canopyGradDistant)" opacity="0.6" d="M0,290 Q160,230 320,270 T640,240 T960,260 T1280,230 T1440,255 L1440,400 L0,400 Z" />
+            </svg>
+        </div>
+
+        <!-- Midground Lush Foliage & Fern Layer (Parallax rate: 0.22) -->
+        <div class="garden-layer garden-foliage-midground">
+            <svg class="garden-svg-midground" viewBox="0 0 1440 420" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="midLeavesGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#3b7a5e" stop-opacity="0.7"/>
+                        <stop offset="50%" stop-color="#21543e" stop-opacity="0.9"/>
+                        <stop offset="100%" stop-color="#123526" stop-opacity="0.98"/>
+                    </linearGradient>
+                </defs>
+                <path fill="url(#midLeavesGrad)" d="M0,310 C60,250 110,230 170,260 C230,290 280,220 360,235 C440,250 510,180 600,220 C690,260 760,210 850,240 C940,270 1020,190 1120,230 C1220,270 1310,210 1440,270 L1440,420 L0,420 Z"/>
+                <path fill="url(#midLeavesGrad)" opacity="0.55" d="M-20,340 C80,280 160,270 240,300 C320,330 420,260 520,290 C620,320 710,250 820,280 C930,310 1050,250 1180,290 C1310,330 1380,270 1460,310 L1460,420 L-20,420 Z"/>
+            </svg>
+        </div>
+
+        <!-- Foreground Botanical Fronds & Tropical Foliage (Parallax rate: 0.36) -->
+        <div class="garden-frond garden-frond-left">
+            <svg viewBox="0 0 320 540" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMax meet">
+                <defs>
+                    <linearGradient id="frondLeftGrad" x1="10%" y1="0%" x2="90%" y2="100%">
+                        <stop offset="0%" stop-color="#4aa77c" stop-opacity="0.85"/>
+                        <stop offset="60%" stop-color="#235d45" stop-opacity="0.92"/>
+                        <stop offset="100%" stop-color="#103625" stop-opacity="0.98"/>
+                    </linearGradient>
+                </defs>
+                <path fill="url(#frondLeftGrad)" d="M-60,540 C-30,420 20,320 110,240 C140,213 185,185 240,170 C220,210 185,245 155,275 C210,250 260,245 305,250 C265,285 220,315 175,335 C230,325 280,335 315,355 C270,380 220,400 170,410 C215,410 255,425 280,450 C235,465 185,470 135,475 C85,480 0,510 -60,540 Z"/>
+                <path fill="url(#frondLeftGrad)" opacity="0.7" d="M-80,540 C-40,360 40,240 160,140 C190,115 225,95 270,80 C245,125 205,160 170,195 C230,170 280,165 315,180 C270,215 215,245 165,265 C115,285 -20,440 -80,540 Z"/>
+            </svg>
+        </div>
+
+        <div class="garden-frond garden-frond-right">
+            <svg viewBox="0 0 340 560" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMaxYMax meet">
+                <defs>
+                    <linearGradient id="frondRightGrad" x1="90%" y1="0%" x2="10%" y2="100%">
+                        <stop offset="0%" stop-color="#52b788" stop-opacity="0.82"/>
+                        <stop offset="55%" stop-color="#286b50" stop-opacity="0.92"/>
+                        <stop offset="100%" stop-color="#123d2a" stop-opacity="0.98"/>
+                    </linearGradient>
+                </defs>
+                <path fill="url(#frondRightGrad)" d="M400,560 C370,430 310,320 220,230 C190,200 140,170 80,150 C105,195 145,235 180,270 C120,240 65,235 15,245 C65,280 115,315 165,340 C105,330 50,340 10,365 C60,395 115,415 170,425 C120,425 75,445 45,475 C95,490 150,490 205,490 C260,490 350,520 400,560 Z"/>
+                <path fill="url(#frondRightGrad)" opacity="0.65" d="M420,560 C380,370 290,240 160,130 C125,100 85,80 35,65 C65,115 110,155 150,190 C85,165 30,165 -10,185 C40,220 100,255 155,275 C210,295 360,450 420,560 Z"/>
+            </svg>
+        </div>
+
+        <!-- Sunlight & Morning Conservatory Ray Dapples -->
+        <div class="garden-sunlight-veil"></div>
+    </div>
+
     <!-- Flash Alerts -->
     <div th:replace="~{fragments/layout :: alerts}"></div>
 
@@ -250,5 +320,6 @@
 
     <!-- Scripts -->
     <div th:replace="~{fragments/layout :: scripts}"></div>
+    <script th:src="@{/js/garden-reveal.js}" src="/js/garden-reveal.js" defer></script>
 </body>
 </html>
