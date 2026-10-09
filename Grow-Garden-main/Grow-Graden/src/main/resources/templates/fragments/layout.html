@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} ?: 'GrowGarden - Online Gardening Community'">GrowGarden - Online Gardening Community</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    <!-- Custom Garden Design CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+
+    <!-- Aceternity-Inspired Collapsible Sidebar & Global CloudShader Background -->
+    <div th:fragment="navbar(activeTab)" th:remove="tag">
+        <!-- Global WebGL CloudShader Background (Full Viewport Canvas) -->
+        <div class="global-cloud-canvas-container" id="globalCloudContainer" aria-hidden="true">
+            <canvas id="heroCloudCanvas" class="global-cloud-canvas"></canvas>
+            <div class="global-cloud-scrim"></div>
+        </div>
+
+        <!-- Aceternity-Inspired Collapsible Floating Sidebar (Desktop >= 992px) -->
+        <aside class="garden-floating-sidebar d-none d-lg-flex" id="gardenFloatingSidebar" aria-label="Main Navigation" aria-expanded="false">
+            <!-- Brand & Pin Button -->
+            <div class="sidebar-brand-wrapper d-flex align-items-center justify-content-between">
+                <a th:href="@{/}" class="garden-brand-link" aria-label="GrowGarden Home" title="GrowGarden Home">
+                    <div class="brand-icon-box">
+                        <i class="bi bi-flower1"></i>
+                    </div>
+                    <div class="brand-text-group sidebar-expand-text">
+                        <span class="brand-title">GrowGarden</span>
+                        <span class="brand-subtitle">Botanical Collective</span>
+                    </div>
+                </a>
+                <button type="button" class="sidebar-pin-btn sidebar-expand-text" id="sidebarPinToggleBtn" aria-label="Pin or collapse sidebar" title="Pin sidebar open">
+                    <i class="bi bi-pin-angle" id="sidebarPinIcon"></i>
+                </button>
+            </div>
+
+            <!-- Primary Navigation Links -->
+            <nav class="sidebar-nav-container" aria-label="Sidebar Navigation Links">
+                <ul class="sidebar-nav-list list-unstyled mb-0" role="menubar">
+                    <li class="sidebar-nav-item" role="none">
+                        <a th:href="@{/}" class="sidebar-nav-link" th:classappend="${activeTab == 'home'} ? 'active' : ''" th:attr="aria-current=${activeTab == 'home'} ? 'page' : null" role="menuitem" title="Home">
+                            <span class="nav-icon-box"><i class="bi bi-house-door"></i></span>
+                            <span class="nav-label sidebar-expand-text">Home</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item" role="none">
+                        <a th:href="@{/tips}" class="sidebar-nav-link" th:classappend="${activeTab == 'tips'} ? 'active' : ''" th:attr="aria-current=${activeTab == 'tips'} ? 'page' : null" role="menuitem" title="Gardening Tips">
+                            <span class="nav-icon-box"><i class="bi bi-lightbulb"></i></span>
+                            <span class="nav-label sidebar-expand-text">Gardening Tips</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item" role="none">
+                        <a th:href="@{/discussions}" class="sidebar-nav-link" th:classappend="${activeTab == 'discussions'} ? 'active' : ''" th:attr="aria-current=${activeTab == 'discussions'} ? 'page' : null" role="menuitem" title="Discussions">
+                            <span class="nav-icon-box"><i class="bi bi-chat-dots"></i></span>
+                            <span class="nav-label sidebar-expand-text">Discussions</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item" role="none">
+                        <a th:href="@{/projects}" class="sidebar-nav-link" th:classappend="${activeTab == 'projects'} ? 'active' : ''" th:attr="aria-current=${activeTab == 'projects'} ? 'page' : null" role="menuitem" title="Projects">
+                            <span class="nav-icon-box"><i class="bi bi-kanban"></i></span>
+                            <span class="nav-label sidebar-expand-text">Projects</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-nav-item" role="none">
+                        <a th:href="@{/about}" class="sidebar-nav-link" th:classappend="${activeTab == 'about'} ? 'active' : ''" th:attr="aria-current=${activeTab == 'about'} ? 'page' : null" role="menuitem" title="About">
+                            <span class="nav-icon-box"><i class="bi bi-info-circle"></i></span>
+                            <span class="nav-label sidebar-expand-text">About</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Bottom Action CTA -->
+            <div class="sidebar-footer-cta mt-auto pt-3">
+                <a th:href="@{/projects/new}" class="sidebar-share-btn w-100" aria-label="Share Your Garden" title="Share Your Garden">
+                    <span class="share-btn-icon-box"><i class="bi bi-flower2"></i></span>
+                    <span class="sidebar-expand-text">Share Your Garden</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Mobile Top Header (< 992px) -->
+        <header class="mobile-topbar d-flex d-lg-none align-items-center justify-content-between px-3" role="banner">
+            <a th:href="@{/}" class="d-flex align-items-center gap-2 text-decoration-none text-white">
+                <div class="brand-icon-box" style="width: 36px; height: 36px; min-width: 36px; font-size: 1.15rem;">
+                    <i class="bi bi-flower1"></i>
+                </div>
+                <div>
+                    <span class="fw-bold fs-5 text-white d-block lh-1">GrowGarden</span>
+                    <span class="text-white-50 small" style="font-size: 0.65rem; letter-spacing: 0.5px;">COMMUNITY</span>
+                </div>
+            </a>
+            <button class="mobile-menu-toggle text-white" id="mobileNavToggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobileNavMenu">
+                <i class="bi bi-list fs-2"></i>
+            </button>
+        </header>
+
+        <!-- Compact Accessible Mobile Navigation Panel -->
+        <div class="mobile-nav-panel d-lg-none" id="mobileNavMenu" role="dialog" aria-modal="true" aria-label="Mobile Navigation" aria-hidden="true">
+            <div class="mobile-nav-header d-flex align-items-center justify-content-between p-3 border-bottom border-secondary border-opacity-25">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="brand-icon-box" style="width: 32px; height: 32px; min-width: 32px; font-size: 1.1rem;">
+                        <i class="bi bi-flower1"></i>
+                    </div>
+                    <span class="fw-bold text-white fs-6">GrowGarden</span>
+                    <span class="badge bg-success-subtle text-success fs-7">Collective</span>
+                </div>
+                <button type="button" class="btn text-white p-1" id="mobileNavCloseBtn" aria-label="Close navigation menu">
+                    <i class="bi bi-x-lg fs-5"></i>
+                </button>
+            </div>
+
+            <div class="mobile-nav-body p-3">
+                <nav class="d-flex flex-column gap-1" aria-label="Mobile Navigation Links">
+                    <a th:href="@{/}" class="mobile-nav-item-link" th:classappend="${activeTab == 'home'} ? 'active' : ''" th:attr="aria-current=${activeTab == 'home'} ? 'page' : null">
+                        <i class="bi bi-house-door text-success"></i>
+                        <span>Home</span>
+                    </a>
+                    <a th:href="@{/tips}" class="mobile-nav-item-link" th:classappend="${activeTab == 'tips'} ? 'active' : ''" th:attr="aria-current=${activeTab == 'tips'} ? 'page' : null">
+                        <i class="bi bi-lightbulb text-warning"></i>
+                        <span>Gardening Tips</span>
+                    </a>
+                    <a th:href="@{/discussions}" class="mobile-nav-item-link" th:classappend="${activeTab == 'discussions'} ? 'active' : ''" th:attr="aria-current=${activeTab == 'discussions'} ? 'page' : null">
+                        <i class="bi bi-chat-dots text-info"></i>
+                        <span>Discussions</span>
+                    </a>
+                    <a th:href="@{/projects}" class="mobile-nav-item-link" th:classappend="${activeTab == 'projects'} ? 'active' : ''" th:attr="aria-current=${activeTab == 'projects'} ? 'page' : null">
+                        <i class="bi bi-kanban text-success"></i>
+                        <span>Projects</span>
+                    </a>
+                    <a th:href="@{/about}" class="mobile-nav-item-link" th:classappend="${activeTab == 'about'} ? 'active' : ''" th:attr="aria-current=${activeTab == 'about'} ? 'page' : null">
+                        <i class="bi bi-info-circle text-light"></i>
+                        <span>About</span>
+                    </a>
+                </nav>
+
+                <hr class="border-secondary opacity-25 my-3">
+
+                <!-- Prominent 'Share Your Garden' Mobile Button -->
+                <a th:href="@{/projects/new}" class="sidebar-share-btn w-100 justify-content-center py-2 mb-3">
+                    <i class="bi bi-flower2"></i>
+                    <span>Share Your Garden</span>
+                </a>
+
+                <div class="small text-uppercase text-white-50 px-2 mb-2 fw-semibold" style="font-size: 0.72rem; letter-spacing: 0.8px;">Quick Contributions</div>
+                <div class="d-flex flex-column gap-1">
+                    <a th:href="@{/tips/new}" class="mobile-quick-action-link">
+                        <i class="bi bi-plus-circle text-success me-2"></i>
+                        <span>Share a Gardening Tip</span>
+                    </a>
+                    <a th:href="@{/discussions/new}" class="mobile-quick-action-link">
+                        <i class="bi bi-question-circle text-warning me-2"></i>
+                        <span>Ask Community Question</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Backdrop -->
+        <div class="mobile-nav-backdrop" id="mobileNavBackdrop" aria-hidden="true"></div>
+    </div>
+
+    <!-- Flash Alert Messages Fragment -->
+    <div th:fragment="alerts" class="container mt-3">
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show d-flex align-items-center shadow-sm" role="alert">
+            <i class="bi bi-check-circle-fill fs-5 me-2"></i>
+            <div th:text="${successMessage}">Operation completed successfully!</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show d-flex align-items-center shadow-sm" role="alert">
+            <i class="bi bi-exclamation-triangle-fill fs-5 me-2"></i>
+            <div th:text="${errorMessage}">Something went wrong!</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+
+    <!-- Footer Fragment -->
+    <footer th:fragment="footer" class="garden-footer">
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="text-white fw-bold d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-flower1 text-warning"></i> GrowGarden Community
+                    </h5>
+                    <p class="small text-light-50">
+                        A collaborative botanical knowledge collective for gardeners, urban horticulturists, and plant enthusiasts.
+                        Diagnose plant health, explore organic remedies, and cultivate living gardens together.
+                    </p>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h6 class="text-white fw-bold mb-3">Community</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a th:href="@{/}"><i class="bi bi-chevron-right me-1"></i> Home</a></li>
+                        <li class="mb-2"><a th:href="@{/tips}"><i class="bi bi-chevron-right me-1"></i> Gardening Tips</a></li>
+                        <li class="mb-2"><a th:href="@{/discussions}"><i class="bi bi-chevron-right me-1"></i> Discussions Q&A</a></li>
+                        <li class="mb-2"><a th:href="@{/projects}"><i class="bi bi-chevron-right me-1"></i> Garden Projects</a></li>
+                        <li class="mb-2"><a th:href="@{/about}"><i class="bi bi-chevron-right me-1"></i> About Platform</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="text-white fw-bold mb-3">Quick Actions</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a th:href="@{/tips/new}"><i class="bi bi-pencil-square me-1"></i> Write a Tip</a></li>
+                        <li class="mb-2"><a th:href="@{/discussions/new}"><i class="bi bi-question-diamond me-1"></i> Ask the Community</a></li>
+                        <li class="mb-2"><a th:href="@{/projects/new}"><i class="bi bi-plus-square me-1"></i> Track New Project</a></li>
+                        <li class="mb-2"><a th:href="@{/api/stats}" target="_blank"><i class="bi bi-code-slash me-1"></i> REST API Stats</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="text-white fw-bold mb-3">Platform Health</h6>
+                    <p class="small text-light-50 mb-2">
+                        <i class="bi bi-database-check text-success me-1"></i> H2 Persistent Database Active
+                    </p>
+                    <p class="small text-light-50 mb-0">
+                        <i class="bi bi-shield-check text-info me-1"></i> Spring Boot 3 & Thymeleaf Engine
+                    </p>
+                </div>
+            </div>
+            <hr class="border-secondary opacity-25">
+            <div class="d-flex flex-wrap justify-content-between align-items-center small text-light-50">
+                <div>&copy; 2026 GrowGarden Community Platform. All rights reserved.</div>
+                <div>Cultivated with 🌿 for gardening enthusiasts</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 Bundle JS, Aceternity Navigation Controller & Full-Site CloudShader -->
+    <div th:fragment="scripts">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script th:src="@{/js/navbar.js}" src="/js/navbar.js"></script>
+        <script th:src="@{/js/cloud-shader.js}" src="/js/cloud-shader.js"></script>
+    </div>
+</body>
+</html>

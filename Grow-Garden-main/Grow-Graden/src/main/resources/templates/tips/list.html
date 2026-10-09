@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Gardening Tips & Articles - GrowGarden')}">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav th:replace="~{fragments/layout :: navbar('tips')}"></nav>
+
+    <!-- Flash Alerts -->
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <main class="container my-4">
+        <!-- Header & Action Button -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+            <div>
+                <h2 class="fw-bold text-dark mb-1">
+                    <i class="bi bi-lightbulb-fill text-warning me-2"></i> Gardening Tips & Guides
+                </h2>
+                <p class="text-muted small mb-0">Browse organic remedies, soil amendments, and plant care tutorials</p>
+            </div>
+            <a th:href="@{/tips/new}" class="btn btn-garden-primary d-flex align-items-center gap-2">
+                <i class="bi bi-plus-circle"></i> <span>Share a New Tip</span>
+            </a>
+        </div>
+
+        <!-- Search Bar & Filters -->
+        <div class="card card-garden p-3 mb-4">
+            <form th:action="@{/tips}" method="get" class="row g-2 align-items-center">
+                <div class="col-12 col-md-7 col-lg-8">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                        <input type="text" name="search" class="form-control border-start-0"
+                               placeholder="Search tips by title, plant type, or content..."
+                               th:value="${searchQuery}">
+                    </div>
+                </div>
+                <div class="col-12 col-md-3 col-lg-3">
+                    <select name="category" class="form-select">
+                        <option value="ALL" th:selected="${selectedCategory == null or selectedCategory == 'ALL'}">All Categories</option>
+                        <option value="Plant Care" th:selected="${selectedCategory == 'Plant Care'}">Plant Care</option>
+                        <option value="Pest & Disease Control" th:selected="${selectedCategory == 'Pest & Disease Control'}">Pest & Disease Control</option>
+                        <option value="Soil & Fertilizer" th:selected="${selectedCategory == 'Soil & Fertilizer'}">Soil & Fertilizer</option>
+                        <option value="Propagation" th:selected="${selectedCategory == 'Propagation'}">Propagation</option>
+                        <option value="Seasonal Gardening" th:selected="${selectedCategory == 'Seasonal Gardening'}">Seasonal Gardening</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-2 col-lg-1">
+                    <button type="submit" class="btn btn-garden-primary w-100">Filter</button>
+                </div>
+            </form>
+
+            <!-- Category Pills Quick Filter -->
+            <div class="d-flex flex-wrap gap-1 mt-3 pt-2 border-top">
+                <a th:href="@{/tips}" class="filter-pill" th:classappend="${selectedCategory == null or selectedCategory == 'ALL'} ? 'active' : ''">All</a>
+                <a th:href="@{/tips(category='Plant Care')}" class="filter-pill" th:classappend="${selectedCategory == 'Plant Care'} ? 'active' : ''">🌱 Plant Care</a>
+                <a th:href="@{/tips(category='Pest & Disease Control')}" class="filter-pill" th:classappend="${selectedCategory == 'Pest & Disease Control'} ? 'active' : ''">🐛 Pest & Disease</a>
+                <a th:href="@{/tips(category='Soil & Fertilizer')}" class="filter-pill" th:classappend="${selectedCategory == 'Soil & Fertilizer'} ? 'active' : ''">🪴 Soil & Fertilizer</a>
+                <a th:href="@{/tips(category='Propagation')}" class="filter-pill" th:classappend="${selectedCategory == 'Propagation'} ? 'active' : ''">✂️ Propagation</a>
+                <a th:href="@{/tips(category='Seasonal Gardening')}" class="filter-pill" th:classappend="${selectedCategory == 'Seasonal Gardening'} ? 'active' : ''">🍂 Seasonal</a>
+            </div>
+        </div>
+
+        <!-- Tips Grid -->
+        <div class="row g-4" th:if="${!tips.isEmpty()}">
+            <div class="col-md-6 col-lg-4" th:each="tip : ${tips}">
+                <div class="card card-garden h-100 d-flex flex-column">
+                    <div class="card-img-wrapper">
+                        <img th:src="${tip.imageUrl != null and !tip.imageUrl.isEmpty() ? tip.imageUrl : 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=600&q=80'}"
+                             alt="Plant article image" onerror="this.src='https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=600&q=80'">
+                    </div>
+                    <div class="card-body p-3 d-flex flex-column flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge-category" th:text="${tip.category}">Plant Care</span>
+                            <span class="badge badge-difficulty"
+                                  th:classappend="${tip.difficultyLevel == 'Beginner' ? 'badge-diff-beginner' : (tip.difficultyLevel == 'Intermediate' ? 'badge-diff-intermediate' : 'badge-diff-advanced')}"
+                                  th:text="${tip.difficultyLevel}">Beginner</span>
+                        </div>
+                        <h5 class="card-title fw-bold mb-2">
+                            <a th:href="@{/tips/{id}(id=${tip.id})}" class="text-dark text-decoration-none" th:text="${tip.title}">
+                                Title
+                            </a>
+                        </h5>
+                        <p class="card-text text-muted small mb-3 flex-grow-1" th:text="${tip.summary}">
+                            Summary of the article...
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center pt-2 border-top small text-muted">
+                            <span><i class="bi bi-person me-1"></i> <span th:text="${tip.author}">Author</span></span>
+                            <span><i class="bi bi-heart-fill text-danger me-1"></i> <span th:text="${tip.likesCount}">0</span> Likes</span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 pt-0 pb-3 px-3">
+                        <a th:href="@{/tips/{id}(id=${tip.id})}" class="btn btn-garden-outline btn-sm w-100">
+                            Read Full Article <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="text-center py-5 my-4 bg-white rounded-4 shadow-sm p-4" th:if="${tips.isEmpty()}">
+            <i class="bi bi-search text-muted display-4 d-block mb-3"></i>
+            <h4 class="fw-bold text-dark">No Gardening Tips Found</h4>
+            <p class="text-muted">No tips match your search criteria. Try another filter or contribute the first one!</p>
+            <div class="d-flex justify-content-center gap-2 mt-3">
+                <a th:href="@{/tips}" class="btn btn-outline-secondary">Reset Filters</a>
+                <a th:href="@{/tips/new}" class="btn btn-garden-primary">Share a Tip</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

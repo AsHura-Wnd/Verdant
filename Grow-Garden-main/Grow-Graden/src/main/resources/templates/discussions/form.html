@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Ask a Gardening Question - GrowGarden')}">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav th:replace="~{fragments/layout :: navbar('discussions')}"></nav>
+
+    <!-- Flash Alerts -->
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <main class="container my-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Breadcrumb -->
+                <div class="mb-3">
+                    <a th:href="@{/discussions}" class="text-decoration-none text-muted small">
+                        <i class="bi bi-arrow-left me-1"></i> Back to discussions
+                    </a>
+                </div>
+
+                <div class="form-card">
+                    <div class="d-flex align-items-center gap-2 mb-4">
+                        <div class="bg-danger-subtle text-danger p-2 rounded-circle">
+                            <i class="bi bi-question-circle-fill fs-4"></i>
+                        </div>
+                        <div>
+                            <h3 class="fw-bold text-dark mb-0">Ask the Gardening Community</h3>
+                            <small class="text-muted">Get diagnosis and care solutions from fellow plant parents and horticulturists</small>
+                        </div>
+                    </div>
+
+                    <form th:action="@{/discussions/new}" th:object="${question}" method="post">
+                        <!-- Title -->
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Question / Problem Summary <span class="text-danger">*</span></label>
+                            <input type="text" id="title" class="form-control" th:field="*{title}"
+                                   placeholder="e.g. Why are my Fiddle Leaf Fig leaves turning brown and dropping?"
+                                   th:classappend="${#fields.hasErrors('title')} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
+                                Title error
+                            </div>
+                        </div>
+
+                        <!-- Row: Category & Plant Type -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="category" class="form-label">Category <span class="text-danger">*</span></label>
+                                <select id="category" class="form-select" th:field="*{category}"
+                                        th:classappend="${#fields.hasErrors('category')} ? 'is-invalid' : ''">
+                                    <option value="">Select a Category</option>
+                                    <option value="Plant Diseases">Plant Diseases (Fungal, Blight, Rot)</option>
+                                    <option value="Pest & Disease Control">Pest Control (Insects, Mites, Aphids)</option>
+                                    <option value="Indoor Gardening">Indoor Plant Care</option>
+                                    <option value="Soil & Watering">Soil & Watering Issues</option>
+                                    <option value="Propagation">Propagation Problems</option>
+                                    <option value="General Gardening">General Gardening Question</option>
+                                </select>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('category')}" th:errors="*{category}">
+                                    Category error
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="plantType" class="form-label">Plant Specimen / Variety</label>
+                                <input type="text" id="plantType" class="form-control" th:field="*{plantType}"
+                                       placeholder="e.g. Monstera, Peace Lily, Tomato">
+                            </div>
+                        </div>
+
+                        <!-- Row: Author & Image URL -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="author" class="form-label">Your Name / Handle <span class="text-danger">*</span></label>
+                                <input type="text" id="author" class="form-control" th:field="*{author}"
+                                       placeholder="e.g. GreenThumb Anita"
+                                       th:classappend="${#fields.hasErrors('author')} ? 'is-invalid' : ''">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">
+                                    Author error
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="imageUrl" class="form-label">Photo URL of Affected Plant (Optional)</label>
+                                <input type="url" id="imageUrl" class="form-control" th:field="*{imageUrl}"
+                                       placeholder="https://example.com/leaf-photo.jpg">
+                            </div>
+                        </div>
+
+                        <!-- Detailed Description -->
+                        <div class="mb-4">
+                            <label for="description" class="form-label">Detailed Symptoms & Growing Conditions <span class="text-danger">*</span></label>
+                            <textarea id="description" class="form-control" rows="7" th:field="*{description}"
+                                      placeholder="Describe when the symptoms started, current watering schedule, sunlight exposure, soil type, and whether you recently repotted or fertilized..."
+                                      th:classappend="${#fields.hasErrors('description')} ? 'is-invalid' : ''"></textarea>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
+                                Description error
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                            <a th:href="@{/discussions}" class="btn btn-outline-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-garden-primary px-4">
+                                <i class="bi bi-send me-1"></i> Post Question
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

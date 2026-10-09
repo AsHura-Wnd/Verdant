@@ -1,0 +1,115 @@
+body{
+    padding: 0px;
+    border: 0px;
+}
+ /* ----------------------------Navigation----------------------------- */
+nav{
+    /* border: 1px solid black; */
+    height: 100px;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+/* ----------------------------Navigation ends------------------------- */
+
+/* -------------------------main section starts------------------------- */
+#banner-img{
+    height: 600px;
+    width: 100%;
+}
+#logo-img{
+    height: 100px;
+
+}
+#nav-bar-container{
+    /* border: 1px solid red; */
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 700px;
+}
+#nav-utils{
+    /* border: 1px solid blue; */
+    display: flex;
+    width: 450px;
+    align-items: center;
+    justify-content: space-evenly;
+}
+#search-bar>input{
+    border-radius: 10px;
+    width: 200px;
+    height: 40px;
+}
+#admin-login-logo>img{
+    width: 50px;
+}
+#user-login-logo>img{
+    width: 50px;
+}
+#cart-logo>img{
+    width: 50px;
+}
+#offers-ad{
+display: flex;
+justify-content: center;
+/* border: 1px solid black; */
+margin-top: 30px;
+background-color:  #FFF6F4;
+}
+#offers-ad>div{
+display: flex;
+/* border: 1px solid blue; */
+width: 700px;
+justify-content: space-around;
+align-items: center;
+}
+#offers-ad>div>div:last-child{
+    height: max-content;
+}
+#offers-ad>div>div:last-child button{
+    width: 240px;
+    height: 40px;
+    color: white;
+    background-color: #149253;
+    border: 0px;
+    border-radius: 4px;
+}
+#offers-ad>div>div>div{
+    font-size: 16px;
+    font-family: sans-serif;
+    font-weight:100;
+}
+#section1-cards-container{
+    display: flex;
+    /* border: 1px solid black; */
+    justify-content: space-around;
+}
+#section1-cards-container>div{
+    height: 466px;
+    width: 320px;
+}
+#section1-cards-container>div img{
+    height: 400px;
+    width: 320px;
+}
+/* -------------------------main section ends-------------------------- */
+
+/* ---------------------------- footer starts----------------------------------  */
+footer{
+    border-top: 1px solid #42474C;
+    border-bottom: 1px solid #42474C;
+    background-color: #FAFAFA;
+    display: flex;
+    justify-content: center;
+}
+footer>div{
+    display: flex;
+    /* border: 1px solid red; */
+    justify-content:space-around;
+    color: #114C36;
+    width: 80%;
+}
+footer>div>div{
+   /* border: 1px solid red; */
+   width: 201px;
+}

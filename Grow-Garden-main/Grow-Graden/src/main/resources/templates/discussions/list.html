@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Community Q&A & Plant Diseases - GrowGarden')}">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav th:replace="~{fragments/layout :: navbar('discussions')}"></nav>
+
+    <!-- Flash Alerts -->
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <main class="container my-4">
+        <!-- Header -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+            <div>
+                <h2 class="fw-bold text-dark mb-1">
+                    <i class="bi bi-chat-dots-fill text-danger me-2"></i> Community Q&A & Plant Clinic
+                </h2>
+                <p class="text-muted small mb-0">Ask questions, troubleshoot fungal diseases, identify pests, and exchange plant care advice</p>
+            </div>
+            <a th:href="@{/discussions/new}" class="btn btn-garden-primary d-flex align-items-center gap-2">
+                <i class="bi bi-question-circle"></i> <span>Ask a Question</span>
+            </a>
+        </div>
+
+        <!-- Search & Filter Card -->
+        <div class="card card-garden p-3 mb-4">
+            <form th:action="@{/discussions}" method="get" class="row g-2 align-items-center">
+                <div class="col-12 col-md-4 col-lg-5">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                        <input type="text" name="search" class="form-control border-start-0"
+                               placeholder="Search questions by symptom, plant, or pest..."
+                               th:value="${searchQuery}">
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-md-3 col-lg-3">
+                    <select name="category" class="form-select">
+                        <option value="ALL" th:selected="${selectedCategory == null or selectedCategory == 'ALL'}">All Categories</option>
+                        <option value="Plant Diseases" th:selected="${selectedCategory == 'Plant Diseases'}">Plant Diseases</option>
+                        <option value="Pest & Disease Control" th:selected="${selectedCategory == 'Pest & Disease Control'}">Pest & Disease Control</option>
+                        <option value="Indoor Gardening" th:selected="${selectedCategory == 'Indoor Gardening'}">Indoor Gardening</option>
+                        <option value="Soil & Watering" th:selected="${selectedCategory == 'Soil & Watering'}">Soil & Watering</option>
+                        <option value="Propagation" th:selected="${selectedCategory == 'Propagation'}">Propagation</option>
+                    </select>
+                </div>
+                <div class="col-12 col-sm-6 col-md-3 col-lg-3">
+                    <select name="resolved" class="form-select">
+                        <option value="" th:selected="${selectedResolved == null}">All Statuses</option>
+                        <option value="false" th:selected="${selectedResolved != null and !selectedResolved}">Needs Help (Open)</option>
+                        <option value="true" th:selected="${selectedResolved != null and selectedResolved}">Solved / Resolved</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-2 col-lg-1">
+                    <button type="submit" class="btn btn-garden-primary w-100">Filter</button>
+                </div>
+            </form>
+
+            <!-- Quick Filter Badges -->
+            <div class="d-flex flex-wrap gap-2 mt-3 pt-2 border-top">
+                <a th:href="@{/discussions}" class="filter-pill" th:classappend="${selectedCategory == null and selectedResolved == null} ? 'active' : ''">All Discussions</a>
+                <a th:href="@{/discussions(resolved='false')}" class="filter-pill text-danger" th:classappend="${selectedResolved != null and !selectedResolved} ? 'active' : ''">
+                    <i class="bi bi-exclamation-circle me-1"></i> Needs Help
+                </a>
+                <a th:href="@{/discussions(resolved='true')}" class="filter-pill text-success" th:classappend="${selectedResolved != null and selectedResolved} ? 'active' : ''">
+                    <i class="bi bi-check-circle me-1"></i> Solved Cases
+                </a>
+                <a th:href="@{/discussions(category='Plant Diseases')}" class="filter-pill" th:classappend="${selectedCategory == 'Plant Diseases'} ? 'active' : ''">
+                    🩺 Plant Diseases
+                </a>
+                <a th:href="@{/discussions(category='Pest & Disease Control')}" class="filter-pill" th:classappend="${selectedCategory == 'Pest & Disease Control'} ? 'active' : ''">
+                    🐛 Pests
+                </a>
+            </div>
+        </div>
+
+        <!-- Discussions List -->
+        <div class="card card-garden p-0" th:if="${!questions.isEmpty()}">
+            <div class="list-group list-group-flush rounded-3">
+                <div class="list-group-item p-3 p-md-4" th:each="q : ${questions}">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+                        <div class="flex-grow-1">
+                            <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                                <span th:if="${q.resolved}" class="badge badge-resolved">
+                                    <i class="bi bi-check2-circle me-1"></i> Solved
+                                </span>
+                                <span th:unless="${q.resolved}" class="badge badge-unresolved">
+                                    <i class="bi bi-exclamation-triangle me-1"></i> Needs Help
+                                </span>
+                                <span class="badge-category" th:text="${q.category}">Category</span>
+                                <span class="badge bg-light text-dark border" th:if="${q.plantType != null and !q.plantType.isEmpty()}" th:text="${q.plantType}">
+                                    Plant Name
+                                </span>
+                            </div>
+
+                            <h5 class="fw-bold mb-2">
+                                <a th:href="@{/discussions/{id}(id=${q.id})}" class="text-dark text-decoration-none" th:text="${q.title}">
+                                    Question title here?
+                                </a>
+                            </h5>
+
+                            <p class="text-secondary small mb-3 text-truncate" style="max-width: 800px;" th:text="${q.description}">
+                                Problem description text...
+                            </p>
+
+                            <div class="d-flex flex-wrap align-items-center gap-3 small text-muted">
+                                <span><i class="bi bi-person me-1"></i> <strong th:text="${q.author}">Author</strong></span>
+                                <span><i class="bi bi-clock me-1"></i> <span th:text="${#temporals.format(q.createdAt, 'MMM dd, yyyy')}">Date</span></span>
+                                <span><i class="bi bi-eye me-1"></i> <span th:text="${q.viewsCount}">0</span> views</span>
+                                <span><i class="bi bi-chat-text-fill text-success me-1"></i> <strong th:text="${q.replies.size()}">0</strong> replies</span>
+                            </div>
+                        </div>
+
+                        <!-- Right Thumbnail & Button -->
+                        <div class="d-flex flex-row flex-md-column align-items-end justify-content-between gap-2 flex-shrink-0">
+                            <div th:if="${q.imageUrl != null and !q.imageUrl.isEmpty()}" class="rounded-3 overflow-hidden" style="width: 70px; height: 70px;">
+                                <img th:src="${q.imageUrl}" alt="Problem plant photo" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                            <a th:href="@{/discussions/{id}(id=${q.id})}" class="btn btn-garden-outline btn-sm">
+                                View Thread <i class="bi bi-chevron-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="text-center py-5 my-4 bg-white rounded-4 shadow-sm p-4" th:if="${questions.isEmpty()}">
+            <i class="bi bi-chat-square-dots text-muted display-4 d-block mb-3"></i>
+            <h4 class="fw-bold text-dark">No Community Discussions Found</h4>
+            <p class="text-muted">No questions match your current search. Have a gardening problem? Post it now!</p>
+            <div class="d-flex justify-content-center gap-2 mt-3">
+                <a th:href="@{/discussions}" class="btn btn-outline-secondary">Reset Filters</a>
+                <a th:href="@{/discussions/new}" class="btn btn-garden-primary">Ask a Question</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

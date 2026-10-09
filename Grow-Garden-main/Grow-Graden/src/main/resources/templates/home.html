@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('GrowGarden - Online Gardening Community')}">
+</head>
+<body>
+
+    <!-- Sidebar & Global CloudShader -->
+    <nav th:replace="~{fragments/layout :: navbar('home')}"></nav>
+
+    <!-- Flash Alerts -->
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <main class="container-fluid px-3 px-md-5 my-4">
+        <!-- Botanical Editorial Hero (Airy, Transparent to CloudShader Background) -->
+        <section class="hero-editorial-section py-4 py-md-5 mb-5">
+            <div class="row align-items-center">
+                <div class="col-xl-9 col-lg-10">
+                    <div class="hero-eyebrow mb-3">
+                        <span class="editorial-badge">
+                            <i class="bi bi-flower1 me-1 text-success"></i> Botanical Knowledge Collective
+                        </span>
+                    </div>
+
+                    <h1 class="hero-editorial-headline mb-3">
+                        Cultivate Knowledge,<br>
+                        <span class="headline-serif-accent">Share the Living Harvest.</span>
+                    </h1>
+
+                    <p class="hero-editorial-subtitle mb-4">
+                        A collaborative sanctuary where home growers, urban botanists, and allotment keepers diagnose plant health, share organic wisdom, and nurture thriving green spaces together.
+                    </p>
+
+                    <!-- Two Primary Actions (Editorial Focus) -->
+                    <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
+                        <a th:href="@{/tips}" class="btn btn-editorial-primary px-4 py-2">
+                            <i class="bi bi-book-half me-2"></i>Explore Gardening Tips
+                        </a>
+                        <a th:href="@{/projects/new}" class="btn btn-editorial-secondary px-4 py-2">
+                            <i class="bi bi-flower2 me-2"></i>Share Your Garden
+                        </a>
+                    </div>
+
+                    <!-- Subtle Integrated Statistics Strip (No Heavy Dashboard Tiles) -->
+                    <div class="hero-metrics-strip d-flex flex-wrap align-items-center gap-3 gap-md-4 pt-2">
+                        <div class="metric-item">
+                            <span class="metric-num" th:text="${totalTips}">0</span>
+                            <span class="metric-label">Gardening Tips</span>
+                        </div>
+                        <span class="metric-separator" aria-hidden="true">&bull;</span>
+                        <div class="metric-item">
+                            <span class="metric-num" th:text="${totalQuestions}">0</span>
+                            <span class="metric-label">Community Questions</span>
+                        </div>
+                        <span class="metric-separator" aria-hidden="true">&bull;</span>
+                        <div class="metric-item">
+                            <span class="metric-num" th:text="${resolvedQuestions}">0</span>
+                            <span class="metric-label">Solved Problems</span>
+                        </div>
+                        <span class="metric-separator" aria-hidden="true">&bull;</span>
+                        <div class="metric-item">
+                            <span class="metric-num" th:text="${totalProjects}">0</span>
+                            <span class="metric-label">Active Projects</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Three Botanical Feature Sections (Consistent Botanical System, No Saturated Borders) -->
+        <section class="mb-5">
+            <div class="row g-4">
+                <!-- 1. Gardening Tips -->
+                <div class="col-md-4">
+                    <div class="editorial-feature-card h-100 p-4">
+                        <div class="feature-icon-circle mb-3">
+                            <i class="bi bi-lightbulb-fill"></i>
+                        </div>
+                        <h4 class="editorial-feature-title mb-1">Gardening Tips</h4>
+                        <div class="editorial-feature-subtitle mb-3">Proven Guides & Organic Remedies</div>
+                        <p class="editorial-feature-text mb-4">
+                            Discover organic pest controls, nutrient-rich compost recipes, and seasonal plant maintenance shared by experienced growers.
+                        </p>
+                        <a th:href="@{/tips}" class="editorial-feature-link mt-auto">
+                            Browse Knowledge Base <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 2. Community Q&A -->
+                <div class="col-md-4">
+                    <div class="editorial-feature-card h-100 p-4">
+                        <div class="feature-icon-circle mb-3">
+                            <i class="bi bi-chat-quote-fill"></i>
+                        </div>
+                        <h4 class="editorial-feature-title mb-1">Community Q&A</h4>
+                        <div class="editorial-feature-subtitle mb-3">Disease Diagnosis & Guidance</div>
+                        <p class="editorial-feature-text mb-4">
+                            Encountering yellowing leaves, mildew, or wilting roots? Post plant questions and receive practical troubleshooting from the community.
+                        </p>
+                        <a th:href="@{/discussions}" class="editorial-feature-link mt-auto">
+                            Open Discussion Forum <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 3. Personal Projects -->
+                <div class="col-md-4">
+                    <div class="editorial-feature-card h-100 p-4">
+                        <div class="feature-icon-circle mb-3">
+                            <i class="bi bi-calendar2-check-fill"></i>
+                        </div>
+                        <h4 class="editorial-feature-title mb-1">Garden Projects</h4>
+                        <div class="editorial-feature-subtitle mb-3">Personal Journal & Growth Milestones</div>
+                        <p class="editorial-feature-text mb-4">
+                            Document windowsill herbs, balcony raised beds, and backyard perennials through developmental milestones from seed to harvest.
+                        </p>
+                        <a th:href="@{/projects}" class="editorial-feature-link mt-auto">
+                            View Garden Projects <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Gardening Tips (Editorial Photographic Presentation) -->
+        <section class="mb-5">
+            <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
+                <div>
+                    <span class="text-uppercase small fw-bold text-success" style="letter-spacing: 0.8px; font-size: 0.75rem;">Community Highlights</span>
+                    <h2 class="editorial-section-heading mb-0">Featured Gardening Tips</h2>
+                </div>
+                <a th:href="@{/tips}" class="editorial-link-subtle">
+                    View Complete Journal <i class="bi bi-chevron-right ms-1"></i>
+                </a>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3" th:each="tip, iterStat : ${featuredTips}">
+                    <div class="editorial-tip-card h-100">
+                        <div class="editorial-img-container" th:if="${tip.imageUrl != null}">
+                            <img th:src="${tip.imageUrl}"
+                                 alt="Plant tip photograph"
+                                 class="editorial-img"
+                                 th:attr="onerror=${'this.src=''https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=800&q=80'''}" />
+                        </div>
+                        <div class="editorial-tip-body p-3 d-flex flex-column flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge-category-pill" th:text="${tip.category}">Plant Care</span>
+                                <span class="badge-difficulty-pill"
+                                      th:classappend="${tip.difficultyLevel == 'Beginner' ? 'diff-beginner' : (tip.difficultyLevel == 'Intermediate' ? 'diff-intermediate' : 'diff-advanced')}"
+                                      th:text="${tip.difficultyLevel}">Beginner</span>
+                            </div>
+                            <h5 class="editorial-tip-title mb-2">
+                                <a th:href="@{/tips/{id}(id=${tip.id})}" class="stretched-link text-decoration-none" th:text="${tip.title}">
+                                    Tip Title
+                                </a>
+                            </h5>
+                            <p class="editorial-tip-summary small mb-3 flex-grow-1" th:text="${tip.summary}">
+                                Summary of the tip...
+                            </p>
+                            <div class="editorial-tip-meta pt-2 d-flex justify-content-between align-items-center small">
+                                <span class="author-label"><i class="bi bi-person me-1"></i> <span th:text="${tip.author}">Author</span></span>
+                                <span class="likes-label"><i class="bi bi-heart-fill text-danger me-1"></i> <span th:text="${tip.likesCount}">0</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Two Columns: Recent Community Q&A and Active Projects -->
+        <section class="row g-4 mb-5">
+            <!-- Left: Community Discussions -->
+            <div class="col-lg-6">
+                <div class="editorial-container-card p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-10">
+                        <div>
+                            <span class="text-uppercase small fw-bold text-success" style="font-size: 0.72rem; letter-spacing: 0.6px;">Botanical Advice</span>
+                            <h3 class="editorial-block-heading mb-0">Recent Community Q&A</h3>
+                        </div>
+                        <a th:href="@{/discussions}" class="editorial-link-subtle small">
+                            All Questions <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item bg-transparent border-bottom border-secondary border-opacity-10 px-0 py-3" th:each="q : ${recentQuestions}">
+                            <div class="d-flex justify-content-between align-items-start mb-1 gap-2">
+                                <a th:href="@{/discussions/{id}(id=${q.id})}" class="editorial-question-link fw-bold text-decoration-none" th:text="${q.title}">
+                                    Question title?
+                                </a>
+                                <span th:if="${q.resolved}" class="badge-status-pill status-solved flex-shrink-0">Solved</span>
+                                <span th:unless="${q.resolved}" class="badge-status-pill status-open flex-shrink-0">Open</span>
+                            </div>
+                            <p class="text-muted small mb-2 text-truncate" th:text="${q.description}">Description text...</p>
+                            <div class="d-flex flex-wrap gap-3 small text-muted">
+                                <span><i class="bi bi-tag text-success me-1"></i> <span th:text="${q.category}">Category</span></span>
+                                <span><i class="bi bi-chat-dots me-1"></i> <span th:text="${q.replies.size()}">0</span> replies</span>
+                                <span><i class="bi bi-person me-1"></i> <span th:text="${q.author}">Author</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-2 text-center">
+                        <a th:href="@{/discussions/new}" class="btn btn-editorial-outline btn-sm w-100">
+                            <i class="bi bi-question-circle me-1"></i> Ask the Community
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Active Gardening Projects -->
+            <div class="col-lg-6">
+                <div class="editorial-container-card p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-10">
+                        <div>
+                            <span class="text-uppercase small fw-bold text-success" style="font-size: 0.72rem; letter-spacing: 0.6px;">Cultivation Journals</span>
+                            <h3 class="editorial-block-heading mb-0">Ongoing Garden Projects</h3>
+                        </div>
+                        <a th:href="@{/projects}" class="editorial-link-subtle small">
+                            All Projects <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item bg-transparent border-bottom border-secondary border-opacity-10 px-0 py-3" th:each="proj : ${recentProjects}">
+                            <div class="d-flex justify-content-between align-items-start mb-1 gap-2">
+                                <a th:href="@{/projects/{id}(id=${proj.id})}" class="editorial-project-link fw-bold text-decoration-none" th:text="${proj.title}">
+                                    Project title
+                                </a>
+                                <span class="badge-status-pill status-project flex-shrink-0" th:text="${proj.status}">In Progress</span>
+                            </div>
+                            <p class="text-muted small mb-2 text-truncate" th:text="${proj.description}">Description...</p>
+                            <div class="d-flex flex-wrap gap-3 small text-muted">
+                                <span><i class="bi bi-flower3 text-success me-1"></i> <span th:text="${proj.plantType}">Plant</span></span>
+                                <span><i class="bi bi-geo-alt text-secondary me-1"></i> <span th:text="${proj.location}">Location</span></span>
+                                <span><i class="bi bi-person me-1"></i> <span th:text="${proj.gardenerName}">Gardener</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-2 text-center">
+                        <a th:href="@{/projects/new}" class="btn btn-editorial-outline btn-sm w-100">
+                            <i class="bi bi-plus-circle me-1"></i> Start a Garden Journal
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
