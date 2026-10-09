@@ -1,18 +1,22 @@
-# 🌿 Verdant (GrowGarden) — Online Gardening Community Platform
+# 🌿 Verdant — Online Gardening Community Platform
 
 An interactive, server-rendered **Online Gardening Community Platform** built with **Java Spring Boot**, **Thymeleaf**, **Spring Data JPA**, and direct **JDBC**. 
 
 Verdant provides gardening enthusiasts, urban botanists, and allotment growers with a digital sanctuary to share horticultural tips, diagnose plant diseases and pests, participate in community discussions, access polymorphic plant-care advice, and track personal garden projects from seed to harvest.
 
+The project demonstrates the practical application of core Java programming, object-oriented design, direct JDBC database connectivity, Jakarta Servlet API integration, and web technologies using the Spring Boot framework.
+
 ---
 
-## 🌟 Key Features
+## ✨ Key Features
 
 ### 1. Community Dashboard (`/`)
 - **Real-Time Statistics**: Live counters for total tips, community discussions, solved plant disease problems, and ongoing garden projects.
 - **Featured Articles**: Curated high-yield gardening guides and organic recipes.
 - **Recent Q&A Feed**: Quick preview of unanswered questions and resolved clinical plant issues.
 - **Active Projects Showcase**: Community garden journeys across balconies, windowsills, and raised beds.
+- **Animated Visuals**: Full-viewport WebGL CloudShader background with dynamic GLSL noise rendering.
+- **Cinematic Garden Reveal**: Scroll-driven multi-scene narrative transition revealing the community garden grid.
 
 ### 2. Gardening Tips & Articles (`/tips`)
 - **Full CRUD Support**: Create, view, edit, and delete gardening tips and articles.
@@ -32,41 +36,71 @@ Verdant provides gardening enthusiasts, urban botanists, and allotment growers w
 - **Milestone & Care Journal**: Log progress, soil recipes, germination dates, and target harvest dates.
 - **Full CRUD Management**: Create, view journal details, edit project specs, or delete projects.
 
-### 5. Dual Interface: Server-Rendered UI + REST API
-- **Thymeleaf HTML5 Templates**: Responsive Bootstrap 5 interface styled with custom natural green tones and plant aesthetics.
-- **REST API Endpoints (`/api/*`)**: Clean JSON endpoints for stats, tips, discussions, and projects.
+### 5. Polymorphic Plant-Care Advisor (`/api/advisor/*`)
+- **Specialized Advisors**: Concrete subclasses for *Vegetables*, *Succulents*, *Herbs*, and *Tropical Foliage*.
+- **Custom Care Plans**: Generates tailored watering schedules, sunlight requirements, and N-P-K fertilizer guidance.
+- **Symptom Diagnosis**: Identifies root rot, leaf scorch, powdery mildew, and nutrient deficiencies with actionable organic fixes.
+
+### 6. Dual Interface: Server-Rendered UI + REST API
+- **Thymeleaf HTML5 Templates**: Responsive Bootstrap 5 interface styled with custom botanical green glassmorphism aesthetics.
+- **REST API Endpoints (`/api/*`)**: Clean JSON endpoints for stats, tips, discussions, projects, JDBC analytics, and advisor services.
 
 ---
 
 ## 🛠️ Technology Stack
 
 | Component | Technology |
-| :--- | :--- |
-| **Language** | Java 17+ (Fully tested and compatible with JDK 17, 21, and 26) |
+|---|---|
+| **Language** | Java 17+ (Tested on JDK 17, JDK 21, and JDK 26) |
 | **Backend Framework** | Spring Boot 3.1.2 (Spring MVC, Spring Data JPA, Validation) |
 | **Frontend Engine** | Thymeleaf 3 (Server-rendered responsive HTML5) |
-| **UI Framework** | Bootstrap 5.3 + Bootstrap Icons + Custom Garden Theme CSS |
+| **UI Framework** | Bootstrap 5.3 + Bootstrap Icons + Custom Glassmorphic Botanical CSS |
+| **Graphics / Animation** | WebGL 1.0 / GLSL (Full-viewport animated CloudShader & scroll reveal) |
 | **Database** | Embedded **H2 Database** (file-based persistence at `./data/gardendb`) |
-| **Optional Database** | MySQL Connector (configured via `application.properties`) |
+| **Direct Database API** | Direct **JDBC** (`java.sql.Connection`, `PreparedStatement`, `ResultSet`) |
+| **Web Integration** | Embedded Apache Tomcat + Jakarta Servlet API (`Filter`) |
 | **Build Tool** | Apache Maven 3.9+ / Maven Wrapper (`mvnw` / `mvnw.cmd`) |
+| **Testing** | JUnit 5, Spring Boot Test, MockMvc (18 integration tests) |
+
+---
+
+## 🏗️ Project Architecture
+
+Verdant uses a clean, layered architecture separating concerns across tiers:
+
+- **Filter / Web Tier**: `GardenSecurityHeadersFilter` intercepts incoming HTTP requests, adding security headers (`X-Content-Type-Options`, `X-Frame-Options`) and measuring execution time (`X-Response-Time-Ms`).
+- **Controller Layer (`com.example.controller`)**: Spring MVC controllers handle web requests, validate forms, and render Thymeleaf views; `RestApiController` provides JSON endpoints.
+- **Service Layer (`com.example.service`)**: Encapsulates business logic and coordinates database transactions.
+- **Persistence Layer (`com.example.repository`)**:
+  - **Spring Data JPA**: High-level repository abstraction for standard entity CRUD operations.
+  - **Direct JDBC DAO (`com.example.repository.jdbc.GardenJdbcDao`)**: Executes raw SQL with `PreparedStatement` and `ResultSet` for analytical grouping and optimized search.
+- **Domain & Advisor Layer (`com.example.domain.advisor`)**: Abstract base class `AbstractPlantAdvisor` with 4 polymorphic subclasses dynamically resolved via `PlantAdvisorRegistry`.
+- **Exception Layer (`com.example.exception`)**: `ResourceNotFoundException` hierarchy mapped via `@ControllerAdvice` (`GlobalExceptionHandler`) to standard HTTP 404 JSON error responses.
 
 ---
 
 ## 📋 Prerequisites
 
 - **Java Development Kit (JDK)**: JDK 17 or higher (JDK 17, 21, or 26)
+- **Git**
 - **Maven**: Maven Wrapper is included (`mvnw.cmd` on Windows, `./mvnw` on Linux/macOS)
 
 ---
 
 ## 🚀 Quick Start Guide
 
-### 1. Clone or Open the Repository
+### 1. Clone the Repository
+```bash
+git clone https://github.com/AsHura-Wnd/Verdant.git
+cd Verdant
+```
+
+### 2. Navigate to Project Directory
 ```bash
 cd Grow-Garden-main/Grow-Graden
 ```
 
-### 2. Set `JAVA_HOME` (if not already set in environment)
+### 3. Set `JAVA_HOME` (if not already set in environment)
 **On Windows (PowerShell):**
 ```powershell
 $env:JAVA_HOME = "C:\Program Files\Java\jdk-26.0.2.1"
@@ -76,7 +110,7 @@ $env:JAVA_HOME = "C:\Program Files\Java\jdk-26.0.2.1"
 export JAVA_HOME=/path/to/jdk-17
 ```
 
-### 3. Build & Test the Project
+### 4. Build & Package
 ```bash
 # Windows
 .\mvnw.cmd clean package
@@ -85,9 +119,7 @@ export JAVA_HOME=/path/to/jdk-17
 ./mvnw clean package
 ```
 
-### 4. Run the Application
-You can run using Spring Boot plugin or directly via the packaged executable JAR:
-
+### 5. Run the Application
 **Option A: Run with Maven Wrapper**
 ```bash
 # Windows
@@ -102,7 +134,7 @@ You can run using Spring Boot plugin or directly via the packaged executable JAR
 java -jar target/Grow-Graden-0.0.1-SNAPSHOT.jar
 ```
 
-### 5. Access the Platform
+### 6. Access the Platform
 Once started, open your web browser and navigate to:
 - **Application Dashboard**: [http://localhost:8080](http://localhost:8080)
 - **Gardening Tips**: [http://localhost:8080/tips](http://localhost:8080/tips)
@@ -116,12 +148,30 @@ Once started, open your web browser and navigate to:
 
 ---
 
+## 🧭 Main Application Routes
+
+| Route | Description |
+|---|---|
+| `/` | Home page with CloudShader and scroll-driven garden reveal |
+| `/tips` | Browse gardening tips and articles |
+| `/tips/new` | Create a new gardening tip |
+| `/tips/{id}` | Detailed view and upvoting for a tip |
+| `/discussions` | View community plant questions and clinic |
+| `/discussions/new` | Ask a plant troubleshooting question |
+| `/discussions/{id}` | Read discussion answers and post replies |
+| `/projects` | Explore personal garden project journals |
+| `/projects/new` | Create a garden project |
+| `/projects/{id}` | View project timeline, soil recipe, and milestones |
+| `/about` | About the platform and mission |
+
+---
+
 ## 🔌 REST API Endpoints
 
-The application also exposes clean REST endpoints for external clients or headless integrations:
+The application exposes clean REST endpoints for JSON clients:
 
 | Method | Endpoint | Description |
-| :--- | :--- | :--- |
+|---|---|---|
 | `GET` | `/api/stats` | Platform statistics (total tips, discussions, resolved cases, projects) |
 | `GET` | `/api/tips` | List all gardening tips (supports `?search=` and `?category=`) |
 | `GET` | `/api/tips/{id}` | Retrieve single tip by ID |
@@ -136,24 +186,24 @@ The application also exposes clean REST endpoints for external clients or headle
 
 ---
 
-## 🏛️ Academic Compliance & Core Java Highlights
+## 📚 Core Java & Academic Compliance Highlights
 
 1. **Direct JDBC Integration (`GardenJdbcDao`)**:
    - Implements genuine `java.sql.Connection`, `java.sql.PreparedStatement`, and `java.sql.ResultSet`.
-   - Employs try-with-resources blocks preventing database connection leaks.
-   - Executes parameterized queries avoiding SQL injection vulnerabilities.
+   - Employs try-with-resources blocks preventing connection leaks.
+   - Parameterized SQL queries preventing SQL injection vulnerabilities.
 2. **Inheritance & Runtime Polymorphism (`com.example.domain.advisor`)**:
    - Abstract base class `AbstractPlantAdvisor` with template method contracts.
    - Concrete subclasses (`VegetableAdvisor`, `SucculentAdvisor`, `HerbAdvisor`, `TropicalFoliageAdvisor`).
-   - Dynamic method dispatch via `PlantAdvisorRegistry` resolving plant types at runtime.
+   - Dynamic method dispatch via `PlantAdvisorRegistry` resolving advisor beans at runtime.
 3. **Custom Exception Hierarchy & Global Advice (`com.example.exception`)**:
    - `ResourceNotFoundException` extends `RuntimeException`.
    - Domain-specific subclasses: `GardeningTipNotFoundException`, `GardenProjectNotFoundException`, `DiscussionQuestionNotFoundException`.
-   - Centralized `@ControllerAdvice` (`GlobalExceptionHandler`) translating domain errors to HTTP 404 JSON (REST) and user alerts (HTML).
+   - Centralized `@ControllerAdvice` (`GlobalExceptionHandler`) translating domain errors to HTTP 404 JSON for REST and user flash alerts for HTML.
 4. **Student-Written Generics & Collections (`com.example.util`)**:
-   - Custom generic class `SearchResultWrapper<T>` with generic method mapping `map(Function<T, R>)`.
+   - Custom generic container `SearchResultWrapper<T>` with higher-order `<R> SearchResultWrapper<R> map(Function<T, R>)` transformation.
 5. **Jakarta Servlet API Filter (`GardenSecurityHeadersFilter`)**:
-   - Intercepts requests, attaches `X-Application-Name`, `X-Content-Type-Options`, `X-Frame-Options`, and `X-Response-Time-Ms`.
+   - Intercepts requests, attaches `X-Application-Name`, `X-Content-Type-Options`, `X-Frame-Options`, `X-Servlet-Filter`, and `X-Response-Time-Ms`.
 6. **Presentation Deliverables**:
    - Presentation files included in root: `GrowGarden_Project_Presentation.pptx` and `GrowGarden_Project_Presentation.pdf`.
 
@@ -161,23 +211,13 @@ The application also exposes clean REST endpoints for external clients or headle
 
 ## 🗄️ Database Configuration
 
-By default, GrowGarden uses an **embedded, persistent file-based H2 database** (`./data/gardendb`). All seed data and user contributions survive application restarts without needing any local database server installed.
-
-### Optional: Connecting to MySQL
-If you prefer running a local MySQL database, open `src/main/resources/application.properties` and configure:
-```properties
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-spring.datasource.url=jdbc:mysql://localhost:3306/growgarden?createDatabaseIfNotExist=true&useSSL=false
-spring.datasource.username=root
-spring.datasource.password=your_password
-spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
-```
+By default, Verdant uses an **embedded, persistent file-based H2 database** (`./data/gardendb`). All seed data and user contributions survive application restarts without needing any local database server installed.
 
 ---
 
-## 🧪 Testing
+## 🧪 Running Automated Tests
 
-Execute automated integration tests verifying database persistence, tip CRUD, Q&A replies, direct JDBC DAO, polymorphic advisors, custom exceptions, and servlet filter headers (18/18 tests pass):
+Run the project's automated test suite with the Maven Wrapper (18/18 tests pass):
 ```bash
 # Windows
 .\mvnw.cmd test
@@ -188,36 +228,38 @@ Execute automated integration tests verifying database persistence, tip CRUD, Q&
 
 ---
 
-## 📦 GitHub Repository & Setup
+## 📋 Project Objectives
 
-- **GitHub Repository**: [https://github.com/AsHura-Wnd/Verdant.git](https://github.com/AsHura-Wnd/Verdant.git)
-- **Primary Branch**: `feature/academic-compliance` (complete, tested academic submission)
-
-```bash
-# Clone the repository
-git clone https://github.com/AsHura-Wnd/Verdant.git
-cd Verdant
-```
+- Build a functional web application using Java and Spring Boot.
+- Apply object-oriented programming principles (inheritance, polymorphism, abstraction) to a practical domain.
+- Integrate a database for persistent data management with Spring Data JPA.
+- Demonstrate direct JDBC-based database operations (`PreparedStatement`, `ResultSet`, aggregated queries).
+- Implement web request handling, MVC design pattern, and Jakarta Servlet filter integration.
+- Develop a clear, maintainable, and user-friendly interface with animated WebGL visuals.
 
 ---
 
-## 🚢 Production Deployment
+## 🔮 Future Enhancements
 
-### 1. Standalone JAR Deployment
-```bash
-nohup java -jar target/Grow-Graden-0.0.1-SNAPSHOT.jar --server.port=8080 > app.log 2>&1 &
-```
+- User registration and role-based authentication (Spring Security)
+- Personalized plant recommendation engine
+- Garden-project image uploads (cloud blob storage)
+- Advanced search indexing and multi-criteria filtering
+- Automated plant-care reminders and seasonal push notifications
+- Cloud production container deployment
 
-### 2. Docker Deployment
-Create a `Dockerfile` in `Grow-Graden`:
-```dockerfile
-FROM eclipse-temurin:17-jre-alpine
-VOLUME /tmp
-COPY target/Grow-Graden-0.0.1-SNAPSHOT.jar app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
-```
-Build and run:
-```bash
-docker build -t grow-garden-app .
-docker run -p 8080:8080 grow-garden-app
-```
+---
+
+## 👨‍💻 Project Information
+
+- **Project Name:** Verdant
+- **Project Type:** Java Web-Based Application
+- **Domain:** Gardening and Botanical Community
+- **Backend:** Java 17+ & Spring Boot 3.1.2
+- **Database:** H2 Embedded (file-based persistence at `./data/gardendb`)
+- **Build Tool:** Apache Maven
+- **License:** MIT License (see [LICENSE](LICENSE))
+
+---
+
+*Verdant — Grow knowledge. Share nature.*
