@@ -1,8 +1,8 @@
-# 🌱 GrowGarden - Online Gardening Community Platform
+# 🌿 Verdant (GrowGarden) — Online Gardening Community Platform
 
-An interactive, server-rendered **Online Gardening Community Platform** built with **Java Spring Boot**, **Thymeleaf**, and **Spring Data JPA**. 
+An interactive, server-rendered **Online Gardening Community Platform** built with **Java Spring Boot**, **Thymeleaf**, **Spring Data JPA**, and direct **JDBC**. 
 
-GrowGarden provides gardening enthusiasts, urban botanists, and allotment growers with a digital sanctuary to share horticultural tips, diagnose plant diseases and pests, participate in community discussions, and track personal garden projects from seed to harvest.
+Verdant provides gardening enthusiasts, urban botanists, and allotment growers with a digital sanctuary to share horticultural tips, diagnose plant diseases and pests, participate in community discussions, access polymorphic plant-care advice, and track personal garden projects from seed to harvest.
 
 ---
 
@@ -188,24 +188,15 @@ Execute automated integration tests verifying database persistence, tip CRUD, Q&
 
 ---
 
-## 📦 How to Push to Your Own GitHub Repository
+## 📦 GitHub Repository & Setup
+
+- **GitHub Repository**: [https://github.com/AsHura-Wnd/Verdant.git](https://github.com/AsHura-Wnd/Verdant.git)
+- **Primary Branch**: `feature/academic-compliance` (complete, tested academic submission)
 
 ```bash
-# 1. Initialize git repository if not present
-git init
-
-# 2. Add files
-git add .
-
-# 3. Create initial commit
-git commit -m "feat: Online Gardening Community Platform with Spring Boot and Thymeleaf"
-
-# 4. Link your remote GitHub repository
-git remote add origin https://github.com/YOUR_USERNAME/grow-garden-community.git
-
-# 5. Push to GitHub
-git branch -M main
-git push -u origin main
+# Clone the repository
+git clone https://github.com/AsHura-Wnd/Verdant.git
+cd Verdant
 ```
 
 ---
