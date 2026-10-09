@@ -129,6 +129,33 @@ The application also exposes clean REST endpoints for external clients or headle
 | `GET` | `/api/discussions/{id}` | Retrieve question details and replies |
 | `GET` | `/api/projects` | List personal projects (supports `?search=` and `?status=`) |
 | `GET` | `/api/projects/{id}` | Retrieve project details |
+| `GET` | `/api/jdbc/metrics` | Direct JDBC analytical aggregates (category metrics & project status) |
+| `GET` | `/api/jdbc/tips/search` | Direct JDBC parameterized search via `PreparedStatement` & `SearchResultWrapper<T>` |
+| `GET` | `/api/advisor/diagnose` | Polymorphic botanical diagnosis (`?plantType=Tomato&symptom=yellow+leaves`) |
+| `GET` | `/api/advisor/care-plan` | Polymorphic care plan generation (`?plantType=Succulent&spaceType=Balcony`) |
+
+---
+
+## 🏛️ Academic Compliance & Core Java Highlights
+
+1. **Direct JDBC Integration (`GardenJdbcDao`)**:
+   - Implements genuine `java.sql.Connection`, `java.sql.PreparedStatement`, and `java.sql.ResultSet`.
+   - Employs try-with-resources blocks preventing database connection leaks.
+   - Executes parameterized queries avoiding SQL injection vulnerabilities.
+2. **Inheritance & Runtime Polymorphism (`com.example.domain.advisor`)**:
+   - Abstract base class `AbstractPlantAdvisor` with template method contracts.
+   - Concrete subclasses (`VegetableAdvisor`, `SucculentAdvisor`, `HerbAdvisor`, `TropicalFoliageAdvisor`).
+   - Dynamic method dispatch via `PlantAdvisorRegistry` resolving plant types at runtime.
+3. **Custom Exception Hierarchy & Global Advice (`com.example.exception`)**:
+   - `ResourceNotFoundException` extends `RuntimeException`.
+   - Domain-specific subclasses: `GardeningTipNotFoundException`, `GardenProjectNotFoundException`, `DiscussionQuestionNotFoundException`.
+   - Centralized `@ControllerAdvice` (`GlobalExceptionHandler`) translating domain errors to HTTP 404 JSON (REST) and user alerts (HTML).
+4. **Student-Written Generics & Collections (`com.example.util`)**:
+   - Custom generic class `SearchResultWrapper<T>` with generic method mapping `map(Function<T, R>)`.
+5. **Jakarta Servlet API Filter (`GardenSecurityHeadersFilter`)**:
+   - Intercepts requests, attaches `X-Application-Name`, `X-Content-Type-Options`, `X-Frame-Options`, and `X-Response-Time-Ms`.
+6. **Presentation Deliverables**:
+   - Presentation files included in root: `GrowGarden_Project_Presentation.pptx` and `GrowGarden_Project_Presentation.pdf`.
 
 ---
 
@@ -150,7 +177,7 @@ spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
 
 ## 🧪 Testing
 
-Execute automated integration tests verifying database persistence, tip CRUD, Q&A replies, and project tracking:
+Execute automated integration tests verifying database persistence, tip CRUD, Q&A replies, direct JDBC DAO, polymorphic advisors, custom exceptions, and servlet filter headers (18/18 tests pass):
 ```bash
 # Windows
 .\mvnw.cmd test

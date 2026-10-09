@@ -1,5 +1,7 @@
 package com.example.service;
 
+import com.example.exception.DiscussionQuestionNotFoundException;
+import com.example.exception.ResourceNotFoundException;
 import com.example.model.DiscussionQuestion;
 import com.example.model.DiscussionReply;
 import com.example.repository.DiscussionQuestionRepository;
@@ -40,7 +42,7 @@ public class DiscussionServiceImpl implements DiscussionService {
     @Override
     public DiscussionQuestion getQuestionById(Long id) {
         DiscussionQuestion question = questionRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Discussion question not found with ID: " + id));
+                .orElseThrow(() -> new DiscussionQuestionNotFoundException(id));
         question.setViewsCount(question.getViewsCount() + 1);
         return questionRepository.save(question);
     }
@@ -53,7 +55,7 @@ public class DiscussionServiceImpl implements DiscussionService {
     @Override
     public DiscussionQuestion updateQuestion(Long id, DiscussionQuestion updatedQuestion) {
         DiscussionQuestion existing = questionRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Discussion question not found with ID: " + id));
+                .orElseThrow(() -> new DiscussionQuestionNotFoundException(id));
         existing.setTitle(updatedQuestion.getTitle());
         existing.setCategory(updatedQuestion.getCategory());
         existing.setDescription(updatedQuestion.getDescription());
@@ -73,7 +75,7 @@ public class DiscussionServiceImpl implements DiscussionService {
     @Override
     public void toggleResolved(Long id) {
         DiscussionQuestion question = questionRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Discussion question not found with ID: " + id));
+                .orElseThrow(() -> new DiscussionQuestionNotFoundException(id));
         question.setResolved(!question.isResolved());
         questionRepository.save(question);
     }
@@ -81,7 +83,7 @@ public class DiscussionServiceImpl implements DiscussionService {
     @Override
     public DiscussionReply addReply(Long questionId, DiscussionReply reply) {
         DiscussionQuestion question = questionRepository.findById(questionId)
-                .orElseThrow(() -> new IllegalArgumentException("Discussion question not found with ID: " + questionId));
+                .orElseThrow(() -> new DiscussionQuestionNotFoundException(questionId));
         reply.setQuestion(question);
         return replyRepository.save(reply);
     }
@@ -94,7 +96,7 @@ public class DiscussionServiceImpl implements DiscussionService {
     @Override
     public void upvoteReply(Long replyId) {
         DiscussionReply reply = replyRepository.findById(replyId)
-                .orElseThrow(() -> new IllegalArgumentException("Reply not found with ID: " + replyId));
+                .orElseThrow(() -> new ResourceNotFoundException("Discussion Reply", replyId));
         reply.setUpvotes(reply.getUpvotes() + 1);
         replyRepository.save(reply);
     }

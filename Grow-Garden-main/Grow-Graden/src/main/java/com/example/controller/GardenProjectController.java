@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.exception.ResourceNotFoundException;
 import com.example.model.GardenProject;
 import com.example.service.GardenProjectService;
 import jakarta.validation.Valid;
@@ -39,7 +40,7 @@ public class GardenProjectController {
             GardenProject project = projectService.getProjectById(id);
             model.addAttribute("project", project);
             return "projects/detail";
-        } catch (IllegalArgumentException e) {
+        } catch (ResourceNotFoundException | IllegalArgumentException e) {
             return "redirect:/projects";
         }
     }
@@ -74,7 +75,7 @@ public class GardenProjectController {
             model.addAttribute("project", project);
             model.addAttribute("isEdit", true);
             return "projects/form";
-        } catch (IllegalArgumentException e) {
+        } catch (ResourceNotFoundException | IllegalArgumentException e) {
             return "redirect:/projects";
         }
     }

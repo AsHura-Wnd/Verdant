@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.exception.ResourceNotFoundException;
 import com.example.model.DiscussionQuestion;
 import com.example.model.DiscussionReply;
 import com.example.service.DiscussionService;
@@ -41,7 +42,7 @@ public class DiscussionController {
                 model.addAttribute("newReply", new DiscussionReply());
             }
             return "discussions/detail";
-        } catch (IllegalArgumentException e) {
+        } catch (ResourceNotFoundException | IllegalArgumentException e) {
             return "redirect:/discussions";
         }
     }

@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.exception.GardeningTipNotFoundException;
 import com.example.model.GardeningTip;
 import com.example.repository.GardeningTipRepository;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class GardeningTipServiceImpl implements GardeningTipService {
     @Transactional(readOnly = true)
     public GardeningTip getTipById(Long id) {
         return tipRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Gardening tip not found with ID: " + id));
+                .orElseThrow(() -> new GardeningTipNotFoundException(id));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.exception.GardenProjectNotFoundException;
 import com.example.model.GardenProject;
 import com.example.repository.GardenProjectRepository;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class GardenProjectServiceImpl implements GardenProjectService {
     @Transactional(readOnly = true)
     public GardenProject getProjectById(Long id) {
         return projectRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Garden project not found with ID: " + id));
+                .orElseThrow(() -> new GardenProjectNotFoundException(id));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.exception.ResourceNotFoundException;
 import com.example.model.GardeningTip;
 import com.example.service.GardeningTipService;
 import jakarta.validation.Valid;
@@ -36,7 +37,7 @@ public class GardeningTipController {
             model.addAttribute("tip", tip);
             model.addAttribute("recentTips", tipService.getRecentTips());
             return "tips/detail";
-        } catch (IllegalArgumentException e) {
+        } catch (ResourceNotFoundException | IllegalArgumentException e) {
             return "redirect:/tips";
         }
     }
@@ -71,7 +72,7 @@ public class GardeningTipController {
             model.addAttribute("tip", tip);
             model.addAttribute("isEdit", true);
             return "tips/form";
-        } catch (IllegalArgumentException e) {
+        } catch (ResourceNotFoundException | IllegalArgumentException e) {
             return "redirect:/tips";
         }
     }
