@@ -204,8 +204,6 @@ The application exposes clean REST endpoints for JSON clients:
    - Custom generic container `SearchResultWrapper<T>` with higher-order `<R> SearchResultWrapper<R> map(Function<T, R>)` transformation.
 5. **Jakarta Servlet API Filter (`GardenSecurityHeadersFilter`)**:
    - Intercepts requests, attaches `X-Application-Name`, `X-Content-Type-Options`, `X-Frame-Options`, `X-Servlet-Filter`, and `X-Response-Time-Ms`.
-6. **Presentation Deliverables**:
-   - Presentation files included in root: `GrowGarden_Project_Presentation.pptx` and `GrowGarden_Project_Presentation.pdf`.
 
 ---
 
