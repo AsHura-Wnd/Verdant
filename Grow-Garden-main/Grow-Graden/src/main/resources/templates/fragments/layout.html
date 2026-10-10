@@ -21,7 +21,7 @@
             <div class="global-cloud-scrim"></div>
         </div>
 
-        <!-- Aceternity-Inspired Collapsible Floating Sidebar (Desktop >= 992px) -->
+        <!-- Sleek Collapsible Sidebar Docked to Right Edge (Desktop >= 992px) -->
         <aside class="garden-floating-sidebar d-none d-lg-flex" id="gardenFloatingSidebar" aria-label="Main Navigation" aria-expanded="false">
             <!-- Brand & Pin Button -->
             <div class="sidebar-brand-wrapper d-flex align-items-center justify-content-between">
@@ -43,31 +43,31 @@
             <nav class="sidebar-nav-container" aria-label="Sidebar Navigation Links">
                 <ul class="sidebar-nav-list list-unstyled mb-0" role="menubar">
                     <li class="sidebar-nav-item" role="none">
-                        <a th:href="@{/}" class="sidebar-nav-link" th:classappend="${activeTab == 'home'} ? 'active' : ''" th:attr="aria-current=${activeTab == 'home'} ? 'page' : null" role="menuitem" title="Home">
+                        <a th:href="@{/}" class="sidebar-nav-link" th:classappend="${activeTab == 'home'} ? 'active' : ''" th:attr="aria-current=${activeTab == 'home'} ? 'page' : null" role="menuitem" title="Home" aria-label="Home">
                             <span class="nav-icon-box"><i class="bi bi-house-door"></i></span>
                             <span class="nav-label sidebar-expand-text">Home</span>
                         </a>
                     </li>
                     <li class="sidebar-nav-item" role="none">
-                        <a th:href="@{/tips}" class="sidebar-nav-link" th:classappend="${activeTab == 'tips'} ? 'active' : ''" th:attr="aria-current=${activeTab == 'tips'} ? 'page' : null" role="menuitem" title="Gardening Tips">
+                        <a th:href="@{/tips}" class="sidebar-nav-link" th:classappend="${activeTab == 'tips'} ? 'active' : ''" th:attr="aria-current=${activeTab == 'tips'} ? 'page' : null" role="menuitem" title="Gardening Tips" aria-label="Gardening Tips">
                             <span class="nav-icon-box"><i class="bi bi-lightbulb"></i></span>
                             <span class="nav-label sidebar-expand-text">Gardening Tips</span>
                         </a>
                     </li>
                     <li class="sidebar-nav-item" role="none">
-                        <a th:href="@{/discussions}" class="sidebar-nav-link" th:classappend="${activeTab == 'discussions'} ? 'active' : ''" th:attr="aria-current=${activeTab == 'discussions'} ? 'page' : null" role="menuitem" title="Discussions">
+                        <a th:href="@{/discussions}" class="sidebar-nav-link" th:classappend="${activeTab == 'discussions'} ? 'active' : ''" th:attr="aria-current=${activeTab == 'discussions'} ? 'page' : null" role="menuitem" title="Discussions" aria-label="Discussions">
                             <span class="nav-icon-box"><i class="bi bi-chat-dots"></i></span>
                             <span class="nav-label sidebar-expand-text">Discussions</span>
                         </a>
                     </li>
                     <li class="sidebar-nav-item" role="none">
-                        <a th:href="@{/projects}" class="sidebar-nav-link" th:classappend="${activeTab == 'projects'} ? 'active' : ''" th:attr="aria-current=${activeTab == 'projects'} ? 'page' : null" role="menuitem" title="Projects">
+                        <a th:href="@{/projects}" class="sidebar-nav-link" th:classappend="${activeTab == 'projects'} ? 'active' : ''" th:attr="aria-current=${activeTab == 'projects'} ? 'page' : null" role="menuitem" title="Projects" aria-label="Projects">
                             <span class="nav-icon-box"><i class="bi bi-kanban"></i></span>
                             <span class="nav-label sidebar-expand-text">Projects</span>
                         </a>
                     </li>
                     <li class="sidebar-nav-item" role="none">
-                        <a th:href="@{/about}" class="sidebar-nav-link" th:classappend="${activeTab == 'about'} ? 'active' : ''" th:attr="aria-current=${activeTab == 'about'} ? 'page' : null" role="menuitem" title="About">
+                        <a th:href="@{/about}" class="sidebar-nav-link" th:classappend="${activeTab == 'about'} ? 'active' : ''" th:attr="aria-current=${activeTab == 'about'} ? 'page' : null" role="menuitem" title="About" aria-label="About">
                             <span class="nav-icon-box"><i class="bi bi-info-circle"></i></span>
                             <span class="nav-label sidebar-expand-text">About</span>
                         </a>
@@ -76,9 +76,9 @@
             </nav>
 
             <!-- Bottom Action CTA -->
-            <div class="sidebar-footer-cta mt-auto pt-3">
+            <div class="sidebar-footer-cta mt-auto pt-2">
                 <a th:href="@{/projects/new}" class="sidebar-share-btn w-100" aria-label="Share Your Garden" title="Share Your Garden">
-                    <span class="share-btn-icon-box"><i class="bi bi-flower2"></i></span>
+                    <span class="share-btn-icon-box"><i class="bi bi-plus-lg"></i></span>
                     <span class="sidebar-expand-text">Share Your Garden</span>
                 </a>
             </div>
