@@ -1,7 +1,6 @@
 package com.example;
 
 import com.example.domain.advisor.AbstractPlantAdvisor;
-import com.example.domain.advisor.CarePlan;
 import com.example.domain.advisor.DiagnosticResult;
 import com.example.domain.advisor.PlantAdvisorRegistry;
 import com.example.domain.advisor.SucculentAdvisor;
@@ -154,6 +153,7 @@ class GrowGradenApplicationTests {
     }
 
     @Test
+    @SuppressWarnings("null")
     void testFloatingSidebarRendersOnHomePage() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
@@ -178,6 +178,7 @@ class GrowGradenApplicationTests {
     }
 
     @Test
+    @SuppressWarnings("null")
     void testFloatingSidebarRendersOnTipsPage() throws Exception {
         mockMvc.perform(get("/tips"))
                 .andExpect(status().isOk())
@@ -187,6 +188,7 @@ class GrowGradenApplicationTests {
     }
 
     @Test
+    @SuppressWarnings("null")
     void testFloatingSidebarRendersOnDiscussionsPage() throws Exception {
         mockMvc.perform(get("/discussions"))
                 .andExpect(status().isOk())
@@ -196,6 +198,7 @@ class GrowGradenApplicationTests {
     }
 
     @Test
+    @SuppressWarnings("null")
     void testFloatingSidebarRendersOnProjectsPage() throws Exception {
         mockMvc.perform(get("/projects"))
                 .andExpect(status().isOk())
@@ -205,6 +208,7 @@ class GrowGradenApplicationTests {
     }
 
     @Test
+    @SuppressWarnings("null")
     void testFloatingSidebarRendersOnAboutPage() throws Exception {
         mockMvc.perform(get("/about"))
                 .andExpect(status().isOk())
@@ -214,6 +218,7 @@ class GrowGradenApplicationTests {
     }
 
     @Test
+    @SuppressWarnings("null")
     void testEditorialHeroAndFeatureSectionsRenderOnHomePage() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
@@ -228,6 +233,7 @@ class GrowGradenApplicationTests {
     }
 
     @Test
+    @SuppressWarnings("null")
     void testCloudShaderIntegratedGloballyAcrossWebsite() throws Exception {
         // Home page has global cloud canvas and script
         mockMvc.perform(get("/"))
@@ -342,6 +348,7 @@ class GrowGradenApplicationTests {
     }
 
     @Test
+    @SuppressWarnings("null")
     void testCustomExceptionHierarchyAndRestGlobalHandling() throws Exception {
         // Verify exception inheritance
         GardeningTipNotFoundException tipEx = new GardeningTipNotFoundException(99999L);
@@ -370,7 +377,7 @@ class GrowGradenApplicationTests {
         assertEquals("garden", wrapper.getQueryFilter());
 
         // Verify generic type transformation map(Function<T, R>)
-        SearchResultWrapper<Integer> lengthWrapper = wrapper.map(String::length);
+        SearchResultWrapper<Integer> lengthWrapper = wrapper.map(s -> s != null ? s.length() : 0);
         assertEquals(3, lengthWrapper.getTotalCount());
         assertEquals(List.of(8, 5, 7), lengthWrapper.getItems());
         assertTrue((Boolean) lengthWrapper.getMetadata().get("hasResults"));
@@ -393,6 +400,7 @@ class GrowGradenApplicationTests {
     }
 
     @Test
+    @SuppressWarnings("null")
     void testJdbcAndAdvisorRestEndpoints() throws Exception {
         // Direct JDBC metrics endpoint
         mockMvc.perform(get("/api/jdbc/metrics"))

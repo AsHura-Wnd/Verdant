@@ -6,6 +6,8 @@ package com.example.exception;
  */
 public class GardenProjectNotFoundException extends ResourceNotFoundException {
 
+    private static final long serialVersionUID = 1L;
+
     public GardenProjectNotFoundException(Long id) {
         super("Garden Project", id);
     }

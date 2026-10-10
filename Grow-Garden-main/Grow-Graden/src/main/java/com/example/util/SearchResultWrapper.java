@@ -41,6 +41,7 @@ public class SearchResultWrapper<T> {
      * Polymorphic generic method mapping element type T into another type R.
      */
     public <R> SearchResultWrapper<R> map(Function<T, R> mapper) {
+        Objects.requireNonNull(mapper, "mapper must not be null");
         List<R> transformed = new ArrayList<>();
         for (T item : this.items) {
             transformed.add(mapper.apply(item));

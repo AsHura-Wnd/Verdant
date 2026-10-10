@@ -6,6 +6,8 @@ package com.example.exception;
  */
 public class DiscussionQuestionNotFoundException extends ResourceNotFoundException {
 
+    private static final long serialVersionUID = 1L;
+
     public DiscussionQuestionNotFoundException(Long id) {
         super("Discussion Question", id);
     }

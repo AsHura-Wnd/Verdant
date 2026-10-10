@@ -13,6 +13,7 @@ import java.util.List;
 
 @Service
 @Transactional
+@SuppressWarnings("null")
 public class DiscussionServiceImpl implements DiscussionService {
 
     private final DiscussionQuestionRepository questionRepository;

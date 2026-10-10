@@ -85,13 +85,13 @@ public class GardenJdbcDao {
              PreparedStatement pstmt = conn.prepareStatement(sql.toString())) {
 
             int paramIndex = 1;
-            if (hasKeyword) {
+            if (hasKeyword && keyword != null) {
                 String pattern = "%" + keyword.trim().toLowerCase() + "%";
                 pstmt.setString(paramIndex++, pattern);
                 pstmt.setString(paramIndex++, pattern);
                 pstmt.setString(paramIndex++, pattern);
             }
-            if (hasDifficulty) {
+            if (hasDifficulty && difficulty != null) {
                 pstmt.setString(paramIndex++, difficulty.trim().toLowerCase());
             }
 
