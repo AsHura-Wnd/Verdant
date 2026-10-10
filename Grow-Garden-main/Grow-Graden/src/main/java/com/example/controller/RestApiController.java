@@ -52,6 +52,19 @@ public class RestApiController {
     }
 
     // ==========================================
+    // 0. Platform Health Check Endpoint
+    // ==========================================
+
+    @GetMapping("/health")
+    public ResponseEntity<Map<String, Object>> healthCheck() {
+        Map<String, Object> health = new HashMap<>();
+        health.put("status", "UP");
+        health.put("application", "Verdant");
+        health.put("timestamp", System.currentTimeMillis());
+        return ResponseEntity.ok(health);
+    }
+
+    // ==========================================
     // 1. Direct JDBC Endpoints
     // ==========================================
 

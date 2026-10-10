@@ -432,4 +432,13 @@ class GrowGradenApplicationTests {
                 .andExpect(jsonPath("$.plantGroup").value("Succulents & Cacti"))
                 .andExpect(jsonPath("$.wateringIntervalDays").value(14));
     }
+
+    @Test
+    void testPlatformHealthCheckEndpoint() throws Exception {
+        mockMvc.perform(get("/api/health"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("UP"))
+                .andExpect(jsonPath("$.application").value("Verdant"))
+                .andExpect(jsonPath("$.timestamp").isNumber());
+    }
 }

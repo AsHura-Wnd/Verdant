@@ -217,7 +217,7 @@ By default, Verdant uses an **embedded, persistent file-based H2 database** (`./
 
 ## 🧪 Running Automated Tests
 
-Run the project's automated test suite with the Maven Wrapper (18/18 tests pass):
+Run the project's automated test suite with the Maven Wrapper (19/19 tests pass):
 ```bash
 # Windows
 .\mvnw.cmd test
@@ -225,6 +225,122 @@ Run the project's automated test suite with the Maven Wrapper (18/18 tests pass)
 # Linux / macOS
 ./mvnw test
 ```
+
+---
+
+## ☁️ Deploying to Render (Free Web Service)
+
+Verdant is containerized with a production multi-stage Docker build optimized for **Render's Free Web Service plan** (512 MB RAM, 0.1 CPU).
+
+### 🐳 Local Docker Build & Verification
+
+Before deploying to the cloud, you can build and verify the container locally using Docker:
+
+#### 1. Build the Docker Image
+From the repository root directory:
+```bash
+docker build -t verdant:latest .
+```
+
+#### 2. Run the Container
+Map your local port `8080` to the container port:
+```bash
+docker run -d --name verdant-app -p 8080:8080 -e PORT=8080 verdant:latest
+```
+
+#### 3. Test Container Health & Web UI
+```bash
+# Verify health check endpoint (HTTP 200, status: UP)
+curl http://localhost:8080/api/health
+
+# Verify Web Dashboard (HTTP 200)
+curl -I http://localhost:8080/
+```
+
+#### 4. Stop and Clean Up Container
+```bash
+docker stop verdant-app && docker rm verdant-app
+```
+
+---
+
+### 🚀 Step-by-Step Render Deployment Guide
+
+#### Step 1: Create a Render Account
+Sign up or log in at [render.com](https://render.com).
+
+#### Step 2: Create a New Web Service
+1. In the Render Dashboard, click **New +** and select **Web Service**.
+2. Connect your GitHub account and select your repository: `https://github.com/AsHura-Wnd/Verdant`.
+
+#### Step 3: Configure Service Parameters
+Configure the service with the following settings:
+
+| Setting | Recommended Value | Notes |
+|:---|:---|:---|
+| **Name** | `verdant` (or your chosen name) | Forms your free public URL: `https://verdant.onrender.com` |
+| **Region** | Select region closest to you | e.g., Frankfurt, Ohio, Oregon, Singapore |
+| **Branch** | `main` | Production deployment branch |
+| **Root Directory** | *(leave blank / empty)* | Defaults to repository root |
+| **Runtime / Environment** | **Docker** | Render automatically detects the root `Dockerfile` |
+| **Dockerfile Path** | `./Dockerfile` | Standard root Dockerfile location |
+| **Docker Context** | `.` | Repository root build context |
+| **Instance Type** | **Free** ($0/month, 512 MB RAM, 0.1 CPU) | Free tier compute plan |
+
+#### Step 4: Environment Variables (Optional)
+The application works out of the box without requiring manual environment variables. Render automatically injects `PORT` (e.g. `10000`), which Verdant binds to dynamically via `${PORT:8080}`.
+
+Optional configuration variables:
+
+| Variable | Default Value | Description |
+|:---|:---|:---|
+| `PORT` | *(injected by Render)* | Port for Tomcat to bind to (configured via `${PORT:8080}`). |
+| `JAVA_OPTS` | `-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -Xss512k -XX:+ExitOnOutOfMemoryError` | JVM memory tuning configured in `Dockerfile` for 512MB RAM. |
+| `DATA_DIR` | `./data` | File directory for embedded H2 database. |
+
+#### Step 5: Health Check Path
+Under **Advanced Settings** in Render:
+- **Health Check Path:** `/api/health`
+Render periodically polls this endpoint to verify container readiness before directing live traffic.
+
+#### Step 6: Deploy Service
+Click **Create Web Service**. Render will clone the repository, run the multi-stage Docker build, and start the container. Your live application will be accessible at:
+```
+https://<your-service-name>.onrender.com
+```
+
+---
+
+### ⚠️ Database Persistence & Free Tier Notes
+
+1. **H2 Ephemeral Storage on Render Free**:
+   - Render Free instances do not support persistent disk volumes.
+   - The embedded H2 database (`./data/gardendb`) operates inside the container filesystem.
+   - When a free instance spins down after 15 minutes of inactivity or is restarted/redeployed, the container filesystem resets.
+   - **Automatic Seeding**: Verdant's built-in `DataInitializer` automatically re-seeds the complete botanical dataset (gardening tips, plant disease Q&As, and ongoing projects) whenever the database initializes, ensuring the website is always immediately usable.
+   
+2. **Permanent Persistence Option (PostgreSQL)**:
+   - For permanent data storage across redeployments, connect an external managed PostgreSQL database (such as Render PostgreSQL, Supabase, Neon, or ElephantSQL).
+   - In Render's **Environment** tab, set:
+     - `SPRING_DATASOURCE_URL`: `jdbc:postgresql://<host>:<port>/<dbname>`
+     - `SPRING_DATASOURCE_USERNAME`: `<username>`
+     - `SPRING_DATASOURCE_PASSWORD`: `<password>`
+     - `SPRING_DATASOURCE_DRIVER_CLASS_NAME`: `org.postgresql.Driver`
+     - `SPRING_JPA_DATABASE_PLATFORM`: `org.hibernate.dialect.PostgreSQLDialect`
+
+3. **Free Tier Cold Starts**:
+   - Free instances spin down when idle. The first HTTP request after inactivity may take 30–50 seconds to boot the JVM container.
+
+---
+
+### 🔍 Troubleshooting
+
+| Issue | Cause | Resolution |
+|:---|:---|:---|
+| **Build fails: `mvnw: permission denied`** | Missing executable bit on wrapper | The `Dockerfile` includes `RUN chmod +x ./mvnw` and UNIX line ending normalization (`sed -i 's/\r$//' ./mvnw`). |
+| **Container killed (Exit Code 137 / OOM)** | JVM exceeded 512MB RAM | `JAVA_OPTS` in the `Dockerfile` specifies `-XX:MaxRAMPercentage=75.0 -Xss512k` to cap heap at ~384MB and leave room for native memory. |
+| **Port binding error or timeout** | Port mismatch with Render | Verdant dynamically reads `${PORT:8080}` and passes `-Dserver.port=${PORT}` in the Docker ENTRYPOINT. |
+| **Health check failure** | Endpoint slow or unreachable during startup | Ensure the health check path is set to `/api/health`. Free tier initial boot can take ~15-20 seconds. |
 
 ---
 

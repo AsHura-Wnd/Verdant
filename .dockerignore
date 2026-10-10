@@ -1,0 +1,34 @@
+# Version control
+.git
+.gitignore
+.github
+
+# IDE and Editor artifacts
+.vscode/
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+.agents/
+
+# Build artifacts and local target directories
+**/target/
+target/
+*.class
+
+# Local embedded database and runtime data
+**/data/
+data/
+*.mv.db
+*.trace.db
+
+# Documentation & presentation binary files not needed in container
+*.pdf
+*.pptx
+
+# Logs and OS files
+*.log
+logs/
+.DS_Store
+Thumbs.db
