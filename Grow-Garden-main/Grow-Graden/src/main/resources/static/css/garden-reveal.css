@@ -1,7 +1,7 @@
 /* =========================================================================
-   GrowGarden - Scroll-Driven Garden Reveal Experience
-   Scene A: Sky & Clouds (Hero) -> Scene B: Emerging Canopy -> Scene C: Living Garden
-   Fixed Background Behind Content (z-index: -5)
+   GrowGarden - Quiet Botanical Atmosphere (Scroll-Driven Horizon Transition)
+   Scene A: Animated Sky & Clouds (Hero) -> Scene B: Subtle Sage Horizon Transition
+   Concentrated strictly at the bottom edge behind clean content surfaces (z-index: -5)
    ========================================================================= */
 
 :root {
@@ -22,124 +22,76 @@
     z-index: -5;
     overflow: hidden;
     opacity: var(--garden-reveal-opacity, 0);
-    transition: opacity 0.15s ease-out;
+    transition: opacity 0.2s ease-out;
 }
 
-/* Ambient botanical depth layer */
+/* Ambient atmospheric veil: soft transition from sky to warm ivory */
 .garden-ambient-veil {
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at 50% 120%, rgba(18, 53, 38, 0.85) 0%, rgba(27, 69, 52, 0.6) 45%, rgba(63, 107, 91, 0.15) 85%, transparent 100%);
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(244, 240, 229, 0) 30%,
+        rgba(244, 240, 229, 0.45) 60%,
+        rgba(244, 240, 229, 0.88) 100%
+    );
     opacity: var(--garden-reveal-opacity, 0);
     pointer-events: none;
 }
 
-/* Deeper garden environment as user scrolls further */
+/* Soft morning sunlight dapple at the horizon */
 .garden-sunlight-veil {
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse at 75% 25%, rgba(255, 248, 220, 0.18) 0%, rgba(180, 220, 195, 0.08) 50%, transparent 80%),
-                linear-gradient(180deg, transparent 0%, rgba(14, 42, 30, 0.35) 60%, rgba(10, 32, 22, 0.72) 100%);
+    background: radial-gradient(
+        ellipse at 50% 100%,
+        rgba(178, 199, 186, 0.22) 0%,
+        rgba(244, 240, 229, 0.15) 45%,
+        transparent 75%
+    );
     opacity: var(--garden-deep-opacity, 0);
     pointer-events: none;
 }
 
-/* Layer positioning */
-.garden-layer {
+/* Faint distant horizon silhouette - concentrated strictly near the bottom edge */
+.garden-horizon-silhouette {
     position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
     width: 100%;
+    height: clamp(90px, 12vh, 140px);
     pointer-events: none;
+    transform: translate3d(0, calc(15px - var(--garden-p-distant, 0px) * 0.25), 0);
+    opacity: calc(var(--garden-reveal-opacity, 0) * 0.55);
     will-change: transform;
 }
 
-/* Distant canopy */
-.garden-canopy-distant {
-    height: 48vh;
-    min-height: 280px;
-    max-height: 500px;
-    transform: translate3d(0, calc(40px - var(--garden-p-distant, 0px)), 0);
-    opacity: calc(var(--garden-reveal-opacity, 0) * 0.9);
-}
-
-.garden-svg-backdrop {
+.garden-svg-horizon {
     width: 100%;
     height: 100%;
     display: block;
     filter: blur(1.5px);
 }
 
-/* Midground foliage */
-.garden-foliage-midground {
-    height: 42vh;
-    min-height: 240px;
-    max-height: 440px;
-    transform: translate3d(0, calc(60px - var(--garden-p-mid, 0px)), 0);
-    opacity: var(--garden-reveal-opacity, 0);
-}
-
-.garden-svg-midground {
-    width: 100%;
-    height: 100%;
-    display: block;
-}
-
-/* Foreground botanical fronds */
-.garden-frond {
-    position: absolute;
-    bottom: -30px;
-    pointer-events: none;
-    will-change: transform;
-    opacity: var(--garden-reveal-opacity, 0);
-    transition: opacity 0.2s ease-out;
-}
-
-.garden-frond-left {
-    left: -20px;
-    width: clamp(220px, 24vw, 380px);
-    height: auto;
-    transform: translate3d(0, calc(90px - var(--garden-p-fore, 0px)), 0);
-}
-
-.garden-frond-right {
-    right: -20px;
-    width: clamp(240px, 26vw, 400px);
-    height: auto;
-    transform: translate3d(0, calc(100px - var(--garden-p-fore, 0px)), 0);
-}
-
-.garden-frond svg {
-    width: 100%;
-    height: auto;
-    display: block;
-    filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.2));
-}
-
-/* Photographic Garden Horizon Layer */
-.garden-layer-panorama {
+/* Delicate botanical shadow / minimal stalks along bottom edge */
+.garden-botanical-shadow {
     position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
     width: 100%;
-    height: 72vh;
-    min-height: 480px;
+    height: clamp(50px, 7vh, 80px);
     pointer-events: none;
-    z-index: 1;
-    mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.45) 20%, rgba(0, 0, 0, 0.95) 55%, #000000 100%);
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.45) 20%, rgba(0, 0, 0, 0.95) 55%, #000000 100%);
-    transform: translate3d(0, calc(20px - var(--garden-p-distant, 0px) * 0.35), 0);
+    transform: translate3d(0, calc(10px - var(--garden-p-mid, 0px) * 0.2), 0);
+    opacity: calc(var(--garden-reveal-opacity, 0) * 0.4);
     will-change: transform;
-    opacity: 0.94;
 }
 
-.garden-layer-panorama img {
+.garden-svg-shadow {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    object-position: center bottom;
     display: block;
 }
 
@@ -149,11 +101,8 @@
         opacity: 0.85 !important;
         transition: none !important;
     }
-    .garden-canopy-distant,
-    .garden-foliage-midground,
-    .garden-frond-left,
-    .garden-frond-right,
-    .garden-layer-panorama {
+    .garden-horizon-silhouette,
+    .garden-botanical-shadow {
         transform: none !important;
         will-change: auto !important;
     }

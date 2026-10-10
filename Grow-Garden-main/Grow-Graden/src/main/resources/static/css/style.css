@@ -962,17 +962,33 @@ body.navbar-mobile-open {
 }
 
 /* =========================================================================
+   Verdant Lower Content Canvas (Clean Warm-Ivory Editorial Surface)
+   ========================================================================= */
+
+.verdant-lower-canvas {
+    background: rgba(244, 240, 229, 0.94);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(16, 44, 33, 0.08);
+    border-radius: 28px;
+    padding: 44px 36px 36px 36px;
+    box-shadow: 0 16px 44px rgba(16, 44, 33, 0.04);
+}
+
+@media (max-width: 768px) {
+    .verdant-lower-canvas {
+        padding: 24px 16px;
+        border-radius: 20px;
+    }
+}
+
+/* =========================================================================
    Featured Tips (Editorial Photographic Presentation)
    ========================================================================= */
 
 .verdant-section-header {
-    background: rgba(244, 240, 229, 0.90);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(16, 44, 33, 0.08);
-    border-radius: 18px;
-    padding: 14px 22px;
-    box-shadow: 0 4px 16px rgba(16, 44, 33, 0.04);
+    padding: 0 0 14px 0;
+    margin-bottom: 1.5rem;
 }
 
 .editorial-section-heading {
@@ -996,20 +1012,20 @@ body.navbar-mobile-open {
 }
 
 .editorial-tip-card {
-    background: var(--verdant-ivory);
+    background: #ffffff;
     border: 1px solid rgba(16, 44, 33, 0.08);
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 8px 24px rgba(16, 44, 33, 0.06);
+    box-shadow: 0 4px 16px rgba(16, 44, 33, 0.04);
     display: flex;
     flex-direction: column;
     position: relative;
-    transition: transform 0.24s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.24s ease;
+    transition: transform 0.24s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.24s ease, border-color 0.24s ease;
 }
 
 .editorial-tip-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 16px 36px rgba(16, 44, 33, 0.12);
+    box-shadow: 0 14px 32px rgba(16, 44, 33, 0.1);
     border-color: rgba(16, 44, 33, 0.18);
 }
 
@@ -1096,10 +1112,10 @@ body.navbar-mobile-open {
    ========================================================================= */
 
 .editorial-container-card {
-    background: var(--verdant-ivory);
+    background: #ffffff;
     border: 1px solid rgba(16, 44, 33, 0.08);
     border-radius: 22px;
-    box-shadow: 0 10px 30px rgba(16, 44, 33, 0.07);
+    box-shadow: 0 4px 18px rgba(16, 44, 33, 0.04);
 }
 
 .editorial-block-heading {

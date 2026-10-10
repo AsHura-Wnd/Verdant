@@ -11,74 +11,39 @@
     <link rel="stylesheet" th:href="@{/css/garden-reveal.css}" href="/css/garden-reveal.css">
 
     <div class="scroll-garden-reveal-container" id="scrollGardenReveal" aria-hidden="true">
-        <!-- Ambient Botanical Veil -->
+        <!-- Ambient Botanical Veil (Gentle atmospheric transition from sky to warm ivory) -->
         <div class="garden-ambient-veil"></div>
 
-        <!-- Real Photographic Landscape Horizon (Seamless Blend with CloudShader) -->
-        <div class="garden-layer garden-layer-panorama">
-            <img th:src="@{/img/hero-garden-landscape.jpg}" src="/img/hero-garden-landscape.jpg" alt="" />
-        </div>
-
-        <!-- Distant Forest Canopy Silhouettes (Parallax rate: 0.12) -->
-        <div class="garden-layer garden-canopy-distant">
-            <svg class="garden-svg-backdrop" viewBox="0 0 1440 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Pale Distant Horizon Silhouette (Restrained sage landscape at bottom edge) -->
+        <div class="garden-horizon-silhouette">
+            <svg class="garden-svg-horizon" viewBox="0 0 1440 140" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                    <linearGradient id="canopyGradDistant" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stop-color="#2d5e4b" stop-opacity="0.35"/>
-                        <stop offset="60%" stop-color="#1b4534" stop-opacity="0.75"/>
-                        <stop offset="100%" stop-color="#0e2a1e" stop-opacity="0.95"/>
+                    <linearGradient id="paleHorizonGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#9db3a4" stop-opacity="0.22"/>
+                        <stop offset="50%" stop-color="#88a192" stop-opacity="0.35"/>
+                        <stop offset="100%" stop-color="#708b7c" stop-opacity="0.5"/>
                     </linearGradient>
                 </defs>
-                <path fill="url(#canopyGradDistant)" d="M0,260 Q120,200 240,240 T480,210 T720,250 T960,195 T1200,240 T1440,215 L1440,400 L0,400 Z" />
-                <path fill="url(#canopyGradDistant)" opacity="0.6" d="M0,290 Q160,230 320,270 T640,240 T960,260 T1280,230 T1440,255 L1440,400 L0,400 Z" />
+                <path fill="url(#paleHorizonGrad)" d="M0,80 Q160,55 340,70 T700,55 T1060,72 T1440,62 L1440,140 L0,140 Z"/>
+                <path fill="url(#paleHorizonGrad)" opacity="0.55" d="M0,95 Q200,75 420,88 T860,80 T1260,92 T1440,85 L1440,140 L0,140 Z"/>
             </svg>
         </div>
 
-        <!-- Midground Lush Foliage & Fern Layer (Parallax rate: 0.22) -->
-        <div class="garden-layer garden-foliage-midground">
-            <svg class="garden-svg-midground" viewBox="0 0 1440 420" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Soft Botanical Shadows & Minimal Stems (Restrained at bottom edge) -->
+        <div class="garden-botanical-shadow">
+            <svg class="garden-svg-shadow" viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                    <linearGradient id="midLeavesGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stop-color="#3b7a5e" stop-opacity="0.7"/>
-                        <stop offset="50%" stop-color="#21543e" stop-opacity="0.9"/>
-                        <stop offset="100%" stop-color="#123526" stop-opacity="0.98"/>
+                    <linearGradient id="botanicalShadowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#6b8675" stop-opacity="0.16"/>
+                        <stop offset="100%" stop-color="#557060" stop-opacity="0.28"/>
                     </linearGradient>
                 </defs>
-                <path fill="url(#midLeavesGrad)" d="M0,310 C60,250 110,230 170,260 C230,290 280,220 360,235 C440,250 510,180 600,220 C690,260 760,210 850,240 C940,270 1020,190 1120,230 C1220,270 1310,210 1440,270 L1440,420 L0,420 Z"/>
-                <path fill="url(#midLeavesGrad)" opacity="0.55" d="M-20,340 C80,280 160,270 240,300 C320,330 420,260 520,290 C620,320 710,250 820,280 C930,310 1050,250 1180,290 C1310,330 1380,270 1460,310 L1460,420 L-20,420 Z"/>
+                <!-- Delicate minimal botanical outlines along bottom edge -->
+                <path fill="url(#botanicalShadowGrad)" d="M0,52 Q120,44 240,49 Q300,34 310,26 Q320,36 360,48 Q500,42 640,49 Q720,32 735,22 Q750,34 800,47 Q980,44 1120,49 Q1200,30 1215,20 Q1230,32 1280,47 Q1360,45 1440,52 L1440,80 L0,80 Z"/>
             </svg>
         </div>
 
-        <!-- Foreground Botanical Fronds & Tropical Foliage (Parallax rate: 0.36) -->
-        <div class="garden-frond garden-frond-left">
-            <svg viewBox="0 0 320 540" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMax meet">
-                <defs>
-                    <linearGradient id="frondLeftGrad" x1="10%" y1="0%" x2="90%" y2="100%">
-                        <stop offset="0%" stop-color="#4aa77c" stop-opacity="0.85"/>
-                        <stop offset="60%" stop-color="#235d45" stop-opacity="0.92"/>
-                        <stop offset="100%" stop-color="#103625" stop-opacity="0.98"/>
-                    </linearGradient>
-                </defs>
-                <path fill="url(#frondLeftGrad)" d="M-60,540 C-30,420 20,320 110,240 C140,213 185,185 240,170 C220,210 185,245 155,275 C210,250 260,245 305,250 C265,285 220,315 175,335 C230,325 280,335 315,355 C270,380 220,400 170,410 C215,410 255,425 280,450 C235,465 185,470 135,475 C85,480 0,510 -60,540 Z"/>
-                <path fill="url(#frondLeftGrad)" opacity="0.7" d="M-80,540 C-40,360 40,240 160,140 C190,115 225,95 270,80 C245,125 205,160 170,195 C230,170 280,165 315,180 C270,215 215,245 165,265 C115,285 -20,440 -80,540 Z"/>
-            </svg>
-        </div>
-
-        <div class="garden-frond garden-frond-right">
-            <svg viewBox="0 0 340 560" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMaxYMax meet">
-                <defs>
-                    <linearGradient id="frondRightGrad" x1="90%" y1="0%" x2="10%" y2="100%">
-                        <stop offset="0%" stop-color="#52b788" stop-opacity="0.82"/>
-                        <stop offset="55%" stop-color="#286b50" stop-opacity="0.92"/>
-                        <stop offset="100%" stop-color="#123d2a" stop-opacity="0.98"/>
-                    </linearGradient>
-                </defs>
-                <path fill="url(#frondRightGrad)" d="M400,560 C370,430 310,320 220,230 C190,200 140,170 80,150 C105,195 145,235 180,270 C120,240 65,235 15,245 C65,280 115,315 165,340 C105,330 50,340 10,365 C60,395 115,415 170,425 C120,425 75,445 45,475 C95,490 150,490 205,490 C260,490 350,520 400,560 Z"/>
-                <path fill="url(#frondRightGrad)" opacity="0.65" d="M420,560 C380,370 290,240 160,130 C125,100 85,80 35,65 C65,115 110,155 150,190 C85,165 30,165 -10,185 C40,220 100,255 155,275 C210,295 360,450 420,560 Z"/>
-            </svg>
-        </div>
-
-        <!-- Sunlight & Morning Conservatory Ray Dapples -->
+        <!-- Atmospheric Morning Sunlight Veil -->
         <div class="garden-sunlight-veil"></div>
     </div>
 
@@ -235,127 +200,130 @@
             </div>
         </section>
 
-        <!-- Featured Gardening Tips (Editorial Photographic Presentation) -->
-        <section class="mb-5 pt-3">
-            <div class="verdant-section-header d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
-                <div>
-                    <span class="text-uppercase small fw-bold text-success" style="letter-spacing: 0.8px; font-size: 0.75rem;">Community Highlights</span>
-                    <h2 class="editorial-section-heading mb-0">Featured Gardening Tips</h2>
+        <!-- Calm Warm-Ivory Content Canvas for Lower Sections -->
+        <div class="verdant-lower-canvas mb-5">
+            <!-- Featured Gardening Tips (Editorial Photographic Presentation) -->
+            <section class="mb-5">
+                <div class="verdant-section-header d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
+                    <div>
+                        <span class="text-uppercase small fw-bold text-success" style="letter-spacing: 0.8px; font-size: 0.75rem;">Community Highlights</span>
+                        <h2 class="editorial-section-heading mb-0">Featured Gardening Tips</h2>
+                    </div>
+                    <a th:href="@{/tips}" class="editorial-link-subtle">
+                        View Complete Journal <i class="bi bi-chevron-right ms-1"></i>
+                    </a>
                 </div>
-                <a th:href="@{/tips}" class="editorial-link-subtle">
-                    View Complete Journal <i class="bi bi-chevron-right ms-1"></i>
-                </a>
-            </div>
 
-            <div class="row g-4">
-                <div class="col-md-6 col-lg-3" th:each="tip, iterStat : ${featuredTips}">
-                    <div class="editorial-tip-card h-100">
-                        <div class="editorial-img-container" th:if="${tip.imageUrl != null}">
-                            <img th:src="${tip.imageUrl}"
-                                 alt="Plant tip photograph"
-                                 class="editorial-img"
-                                 th:attr="onerror=${'this.src=''https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=800&q=80'''}" />
-                        </div>
-                        <div class="editorial-tip-body p-3 d-flex flex-column flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="badge-category-pill" th:text="${tip.category}">Plant Care</span>
-                                <span class="badge-difficulty-pill"
-                                      th:classappend="${tip.difficultyLevel == 'Beginner' ? 'diff-beginner' : (tip.difficultyLevel == 'Intermediate' ? 'diff-intermediate' : 'diff-advanced')}"
-                                      th:text="${tip.difficultyLevel}">Beginner</span>
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-3" th:each="tip, iterStat : ${featuredTips}">
+                        <div class="editorial-tip-card h-100">
+                            <div class="editorial-img-container" th:if="${tip.imageUrl != null}">
+                                <img th:src="${tip.imageUrl}"
+                                     alt="Plant tip photograph"
+                                     class="editorial-img"
+                                     th:attr="onerror=${'this.src=''https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=800&q=80'''}" />
                             </div>
-                            <h5 class="editorial-tip-title mb-2">
-                                <a th:href="@{/tips/{id}(id=${tip.id})}" class="stretched-link text-decoration-none" th:text="${tip.title}">
-                                    Tip Title
-                                </a>
-                            </h5>
-                            <p class="editorial-tip-summary small mb-3 flex-grow-1" th:text="${tip.summary}">
-                                Summary of the tip...
-                            </p>
-                            <div class="editorial-tip-meta pt-2 d-flex justify-content-between align-items-center small">
-                                <span class="author-label"><i class="bi bi-person me-1"></i> <span th:text="${tip.author}">Author</span></span>
-                                <span class="likes-label"><i class="bi bi-heart-fill text-danger me-1"></i> <span th:text="${tip.likesCount}">0</span></span>
+                            <div class="editorial-tip-body p-3 d-flex flex-column flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="badge-category-pill" th:text="${tip.category}">Plant Care</span>
+                                    <span class="badge-difficulty-pill"
+                                          th:classappend="${tip.difficultyLevel == 'Beginner' ? 'diff-beginner' : (tip.difficultyLevel == 'Intermediate' ? 'diff-intermediate' : 'diff-advanced')}"
+                                          th:text="${tip.difficultyLevel}">Beginner</span>
+                                </div>
+                                <h5 class="editorial-tip-title mb-2">
+                                    <a th:href="@{/tips/{id}(id=${tip.id})}" class="stretched-link text-decoration-none" th:text="${tip.title}">
+                                        Tip Title
+                                    </a>
+                                </h5>
+                                <p class="editorial-tip-summary small mb-3 flex-grow-1" th:text="${tip.summary}">
+                                    Summary of the tip...
+                                </p>
+                                <div class="editorial-tip-meta pt-2 d-flex justify-content-between align-items-center small">
+                                    <span class="author-label"><i class="bi bi-person me-1"></i> <span th:text="${tip.author}">Author</span></span>
+                                    <span class="likes-label"><i class="bi bi-heart-fill text-danger me-1"></i> <span th:text="${tip.likesCount}">0</span></span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Two Columns: Recent Community Q&A and Active Projects -->
-        <section class="row g-4 mb-5">
-            <!-- Left: Community Discussions -->
-            <div class="col-lg-6">
-                <div class="editorial-container-card p-4 h-100">
-                    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-10">
-                        <div>
-                            <span class="text-uppercase small fw-bold text-success" style="font-size: 0.72rem; letter-spacing: 0.6px;">Botanical Advice</span>
-                            <h3 class="editorial-block-heading mb-0">Recent Community Q&A</h3>
-                        </div>
-                        <a th:href="@{/discussions}" class="editorial-link-subtle small">
-                            All Questions <i class="bi bi-arrow-right"></i>
-                        </a>
-                    </div>
-                    <div class="list-group list-group-flush">
-                        <div class="list-group-item bg-transparent border-bottom border-secondary border-opacity-10 px-0 py-3" th:each="q : ${recentQuestions}">
-                            <div class="d-flex justify-content-between align-items-start mb-1 gap-2">
-                                <a th:href="@{/discussions/{id}(id=${q.id})}" class="editorial-question-link fw-bold text-decoration-none" th:text="${q.title}">
-                                    Question title?
-                                </a>
-                                <span th:if="${q.resolved}" class="badge-status-pill status-solved flex-shrink-0">Solved</span>
-                                <span th:unless="${q.resolved}" class="badge-status-pill status-open flex-shrink-0">Open</span>
+            <!-- Two Columns: Recent Community Q&A and Active Projects -->
+            <section class="row g-4">
+                <!-- Left: Community Discussions -->
+                <div class="col-lg-6">
+                    <div class="editorial-container-card p-4 h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-10">
+                            <div>
+                                <span class="text-uppercase small fw-bold text-success" style="font-size: 0.72rem; letter-spacing: 0.6px;">Botanical Advice</span>
+                                <h3 class="editorial-block-heading mb-0">Recent Community Q&A</h3>
                             </div>
-                            <p class="text-muted small mb-2 text-truncate" th:text="${q.description}">Description text...</p>
-                            <div class="d-flex flex-wrap gap-3 small text-muted">
-                                <span><i class="bi bi-tag text-success me-1"></i> <span th:text="${q.category}">Category</span></span>
-                                <span><i class="bi bi-chat-dots me-1"></i> <span th:text="${q.replies.size()}">0</span> replies</span>
-                                <span><i class="bi bi-person me-1"></i> <span th:text="${q.author}">Author</span></span>
+                            <a th:href="@{/discussions}" class="editorial-link-subtle small">
+                                All Questions <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item bg-transparent border-bottom border-secondary border-opacity-10 px-0 py-3" th:each="q : ${recentQuestions}">
+                                <div class="d-flex justify-content-between align-items-start mb-1 gap-2">
+                                    <a th:href="@{/discussions/{id}(id=${q.id})}" class="editorial-question-link fw-bold text-decoration-none" th:text="${q.title}">
+                                        Question title?
+                                    </a>
+                                    <span th:if="${q.resolved}" class="badge-status-pill status-solved flex-shrink-0">Solved</span>
+                                    <span th:unless="${q.resolved}" class="badge-status-pill status-open flex-shrink-0">Open</span>
+                                </div>
+                                <p class="text-muted small mb-2 text-truncate" th:text="${q.description}">Description text...</p>
+                                <div class="d-flex flex-wrap gap-3 small text-muted">
+                                    <span><i class="bi bi-tag text-success me-1"></i> <span th:text="${q.category}">Category</span></span>
+                                    <span><i class="bi bi-chat-dots me-1"></i> <span th:text="${q.replies.size()}">0</span> replies</span>
+                                    <span><i class="bi bi-person me-1"></i> <span th:text="${q.author}">Author</span></span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="mt-3 pt-2 text-center">
-                        <a th:href="@{/discussions/new}" class="btn btn-editorial-outline btn-sm w-100">
-                            <i class="bi bi-question-circle me-1"></i> Ask the Community
-                        </a>
+                        <div class="mt-3 pt-2 text-center">
+                            <a th:href="@{/discussions/new}" class="btn btn-editorial-outline btn-sm w-100">
+                                <i class="bi bi-question-circle me-1"></i> Ask the Community
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Right: Active Gardening Projects -->
-            <div class="col-lg-6">
-                <div class="editorial-container-card p-4 h-100">
-                    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-10">
-                        <div>
-                            <span class="text-uppercase small fw-bold text-success" style="font-size: 0.72rem; letter-spacing: 0.6px;">Cultivation Journals</span>
-                            <h3 class="editorial-block-heading mb-0">Ongoing Garden Projects</h3>
-                        </div>
-                        <a th:href="@{/projects}" class="editorial-link-subtle small">
-                            All Projects <i class="bi bi-arrow-right"></i>
-                        </a>
-                    </div>
-                    <div class="list-group list-group-flush">
-                        <div class="list-group-item bg-transparent border-bottom border-secondary border-opacity-10 px-0 py-3" th:each="proj : ${recentProjects}">
-                            <div class="d-flex justify-content-between align-items-start mb-1 gap-2">
-                                <a th:href="@{/projects/{id}(id=${proj.id})}" class="editorial-project-link fw-bold text-decoration-none" th:text="${proj.title}">
-                                    Project title
-                                </a>
-                                <span class="badge-status-pill status-project flex-shrink-0" th:text="${proj.status}">In Progress</span>
+                <!-- Right: Active Gardening Projects -->
+                <div class="col-lg-6">
+                    <div class="editorial-container-card p-4 h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-10">
+                            <div>
+                                <span class="text-uppercase small fw-bold text-success" style="font-size: 0.72rem; letter-spacing: 0.6px;">Cultivation Journals</span>
+                                <h3 class="editorial-block-heading mb-0">Ongoing Garden Projects</h3>
                             </div>
-                            <p class="text-muted small mb-2 text-truncate" th:text="${proj.description}">Description...</p>
-                            <div class="d-flex flex-wrap gap-3 small text-muted">
-                                <span><i class="bi bi-flower3 text-success me-1"></i> <span th:text="${proj.plantType}">Plant</span></span>
-                                <span><i class="bi bi-geo-alt text-secondary me-1"></i> <span th:text="${proj.location}">Location</span></span>
-                                <span><i class="bi bi-person me-1"></i> <span th:text="${proj.gardenerName}">Gardener</span></span>
+                            <a th:href="@{/projects}" class="editorial-link-subtle small">
+                                All Projects <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                        <div class="list-group list-group-flush">
+                            <div class="list-group-item bg-transparent border-bottom border-secondary border-opacity-10 px-0 py-3" th:each="proj : ${recentProjects}">
+                                <div class="d-flex justify-content-between align-items-start mb-1 gap-2">
+                                    <a th:href="@{/projects/{id}(id=${proj.id})}" class="editorial-project-link fw-bold text-decoration-none" th:text="${proj.title}">
+                                        Project title
+                                    </a>
+                                    <span class="badge-status-pill status-project flex-shrink-0" th:text="${proj.status}">In Progress</span>
+                                </div>
+                                <p class="text-muted small mb-2 text-truncate" th:text="${proj.description}">Description...</p>
+                                <div class="d-flex flex-wrap gap-3 small text-muted">
+                                    <span><i class="bi bi-flower3 text-success me-1"></i> <span th:text="${proj.plantType}">Plant</span></span>
+                                    <span><i class="bi bi-geo-alt text-secondary me-1"></i> <span th:text="${proj.location}">Location</span></span>
+                                    <span><i class="bi bi-person me-1"></i> <span th:text="${proj.gardenerName}">Gardener</span></span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="mt-3 pt-2 text-center">
-                        <a th:href="@{/projects/new}" class="btn btn-editorial-outline btn-sm w-100">
-                            <i class="bi bi-plus-circle me-1"></i> Start a Garden Journal
-                        </a>
+                        <div class="mt-3 pt-2 text-center">
+                            <a th:href="@{/projects/new}" class="btn btn-editorial-outline btn-sm w-100">
+                                <i class="bi bi-plus-circle me-1"></i> Start a Garden Journal
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </div>
     </main>
 
     <!-- Footer -->
