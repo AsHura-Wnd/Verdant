@@ -4,19 +4,33 @@
    ======================================================== */
 
 :root {
-    --garden-dark: #143828;
+    /* Verdant Cohesive Botanical Identity Palette */
+    --verdant-ivory: #F4F0E5;
+    --verdant-forest: #244735;
+    --verdant-sage: #B8CBB1;
+    --verdant-deep: #102C21;
+    --verdant-mint: #74C69D;
+    --verdant-mint-subtle: #d8f3dc;
+    --verdant-stone: #eae5d8;
+    --verdant-border: rgba(16, 44, 33, 0.12);
+    --verdant-text-dark: #102C21;
+    --verdant-text-body: #233e31;
+    --verdant-text-muted: #4a6355;
+
+    /* Legacy compatible variables */
+    --garden-dark: #102C21;
     --garden-darker: #0c2117;
-    --garden-primary: #235d45;
+    --garden-primary: #244735;
     --garden-accent: #3a8262;
     --garden-light: #52b788;
-    --garden-soft: #74c69d;
-    --garden-pale: #e8f5e9;
+    --garden-soft: #74C69D;
+    --garden-pale: #F4F0E5;
     --garden-cream: #faf8f2;
-    --garden-surface: #ffffff;
-    --garden-stone: #f4f1ea;
+    --garden-surface: #F4F0E5;
+    --garden-stone: #eae5d8;
     --garden-border: #e2ddd5;
-    --garden-text: #1f2937;
-    --garden-text-muted: #576574;
+    --garden-text: #102C21;
+    --garden-text-muted: #4a6355;
     --garden-earth: #8d7053;
     --garden-warning: #d97706;
     --garden-success: #15803d;
@@ -25,12 +39,12 @@
     --sidebar-collapsed-w: 52px;
     --sidebar-expanded-w: 230px;
 
-    --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.04);
-    --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.09);
+    --shadow-sm: 0 2px 6px rgba(16, 44, 33, 0.04);
+    --shadow-md: 0 6px 18px rgba(16, 44, 33, 0.07);
+    --shadow-lg: 0 14px 34px rgba(16, 44, 33, 0.10);
     --radius-sm: 8px;
     --radius-md: 14px;
-    --radius-lg: 20px;
+    --radius-lg: 22px;
 }
 
 /* =========================================================================
@@ -76,9 +90,9 @@ html, body {
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     background-color: transparent;
-    color: var(--garden-text);
+    color: var(--verdant-text-dark);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -86,19 +100,29 @@ body {
     padding: 0;
 }
 
-/* Desktop layout spacing: Attached right-rail leaves maximum room for page content */
+/* Desktop layout spacing & genuine dynamic content-reflow */
 @media (min-width: 992px) {
     body {
         padding-left: 0;
         padding-right: var(--sidebar-collapsed-w); /* 52px */
         transition: padding-right 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     }
+    body:has(.garden-floating-sidebar:hover),
+    body:has(.garden-floating-sidebar.is-hovered),
+    body.sidebar-hovered,
     body.sidebar-pinned {
         padding-left: 0;
-        padding-right: var(--sidebar-expanded-w); /* 230px */
+        padding-right: var(--sidebar-expanded-w); /* 230px, exactly 178px narrowing delta */
     }
     .container {
         max-width: min(100%, 1240px);
+        transition: max-width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .verdant-main-container {
+        max-width: min(100%, 1320px);
+        margin-left: auto;
+        margin-right: auto;
+        transition: max-width 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     }
 }
 
@@ -593,217 +617,369 @@ body.navbar-mobile-open {
 }
 
 /* =========================================================================
-   Botanical Editorial Hero Section (Airy, Transparent to CloudShader)
+   Verdant Top Navigation Header (Brand & Search Pill)
    ========================================================================= */
 
-.hero-editorial-section {
+.verdant-top-header {
     position: relative;
-    padding-top: 1rem;
+    z-index: 20;
 }
 
-.editorial-badge {
-    display: inline-flex;
+.verdant-brand {
+    color: var(--verdant-deep);
+}
+
+.verdant-logo-box {
+    width: 38px;
+    height: 38px;
+    display: flex;
     align-items: center;
-    padding: 6px 16px;
+    justify-content: center;
+    color: var(--verdant-deep);
+}
+
+.verdant-leaf-svg {
+    width: 28px;
+    height: 28px;
+}
+
+.verdant-brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.05;
+}
+
+.verdant-brand-name {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--verdant-deep);
+    letter-spacing: -0.01em;
+}
+
+.verdant-brand-tagline {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--verdant-forest);
+    text-transform: uppercase;
+}
+
+/* Header Translucent Search Pill */
+.verdant-search-form {
+    position: relative;
+    background: rgba(244, 240, 229, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(16, 44, 33, 0.14);
     border-radius: 9999px;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(82, 183, 136, 0.35);
-    color: var(--garden-dark);
-    font-weight: 600;
+    padding: 7px 16px;
+    box-shadow: 0 4px 14px rgba(16, 44, 33, 0.05);
+    transition: all 0.22s ease;
+    width: 290px;
+}
+
+.verdant-search-form:focus-within {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: var(--verdant-forest);
+    box-shadow: 0 6px 20px rgba(16, 44, 33, 0.12);
+    width: 320px;
+}
+
+.verdant-search-form .search-icon {
+    color: var(--verdant-forest);
+    font-size: 0.85rem;
+    margin-right: 8px;
+}
+
+.verdant-search-input {
+    border: none;
+    background: transparent;
+    outline: none;
     font-size: 0.82rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    color: var(--verdant-deep);
+    width: 100%;
+    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-.hero-editorial-headline {
-    font-size: clamp(2.3rem, 4vw, 3.6rem);
-    font-weight: 800;
-    color: var(--garden-dark);
-    line-height: 1.14;
-    letter-spacing: -0.025em;
-    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.85), 0 2px 14px rgba(255, 255, 255, 0.45);
+.verdant-search-input::placeholder {
+    color: rgba(16, 44, 33, 0.55);
 }
 
-.headline-serif-accent {
-    font-family: Georgia, "Times New Roman", serif;
-    font-style: italic;
-    font-weight: 400;
-    color: var(--garden-primary);
-}
-
-.hero-editorial-subtitle {
-    font-size: 1.15rem;
-    color: #244234;
-    line-height: 1.65;
-    max-width: 740px;
-    font-weight: 450;
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6);
-}
-
-/* Two Primary Editorial Actions */
-.btn-editorial-primary {
-    background-color: var(--garden-dark);
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
+.search-badge {
+    background: rgba(16, 44, 33, 0.08);
+    color: var(--verdant-forest);
+    font-size: 0.7rem;
     font-weight: 600;
-    font-size: 0.95rem;
-    box-shadow: 0 4px 16px rgba(20, 56, 40, 0.28);
-    transition: all 0.22s ease;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-}
-
-.btn-editorial-primary:hover {
-    background-color: var(--garden-darker);
-    color: #ffffff;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(20, 56, 40, 0.38);
-}
-
-.btn-editorial-secondary {
-    background: rgba(255, 255, 255, 0.88);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    color: var(--garden-dark);
-    border: 1px solid rgba(20, 56, 40, 0.25);
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    transition: all 0.22s ease;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-}
-
-.btn-editorial-secondary:hover {
-    background: #ffffff;
-    color: var(--garden-primary);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-    border-color: var(--garden-primary);
-}
-
-/* Subtle Integrated Metrics Strip */
-.hero-metrics-strip {
-    border-top: 1px solid rgba(20, 56, 40, 0.12);
-}
-
-.metric-item {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 7px;
-}
-
-.metric-num {
-    font-size: 1.5rem;
-    font-weight: 750;
-    color: var(--garden-dark);
+    padding: 2px 7px;
+    border-radius: 6px;
     line-height: 1;
 }
 
-.metric-label {
-    font-size: 0.82rem;
-    font-weight: 550;
-    color: #3f5e4f;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.metric-separator {
-    color: rgba(20, 56, 40, 0.35);
-    font-size: 0.95rem;
-}
-
 /* =========================================================================
-   Three Botanical Feature Sections (Consistent Botanical System)
+   Verdant Botanical Hero Section
    ========================================================================= */
 
-.editorial-feature-card {
-    background: rgba(255, 255, 255, 0.88);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(226, 221, 213, 0.8);
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+.verdant-hero-section {
+    position: relative;
+    padding: 1.5rem 0 2rem 0;
+}
+
+.verdant-eyebrow-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 18px;
+    border-radius: 9999px;
+    background: rgba(244, 240, 229, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(16, 44, 33, 0.12);
+    color: var(--verdant-forest);
+    font-weight: 600;
+    font-size: 0.82rem;
+    box-shadow: 0 2px 8px rgba(16, 44, 33, 0.04);
+}
+
+.verdant-hero-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(2.4rem, 4.4vw, 3.8rem);
+    font-weight: 700;
+    color: var(--verdant-deep);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.85);
+}
+
+.verdant-hero-italic {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--verdant-forest);
+}
+
+.verdant-hero-subtitle {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.05rem;
+    color: #274435;
+    line-height: 1.65;
+    max-width: 680px;
+    font-weight: 450;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.65);
+}
+
+/* Hero Dual Pill Action Buttons */
+.btn-verdant-primary {
+    background-color: var(--verdant-deep);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.94rem;
+    padding: 12px 26px;
+    box-shadow: 0 6px 18px rgba(16, 44, 33, 0.3);
+    transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-verdant-primary:hover {
+    background-color: #1a4533;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(16, 44, 33, 0.4);
+}
+
+.btn-icon-sprout {
+    font-size: 1.05rem;
+    line-height: 1;
+}
+
+.btn-arrow {
+    font-size: 1.1rem;
+    transition: transform 0.2s ease;
+}
+
+.btn-verdant-primary:hover .btn-arrow {
+    transform: translateX(3px);
+}
+
+.btn-verdant-secondary {
+    background: var(--verdant-ivory);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: var(--verdant-deep);
+    border: 1px solid rgba(16, 44, 33, 0.16);
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.94rem;
+    padding: 12px 26px;
+    box-shadow: 0 4px 14px rgba(16, 44, 33, 0.08);
+    transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-verdant-secondary:hover {
+    background: #ffffff;
+    color: var(--verdant-deep);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(16, 44, 33, 0.12);
+    border-color: rgba(16, 44, 33, 0.28);
+}
+
+/* Genuine Database Statistics Strip with Vertical Dividers */
+.verdant-stats-strip {
+    margin-top: 1rem;
+}
+
+.stat-cell {
     display: flex;
     flex-direction: column;
 }
 
-.editorial-feature-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
-    border-color: rgba(82, 183, 136, 0.45);
-    background: rgba(255, 255, 255, 0.95);
+.stat-number {
+    font-size: 1.55rem;
+    font-weight: 800;
+    color: var(--verdant-deep);
+    line-height: 1;
+    margin-bottom: 4px;
 }
 
-.feature-icon-circle {
-    width: 46px;
-    height: 46px;
-    border-radius: 12px;
-    background: rgba(82, 183, 136, 0.16);
-    border: 1px solid rgba(82, 183, 136, 0.32);
-    color: var(--garden-primary);
+.stat-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: #3b5a4a;
+}
+
+.stat-divider {
+    width: 1px;
+    height: 32px;
+    background: rgba(16, 44, 33, 0.22);
+}
+
+/* =========================================================================
+   Verdant Three Botanical Community Cards (Ivory Surfaces & Photography)
+   ========================================================================= */
+
+.verdant-card {
+    background: var(--verdant-ivory);
+    border: 1px solid rgba(16, 44, 33, 0.08);
+    border-radius: 22px;
+    padding: 24px;
+    box-shadow: 0 12px 32px rgba(16, 44, 33, 0.08);
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s ease, border-color 0.28s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.verdant-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 42px rgba(16, 44, 33, 0.14);
+    border-color: rgba(16, 44, 33, 0.18);
+}
+
+.verdant-card-icon-badge {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #d8f3dc;
+    color: var(--verdant-forest);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.25rem;
-    transition: transform 0.2s ease;
+    font-size: 1.2rem;
+    box-shadow: 0 2px 6px rgba(16, 44, 33, 0.06);
 }
 
-.editorial-feature-card:hover .feature-icon-circle {
-    transform: scale(1.08);
+.verdant-card-arrow-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #ffffff;
+    color: var(--verdant-deep);
+    border: 1px solid rgba(16, 44, 33, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 1.05rem;
+    box-shadow: 0 2px 6px rgba(16, 44, 33, 0.04);
+    transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
-.editorial-feature-title {
+.verdant-card:hover .verdant-card-arrow-btn {
+    background: var(--verdant-deep);
+    color: #ffffff;
+    transform: translateX(2px);
+}
+
+.verdant-card-title {
+    font-family: 'Playfair Display', Georgia, serif;
     font-weight: 700;
-    font-size: 1.15rem;
-    color: var(--garden-dark);
+    font-size: 1.35rem;
+    color: var(--verdant-deep);
+    letter-spacing: -0.01em;
 }
 
-.editorial-feature-subtitle {
-    font-size: 0.78rem;
-    font-weight: 600;
+.verdant-card-subtitle {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.9px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--garden-text-muted);
+    color: #4f685a;
 }
 
-.editorial-feature-text {
+.verdant-card-desc {
     font-size: 0.91rem;
-    color: #475569;
-    line-height: 1.6;
+    color: #314a3c;
+    line-height: 1.55;
     flex-grow: 1;
 }
 
-.editorial-feature-link {
-    color: var(--garden-primary);
-    font-weight: 600;
-    font-size: 0.88rem;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    transition: gap 0.2s ease, color 0.2s ease;
+.verdant-card-img-wrapper {
+    border-radius: 16px;
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+    background: #dce7db;
+    box-shadow: 0 4px 14px rgba(16, 44, 33, 0.08);
 }
 
-.editorial-feature-link:hover {
-    color: var(--garden-darker);
-    gap: 8px;
+.verdant-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+}
+
+.verdant-card:hover .verdant-card-img {
+    transform: scale(1.04);
 }
 
 /* =========================================================================
    Featured Tips (Editorial Photographic Presentation)
    ========================================================================= */
 
+.verdant-section-header {
+    background: rgba(244, 240, 229, 0.90);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(16, 44, 33, 0.08);
+    border-radius: 18px;
+    padding: 14px 22px;
+    box-shadow: 0 4px 16px rgba(16, 44, 33, 0.04);
+}
+
 .editorial-section-heading {
-    font-weight: 800;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
     font-size: 1.65rem;
-    color: var(--garden-dark);
+    color: var(--verdant-deep);
     letter-spacing: -0.02em;
 }
 
@@ -820,13 +996,11 @@ body.navbar-mobile-open {
 }
 
 .editorial-tip-card {
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(226, 221, 213, 0.8);
-    border-radius: 14px;
+    background: var(--verdant-ivory);
+    border: 1px solid rgba(16, 44, 33, 0.08);
+    border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 8px 24px rgba(16, 44, 33, 0.06);
     display: flex;
     flex-direction: column;
     position: relative;
@@ -835,14 +1009,15 @@ body.navbar-mobile-open {
 
 .editorial-tip-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 16px 36px rgba(16, 44, 33, 0.12);
+    border-color: rgba(16, 44, 33, 0.18);
 }
 
 .editorial-img-container {
     aspect-ratio: 16 / 10;
     height: 175px;
     overflow: hidden;
-    background-color: var(--garden-pale);
+    background-color: #dce7db;
     position: relative;
 }
 
@@ -858,8 +1033,8 @@ body.navbar-mobile-open {
 }
 
 .badge-category-pill {
-    background: rgba(216, 243, 220, 0.8);
-    color: var(--garden-dark);
+    background: #d8f3dc;
+    color: var(--verdant-forest);
     font-weight: 600;
     font-size: 0.72rem;
     padding: 3px 9px;
@@ -890,29 +1065,30 @@ body.navbar-mobile-open {
 }
 
 .editorial-tip-title {
+    font-family: 'Playfair Display', Georgia, serif;
     font-weight: 700;
-    font-size: 1rem;
+    font-size: 1.05rem;
     line-height: 1.35;
-    color: var(--garden-dark);
+    color: var(--verdant-deep);
 }
 
 .editorial-tip-title a {
-    color: var(--garden-dark);
+    color: var(--verdant-deep);
     transition: color 0.2s ease;
 }
 
 .editorial-tip-title a:hover {
-    color: var(--garden-primary);
+    color: var(--verdant-forest);
 }
 
 .editorial-tip-summary {
-    color: var(--garden-text-muted);
+    color: var(--verdant-text-muted);
     line-height: 1.5;
 }
 
 .editorial-tip-meta {
-    border-top: 1px solid rgba(0, 0, 0, 0.06);
-    color: #64748b;
+    border-top: 1px solid rgba(16, 44, 33, 0.08);
+    color: #556c5f;
 }
 
 /* =========================================================================
@@ -920,18 +1096,17 @@ body.navbar-mobile-open {
    ========================================================================= */
 
 .editorial-container-card {
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(226, 221, 213, 0.85);
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    background: var(--verdant-ivory);
+    border: 1px solid rgba(16, 44, 33, 0.08);
+    border-radius: 22px;
+    box-shadow: 0 10px 30px rgba(16, 44, 33, 0.07);
 }
 
 .editorial-block-heading {
-    font-weight: 750;
-    font-size: 1.22rem;
-    color: var(--garden-dark);
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--verdant-deep);
 }
 
 .editorial-question-link,

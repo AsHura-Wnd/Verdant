@@ -3,7 +3,11 @@
 <head th:fragment="head(title)">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${title} ?: 'GrowGarden - Online Gardening Community'">GrowGarden - Online Gardening Community</title>
+    <title th:text="${title} ?: 'Verdant - Online Gardening Community'">Verdant - Online Gardening Community</title>
+    <!-- Google Fonts: Editorial Serif & Sans-Serif -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -25,13 +29,13 @@
         <aside class="garden-floating-sidebar d-none d-lg-flex" id="gardenFloatingSidebar" aria-label="Main Navigation" aria-expanded="false">
             <!-- Brand & Pin Button -->
             <div class="sidebar-brand-wrapper d-flex align-items-center justify-content-between">
-                <a th:href="@{/}" class="garden-brand-link" aria-label="GrowGarden Home" title="GrowGarden Home">
+                <a th:href="@{/}" class="garden-brand-link" aria-label="Verdant Home" title="Verdant Home">
                     <div class="brand-icon-box">
                         <i class="bi bi-flower1"></i>
                     </div>
                     <div class="brand-text-group sidebar-expand-text">
-                        <span class="brand-title">GrowGarden</span>
-                        <span class="brand-subtitle">Botanical Collective</span>
+                        <span class="brand-title">Verdant</span>
+                        <span class="brand-subtitle">Grow Together</span>
                     </div>
                 </a>
                 <button type="button" class="sidebar-pin-btn sidebar-expand-text" id="sidebarPinToggleBtn" aria-label="Pin or collapse sidebar" title="Pin sidebar open">
@@ -91,8 +95,8 @@
                     <i class="bi bi-flower1"></i>
                 </div>
                 <div>
-                    <span class="fw-bold fs-5 text-white d-block lh-1">GrowGarden</span>
-                    <span class="text-white-50 small" style="font-size: 0.65rem; letter-spacing: 0.5px;">COMMUNITY</span>
+                    <span class="fw-bold fs-5 text-white d-block lh-1">Verdant</span>
+                    <span class="text-white-50 small" style="font-size: 0.65rem; letter-spacing: 0.5px;">GROW TOGETHER</span>
                 </div>
             </a>
             <button class="mobile-menu-toggle text-white" id="mobileNavToggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobileNavMenu">
@@ -107,7 +111,7 @@
                     <div class="brand-icon-box" style="width: 32px; height: 32px; min-width: 32px; font-size: 1.1rem;">
                         <i class="bi bi-flower1"></i>
                     </div>
-                    <span class="fw-bold text-white fs-6">GrowGarden</span>
+                    <span class="fw-bold text-white fs-6">Verdant</span>
                     <span class="badge bg-success-subtle text-success fs-7">Collective</span>
                 </div>
                 <button type="button" class="btn text-white p-1" id="mobileNavCloseBtn" aria-label="Close navigation menu">
@@ -185,10 +189,10 @@
             <div class="row g-4 mb-4">
                 <div class="col-lg-4 col-md-6">
                     <h5 class="text-white fw-bold d-flex align-items-center gap-2 mb-3">
-                        <i class="bi bi-flower1 text-warning"></i> GrowGarden Community
+                        <i class="bi bi-flower1 text-warning"></i> Verdant Community
                     </h5>
                     <p class="small text-light-50">
-                        A collaborative botanical knowledge collective for gardeners, urban horticulturists, and plant enthusiasts.
+                        A collaborative botanical sanctuary and knowledge collective for home growers, urban botanists, and plant enthusiasts.
                         Diagnose plant health, explore organic remedies, and cultivate living gardens together.
                     </p>
                 </div>
@@ -223,7 +227,7 @@
             </div>
             <hr class="border-secondary opacity-25">
             <div class="d-flex flex-wrap justify-content-between align-items-center small text-light-50">
-                <div>&copy; 2026 GrowGarden Community Platform. All rights reserved.</div>
+                <div>&copy; 2026 Verdant — Botanical Community Platform. All rights reserved.</div>
                 <div>Cultivated with 🌿 for gardening enthusiasts</div>
             </div>
         </div>

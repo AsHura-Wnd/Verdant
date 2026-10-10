@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             if (!desktopSidebar.classList.contains('is-pinned')) {
                 desktopSidebar.classList.add('is-hovered');
+                document.body.classList.add('sidebar-hovered');
                 desktopSidebar.setAttribute('aria-expanded', 'true');
             }
         });
@@ -51,6 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (hoverTimeout) clearTimeout(hoverTimeout);
                 hoverTimeout = setTimeout(function () {
                     desktopSidebar.classList.remove('is-hovered');
+                    document.body.classList.remove('sidebar-hovered');
                     desktopSidebar.setAttribute('aria-expanded', 'false');
                 }, 60);
             }
@@ -60,6 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
         desktopSidebar.addEventListener('focusin', function () {
             if (!desktopSidebar.classList.contains('is-pinned')) {
                 desktopSidebar.classList.add('is-hovered');
+                document.body.classList.add('sidebar-hovered');
                 desktopSidebar.setAttribute('aria-expanded', 'true');
             }
         });
@@ -69,6 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // If focus moves outside the sidebar, collapse
                 if (!desktopSidebar.contains(e.relatedTarget)) {
                     desktopSidebar.classList.remove('is-hovered');
+                    document.body.classList.remove('sidebar-hovered');
                     desktopSidebar.setAttribute('aria-expanded', 'false');
                 }
             }
@@ -82,6 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const nowPinned = desktopSidebar.classList.toggle('is-pinned');
                 desktopSidebar.classList.remove('is-hovered');
+                document.body.classList.remove('sidebar-hovered');
                 document.body.classList.toggle('sidebar-pinned', nowPinned);
                 localStorage.setItem(STORAGE_KEY, nowPinned ? 'true' : 'false');
                 desktopSidebar.setAttribute('aria-expanded', nowPinned ? 'true' : 'false');

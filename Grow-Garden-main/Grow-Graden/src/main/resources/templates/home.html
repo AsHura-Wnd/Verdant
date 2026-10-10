@@ -14,6 +14,11 @@
         <!-- Ambient Botanical Veil -->
         <div class="garden-ambient-veil"></div>
 
+        <!-- Real Photographic Landscape Horizon (Seamless Blend with CloudShader) -->
+        <div class="garden-layer garden-layer-panorama">
+            <img th:src="@{/img/hero-garden-landscape.jpg}" src="/img/hero-garden-landscape.jpg" alt="" />
+        </div>
+
         <!-- Distant Forest Canopy Silhouettes (Parallax rate: 0.12) -->
         <div class="garden-layer garden-canopy-distant">
             <svg class="garden-svg-backdrop" viewBox="0 0 1440 400" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
@@ -80,121 +85,159 @@
     <!-- Flash Alerts -->
     <div th:replace="~{fragments/layout :: alerts}"></div>
 
-    <main class="container-fluid px-3 px-md-5 my-4">
-        <!-- Botanical Editorial Hero (Airy, Transparent to CloudShader Background) -->
-        <section class="hero-editorial-section py-4 py-md-5 mb-5">
+    <main class="verdant-main-container container-fluid px-3 px-md-5 my-2">
+        <!-- Botanical Header Navigation Bar (Brand & Search Pill) -->
+        <header class="verdant-top-header d-flex justify-content-between align-items-center mb-4 pt-2">
+            <a th:href="@{/}" class="verdant-brand d-flex align-items-center gap-2 text-decoration-none">
+                <div class="verdant-logo-box">
+                    <svg class="verdant-leaf-svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22l1-2.3A4.49,4.49 0 0,0 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,8 17,8 17,8Z"/>
+                    </svg>
+                </div>
+                <div class="verdant-brand-text">
+                    <span class="verdant-brand-name">Verdant</span>
+                    <span class="verdant-brand-tagline">GROW TOGETHER</span>
+                </div>
+            </a>
+            <form th:action="@{/tips}" method="GET" class="verdant-search-form d-none d-md-flex align-items-center" role="search">
+                <i class="bi bi-search search-icon"></i>
+                <input type="text" name="search" class="verdant-search-input" placeholder="Search plants, topics, projects..." autocomplete="off" aria-label="Search plants, topics, projects">
+                <span class="search-badge" title="Shortcut">/</span>
+            </form>
+        </header>
+
+        <!-- Botanical Editorial Hero -->
+        <section class="verdant-hero-section hero-editorial-section mb-5">
             <div class="row align-items-center">
                 <div class="col-xl-9 col-lg-10">
                     <div class="hero-eyebrow mb-3">
-                        <span class="editorial-badge">
-                            <i class="bi bi-flower1 me-1 text-success"></i> Botanical Knowledge Collective
+                        <span class="verdant-eyebrow-pill">
+                            <i class="bi bi-feather2 me-1"></i> A Gardening Community
                         </span>
                     </div>
 
-                    <h1 class="hero-editorial-headline mb-3">
+                    <h1 class="verdant-hero-title mb-3">
                         Cultivate Knowledge,<br>
-                        <span class="headline-serif-accent">Share the Living Harvest.</span>
+                        <span class="verdant-hero-italic">Share the Living Harvest.</span>
                     </h1>
 
-                    <p class="hero-editorial-subtitle mb-4">
+                    <p class="verdant-hero-subtitle mb-4">
                         A collaborative sanctuary where home growers, urban botanists, and allotment keepers diagnose plant health, share organic wisdom, and nurture thriving green spaces together.
                     </p>
 
-                    <!-- Two Primary Actions (Editorial Focus) -->
-                    <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
-                        <a th:href="@{/tips}" class="btn btn-editorial-primary px-4 py-2">
-                            <i class="bi bi-book-half me-2"></i>Explore Gardening Tips
+                    <!-- Two Primary Actions (Pill Buttons) -->
+                    <div class="d-flex flex-wrap align-items-center gap-3 mb-4 pt-1">
+                        <a th:href="@{/tips}" class="btn-verdant-primary">
+                            <span class="btn-icon-sprout">🌿</span>
+                            <span>Explore Gardening Tips</span>
+                            <span class="btn-arrow ms-1">→</span>
                         </a>
-                        <a th:href="@{/projects/new}" class="btn btn-editorial-secondary px-4 py-2">
-                            <i class="bi bi-flower2 me-2"></i>Share Your Garden
+                        <a th:href="@{/discussions}" class="btn-verdant-secondary">
+                            <i class="bi bi-people-fill me-2"></i>
+                            <span>Join the Community</span>
                         </a>
                     </div>
 
-                    <!-- Subtle Integrated Statistics Strip (No Heavy Dashboard Tiles) -->
-                    <div class="hero-metrics-strip d-flex flex-wrap align-items-center gap-3 gap-md-4 pt-2">
-                        <div class="metric-item">
-                            <span class="metric-num" th:text="${totalTips}">0</span>
-                            <span class="metric-label">Gardening Tips</span>
+                    <!-- Genuine Database Statistics Strip with Vertical Dividers -->
+                    <div class="verdant-stats-strip hero-metrics-strip d-flex flex-wrap align-items-center gap-3 gap-md-4 py-2">
+                        <div class="stat-cell">
+                            <div class="stat-number" th:text="${totalTips}">10</div>
+                            <div class="stat-label">GARDENING TIPS</div>
                         </div>
-                        <span class="metric-separator" aria-hidden="true">&bull;</span>
-                        <div class="metric-item">
-                            <span class="metric-num" th:text="${totalQuestions}">0</span>
-                            <span class="metric-label">Community Questions</span>
+                        <div class="stat-divider" aria-hidden="true"></div>
+                        <div class="stat-cell">
+                            <div class="stat-number" th:text="${totalQuestions}">5</div>
+                            <div class="stat-label">COMMUNITY QUESTIONS</div>
                         </div>
-                        <span class="metric-separator" aria-hidden="true">&bull;</span>
-                        <div class="metric-item">
-                            <span class="metric-num" th:text="${resolvedQuestions}">0</span>
-                            <span class="metric-label">Solved Problems</span>
+                        <div class="stat-divider" aria-hidden="true"></div>
+                        <div class="stat-cell">
+                            <div class="stat-number" th:text="${resolvedQuestions}">1</div>
+                            <div class="stat-label">SOLVED PROBLEMS</div>
                         </div>
-                        <span class="metric-separator" aria-hidden="true">&bull;</span>
-                        <div class="metric-item">
-                            <span class="metric-num" th:text="${totalProjects}">0</span>
-                            <span class="metric-label">Active Projects</span>
+                        <div class="stat-divider" aria-hidden="true"></div>
+                        <div class="stat-cell">
+                            <div class="stat-number" th:text="${totalProjects}">5</div>
+                            <div class="stat-label">ACTIVE PROJECTS</div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Three Botanical Feature Sections (Consistent Botanical System, No Saturated Borders) -->
-        <section class="mb-5">
+        <!-- Three Botanical Core Community Sections (Photographic Cards) -->
+        <section class="mb-5 pt-2">
             <div class="row g-4">
                 <!-- 1. Gardening Tips -->
                 <div class="col-md-4">
-                    <div class="editorial-feature-card h-100 p-4">
-                        <div class="feature-icon-circle mb-3">
-                            <i class="bi bi-lightbulb-fill"></i>
+                    <div class="verdant-card editorial-feature-card h-100">
+                        <div class="verdant-card-header d-flex justify-content-between align-items-center mb-3">
+                            <div class="verdant-card-icon-badge">
+                                <i class="bi bi-lightbulb-fill"></i>
+                            </div>
+                            <a th:href="@{/tips}" class="verdant-card-arrow-btn" aria-label="Explore Gardening Tips">
+                                <i class="bi bi-arrow-right"></i>
+                            </a>
                         </div>
-                        <h4 class="editorial-feature-title mb-1">Gardening Tips</h4>
-                        <div class="editorial-feature-subtitle mb-3">Proven Guides & Organic Remedies</div>
-                        <p class="editorial-feature-text mb-4">
+                        <h3 class="verdant-card-title mb-1">Gardening Tips</h3>
+                        <div class="verdant-card-subtitle mb-2">PROVEN GUIDES &amp; ORGANIC REMEDIES</div>
+                        <p class="verdant-card-desc mb-3">
                             Discover organic pest controls, nutrient-rich compost recipes, and seasonal plant maintenance shared by experienced growers.
                         </p>
-                        <a th:href="@{/tips}" class="editorial-feature-link mt-auto">
-                            Browse Knowledge Base <i class="bi bi-arrow-right ms-1"></i>
-                        </a>
+                        <div class="verdant-card-img-wrapper mt-auto">
+                            <img th:src="@{/img/card-gardening-tips.jpg}" src="/img/card-gardening-tips.jpg" alt="Gardening Tips - Seedlings in fertile soil" class="verdant-card-img" />
+                        </div>
                     </div>
                 </div>
 
                 <!-- 2. Community Q&A -->
                 <div class="col-md-4">
-                    <div class="editorial-feature-card h-100 p-4">
-                        <div class="feature-icon-circle mb-3">
-                            <i class="bi bi-chat-quote-fill"></i>
+                    <div class="verdant-card editorial-feature-card h-100">
+                        <div class="verdant-card-header d-flex justify-content-between align-items-center mb-3">
+                            <div class="verdant-card-icon-badge">
+                                <i class="bi bi-chat-quote-fill"></i>
+                            </div>
+                            <a th:href="@{/discussions}" class="verdant-card-arrow-btn" aria-label="Explore Community Discussions">
+                                <i class="bi bi-arrow-right"></i>
+                            </a>
                         </div>
-                        <h4 class="editorial-feature-title mb-1">Community Q&A</h4>
-                        <div class="editorial-feature-subtitle mb-3">Disease Diagnosis & Guidance</div>
-                        <p class="editorial-feature-text mb-4">
+                        <h3 class="verdant-card-title mb-1">Community Q&amp;A</h3>
+                        <div class="verdant-card-subtitle mb-2">DISEASE DIAGNOSIS &amp; GUIDANCE</div>
+                        <p class="verdant-card-desc mb-3">
                             Encountering yellowing leaves, mildew, or wilting roots? Post plant questions and receive practical troubleshooting from the community.
                         </p>
-                        <a th:href="@{/discussions}" class="editorial-feature-link mt-auto">
-                            Open Discussion Forum <i class="bi bi-arrow-right ms-1"></i>
-                        </a>
+                        <div class="verdant-card-img-wrapper mt-auto">
+                            <img th:src="@{/img/card-community-qa.jpg}" src="/img/card-community-qa.jpg" alt="Community Q&A - Plant diagnosis and care" class="verdant-card-img" />
+                        </div>
                     </div>
                 </div>
 
-                <!-- 3. Personal Projects -->
+                <!-- 3. Garden Projects -->
                 <div class="col-md-4">
-                    <div class="editorial-feature-card h-100 p-4">
-                        <div class="feature-icon-circle mb-3">
-                            <i class="bi bi-calendar2-check-fill"></i>
+                    <div class="verdant-card editorial-feature-card h-100">
+                        <div class="verdant-card-header d-flex justify-content-between align-items-center mb-3">
+                            <div class="verdant-card-icon-badge">
+                                <i class="bi bi-journal-richtext"></i>
+                            </div>
+                            <a th:href="@{/projects}" class="verdant-card-arrow-btn" aria-label="Explore Garden Projects">
+                                <i class="bi bi-arrow-right"></i>
+                            </a>
                         </div>
-                        <h4 class="editorial-feature-title mb-1">Garden Projects</h4>
-                        <div class="editorial-feature-subtitle mb-3">Personal Journal & Growth Milestones</div>
-                        <p class="editorial-feature-text mb-4">
+                        <h3 class="verdant-card-title mb-1">Garden Projects</h3>
+                        <div class="verdant-card-subtitle mb-2">PERSONAL JOURNAL &amp; GROWTH MILESTONES</div>
+                        <p class="verdant-card-desc mb-3">
                             Document windowsill herbs, balcony raised beds, and backyard perennials through developmental milestones from seed to harvest.
                         </p>
-                        <a th:href="@{/projects}" class="editorial-feature-link mt-auto">
-                            View Garden Projects <i class="bi bi-arrow-right ms-1"></i>
-                        </a>
+                        <div class="verdant-card-img-wrapper mt-auto">
+                            <img th:src="@{/img/card-garden-projects.jpg}" src="/img/card-garden-projects.jpg" alt="Garden Projects - Planters and Pergola" class="verdant-card-img" />
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Featured Gardening Tips (Editorial Photographic Presentation) -->
-        <section class="mb-5">
-            <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
+        <section class="mb-5 pt-3">
+            <div class="verdant-section-header d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
                 <div>
                     <span class="text-uppercase small fw-bold text-success" style="letter-spacing: 0.8px; font-size: 0.75rem;">Community Highlights</span>
                     <h2 class="editorial-section-heading mb-0">Featured Gardening Tips</h2>
