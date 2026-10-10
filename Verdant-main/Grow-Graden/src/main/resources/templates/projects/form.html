@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${isEdit} ? 'Edit Garden Project - Verdant' : 'Start a Garden Project - Verdant')}">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav th:replace="~{fragments/layout :: navbar('projects')}"></nav>
+
+    <!-- Flash Alerts -->
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <main class="container my-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Breadcrumb -->
+                <div class="mb-3">
+                    <a th:href="@{/projects}" class="text-decoration-none text-muted small">
+                        <i class="bi bi-arrow-left me-1"></i> Back to projects
+                    </a>
+                </div>
+
+                <div class="form-card">
+                    <div class="d-flex align-items-center gap-2 mb-4">
+                        <div class="bg-primary-subtle text-primary p-2 rounded-circle">
+                            <i class="bi bi-folder-plus fs-4"></i>
+                        </div>
+                        <div>
+                            <h3 class="fw-bold text-dark mb-0" th:text="${isEdit} ? 'Edit Garden Project' : 'Start a Personal Garden Project'">
+                                Start a Personal Garden Project
+                            </h3>
+                            <small class="text-muted">Set goals, select plant varieties, and document your growing journey</small>
+                        </div>
+                    </div>
+
+                    <form th:action="${isEdit} ? @{/projects/{id}/edit(id=${project.id})} : @{/projects/new}"
+                          th:object="${project}" method="post">
+
+                        <!-- Title -->
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Project Title <span class="text-danger">*</span></label>
+                            <input type="text" id="title" class="form-control" th:field="*{title}"
+                                   placeholder="e.g. Balcony Cherry Tomatoes & Mediterranean Herbs"
+                                   th:classappend="${#fields.hasErrors('title')} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
+                                Title error
+                            </div>
+                        </div>
+
+                        <!-- Row: Plant Type & Location -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="plantType" class="form-label">Plant Varieties / Species <span class="text-danger">*</span></label>
+                                <input type="text" id="plantType" class="form-control" th:field="*{plantType}"
+                                       placeholder="e.g. Sweet Basil, Thyme, Cherry Tomatoes"
+                                       th:classappend="${#fields.hasErrors('plantType')} ? 'is-invalid' : ''">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('plantType')}" th:errors="*{plantType}">
+                                    Plant error
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="location" class="form-label">Location / Growing Space <span class="text-danger">*</span></label>
+                                <select id="location" class="form-select" th:field="*{location}"
+                                        th:classappend="${#fields.hasErrors('location')} ? 'is-invalid' : ''">
+                                    <option value="">Select Growing Space</option>
+                                    <option value="Apartment Balcony">Apartment Balcony</option>
+                                    <option value="Indoor Windowsill">Indoor Windowsill</option>
+                                    <option value="Backyard Raised Beds">Backyard Raised Beds</option>
+                                    <option value="Rooftop Garden">Rooftop Garden</option>
+                                    <option value="Greenhouse / Sunroom">Greenhouse / Sunroom</option>
+                                    <option value="Front Porch Containers">Front Porch Containers</option>
+                                </select>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('location')}" th:errors="*{location}">
+                                    Location error
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row: Status & Gardener Name -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="status" class="form-label">Project Status <span class="text-danger">*</span></label>
+                                <select id="status" class="form-select" th:field="*{status}">
+                                    <option value="Planning">Planning (Seed selection & prep)</option>
+                                    <option value="In Progress">In Progress (Planted & growing)</option>
+                                    <option value="Flourishing">Flourishing (Strong vegetative/flowering stage)</option>
+                                    <option value="Completed">Completed / Harvested</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="gardenerName" class="form-label">Gardener / Team Name <span class="text-danger">*</span></label>
+                                <input type="text" id="gardenerName" class="form-control" th:field="*{gardenerName}"
+                                       placeholder="e.g. Maya & Amit"
+                                       th:classappend="${#fields.hasErrors('gardenerName')} ? 'is-invalid' : ''">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('gardenerName')}" th:errors="*{gardenerName}">
+                                    Gardener error
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row: Start Date & Target Date -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="startDate" class="form-label">Start Date</label>
+                                <input type="date" id="startDate" class="form-control" th:field="*{startDate}">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="targetDate" class="form-label">Target Harvest / Completion Date</label>
+                                <input type="date" id="targetDate" class="form-control" th:field="*{targetDate}">
+                            </div>
+                        </div>
+
+                        <!-- Image URL -->
+                        <div class="mb-3">
+                            <label for="imageUrl" class="form-label">Project Photo URL (Optional)</label>
+                            <input type="url" id="imageUrl" class="form-control" th:field="*{imageUrl}"
+                                   placeholder="https://example.com/garden-photo.jpg">
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Project Description & Objectives <span class="text-danger">*</span></label>
+                            <textarea id="description" class="form-control" rows="4" th:field="*{description}"
+                                      placeholder="Describe your vision, soil choices, pot sizes, or purpose of this project..."
+                                      th:classappend="${#fields.hasErrors('description')} ? 'is-invalid' : ''"></textarea>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
+                                Description error
+                            </div>
+                        </div>
+
+                        <!-- Notes & Journal -->
+                        <div class="mb-4">
+                            <label for="notes" class="form-label">Care Notes & Milestones (Optional)</label>
+                            <textarea id="notes" class="form-control" rows="4" th:field="*{notes}"
+                                      placeholder="Log progress, e.g. 'Seeds germinated in 4 days. First true leaves developed on day 10...'"></textarea>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                            <a th:href="@{/projects}" class="btn btn-outline-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-garden-primary px-4">
+                                <i class="bi bi-check2-circle me-1"></i>
+                                <span th:text="${isEdit} ? 'Save Changes' : 'Create Project'">Create Project</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

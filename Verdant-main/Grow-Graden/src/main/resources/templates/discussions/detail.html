@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${question.title} + ' - Verdant Discussion')}">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav th:replace="~{fragments/layout :: navbar('discussions')}"></nav>
+
+    <!-- Flash Alerts -->
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <main class="container my-4">
+        <!-- Back Breadcrumb -->
+        <div class="mb-3">
+            <a th:href="@{/discussions}" class="text-decoration-none text-muted small">
+                <i class="bi bi-arrow-left me-1"></i> Back to community discussions
+            </a>
+        </div>
+
+        <div class="row g-4">
+            <!-- Question Thread -->
+            <div class="col-lg-8">
+                <!-- Question Card -->
+                <div class="card card-garden p-4 p-md-5 mb-4">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <span th:if="${question.resolved}" class="badge badge-resolved">
+                                <i class="bi bi-check2-circle me-1"></i> Solved
+                            </span>
+                            <span th:unless="${question.resolved}" class="badge badge-unresolved">
+                                <i class="bi bi-exclamation-triangle me-1"></i> Needs Help
+                            </span>
+                            <span class="badge-category" th:text="${question.category}">Plant Diseases</span>
+                            <span class="badge bg-light text-dark border" th:if="${question.plantType != null and !question.plantType.isEmpty()}" th:text="${question.plantType}">
+                                Plant Type
+                            </span>
+                        </div>
+                        <small class="text-muted" th:text="${#temporals.format(question.createdAt, 'MMM dd, yyyy - hh:mm a')}">Date</small>
+                    </div>
+
+                    <h2 class="fw-bold text-dark mb-3" th:text="${question.title}">Question Title Here?</h2>
+
+                    <!-- Question Author & Stats -->
+                    <div class="d-flex flex-wrap justify-content-between align-items-center py-2 border-top border-bottom mb-4 small text-muted">
+                        <div>
+                            <i class="bi bi-person-fill text-success me-1"></i> Asked by <strong class="text-dark" th:text="${question.author}">Author</strong>
+                        </div>
+                        <div class="d-flex gap-3">
+                            <span><i class="bi bi-eye me-1"></i> <span th:text="${question.viewsCount}">0</span> views</span>
+                            <span><i class="bi bi-chat-text-fill text-success me-1"></i> <span th:text="${question.replies.size()}">0</span> replies</span>
+                        </div>
+                    </div>
+
+                    <!-- Problem Photo if available -->
+                    <div class="mb-4 rounded-3 overflow-hidden shadow-sm" th:if="${question.imageUrl != null and !question.imageUrl.isEmpty()}">
+                        <img th:src="${question.imageUrl}" alt="Problem plant photo" class="img-fluid w-100" style="max-height: 420px; object-fit: cover;">
+                    </div>
+
+                    <!-- Description Body -->
+                    <div class="article-content text-dark mb-4" style="line-height: 1.8; white-space: pre-line;" th:text="${question.description}">
+                        Detailed description of the issue...
+                    </div>
+
+                    <!-- Actions Toolbar -->
+                    <div class="d-flex flex-wrap justify-content-between align-items-center pt-3 border-top gap-2">
+                        <!-- Toggle Solved Form -->
+                        <form th:action="@{/discussions/{id}/toggle-resolve(id=${question.id})}" method="post">
+                            <button type="submit" class="btn btn-sm" th:classappend="${question.resolved} ? 'btn-outline-warning' : 'btn-outline-success'">
+                                <i class="bi" th:classappend="${question.resolved} ? 'bi-arrow-counterclockwise' : 'bi-check-circle-fill'"></i>
+                                <span th:text="${question.resolved} ? 'Re-open as Unresolved' : 'Mark as Solved / Resolved'">Mark as Solved</span>
+                            </button>
+                        </form>
+
+                        <div class="d-flex gap-2">
+                            <!-- Delete Button & Modal Trigger -->
+                            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteQuestionModal">
+                                <i class="bi bi-trash me-1"></i> Delete Thread
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Replies Section -->
+                <div class="card card-garden p-4 mb-4">
+                    <h4 class="fw-bold mb-3 d-flex align-items-center gap-2">
+                        <i class="bi bi-chat-left-dots-fill text-success"></i>
+                        <span>Community Advice & Answers</span>
+                        <span class="badge bg-secondary-subtle text-dark fs-6" th:text="${question.replies.size()}">0</span>
+                    </h4>
+
+                    <!-- Reply List -->
+                    <div class="d-flex flex-column gap-3 mb-4" th:if="${!question.replies.isEmpty()}">
+                        <div class="p-3 rounded-3 border"
+                             th:each="reply : ${question.replies}"
+                             th:classappend="${reply.expertAdvice} ? 'bg-success-subtle border-success' : 'bg-light border-light-subtle'">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <strong class="text-dark" th:text="${reply.author}">Gardener Name</strong>
+                                    <span th:if="${reply.expertAdvice}" class="badge bg-success text-white">
+                                        <i class="bi bi-award-fill me-1"></i> Expert Advice
+                                    </span>
+                                </div>
+                                <small class="text-muted" th:text="${#temporals.format(reply.createdAt, 'MMM dd, yyyy - hh:mm a')}">Date</small>
+                            </div>
+
+                            <p class="mb-3 text-dark" style="white-space: pre-line;" th:text="${reply.content}">
+                                Reply content here...
+                            </p>
+
+                            <div class="d-flex justify-content-between align-items-center pt-2 border-top border-light-subtle">
+                                <!-- Upvote Helpful Form -->
+                                <form th:action="@{/discussions/replies/{replyId}/upvote(replyId=${reply.id})}" method="post" class="d-inline">
+                                    <input type="hidden" name="questionId" th:value="${question.id}">
+                                    <button type="submit" class="btn btn-sm btn-outline-success py-0 px-2 d-flex align-items-center gap-1">
+                                        <i class="bi bi-hand-thumbs-up"></i>
+                                        <span>Helpful (<span th:text="${reply.upvotes}">0</span>)</span>
+                                    </button>
+                                </form>
+
+                                <!-- Delete Reply Form -->
+                                <form th:action="@{/discussions/replies/{replyId}/delete(replyId=${reply.id})}" method="post" class="d-inline"
+                                      onsubmit="return confirm('Remove this reply?');">
+                                    <input type="hidden" name="questionId" th:value="${question.id}">
+                                    <button type="submit" class="btn btn-sm text-danger border-0 py-0">
+                                        <i class="bi bi-trash"></i> Remove
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- No Replies Message -->
+                    <div class="alert alert-light border text-center py-4 mb-4" th:if="${question.replies.isEmpty()}">
+                        <i class="bi bi-chat-quote display-6 text-muted d-block mb-2"></i>
+                        <p class="mb-0 text-muted">No answers posted yet. Be the first to share your diagnosis or solution!</p>
+                    </div>
+
+                    <!-- Post Reply Form -->
+                    <div class="pt-3 border-top">
+                        <h5 class="fw-bold text-dark mb-3">Add Your Advice</h5>
+                        <form th:action="@{/discussions/{id}/reply(id=${question.id})}" th:object="${newReply}" method="post">
+                            <div class="row g-2 mb-3">
+                                <div class="col-md-6">
+                                    <label for="replyAuthor" class="form-label small">Your Name / Handle <span class="text-danger">*</span></label>
+                                    <input type="text" id="replyAuthor" class="form-control form-control-sm" th:field="*{author}"
+                                           placeholder="e.g. GardenFriend" required>
+                                </div>
+                                <div class="col-md-6 d-flex align-items-end">
+                                    <div class="form-check mb-1">
+                                        <input class="form-check-input" type="checkbox" id="expertAdvice" th:field="*{expertAdvice}">
+                                        <label class="form-check-label small" for="expertAdvice">
+                                            Mark as Certified/Horticultural advice
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="replyContent" class="form-label small">Your Solution / Remedy <span class="text-danger">*</span></label>
+                                <textarea id="replyContent" class="form-control" rows="4" th:field="*{content}"
+                                          placeholder="Explain what steps or treatment should be applied (e.g., watering adjustments, fungicides, sunlight requirements)..." required></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-garden-primary btn-sm px-4">
+                                <i class="bi bi-send me-1"></i> Post Advice
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar: Safety & Community Guidelines -->
+            <div class="col-lg-4">
+                <div class="card card-garden p-4 mb-4">
+                    <h5 class="fw-bold mb-3"><i class="bi bi-shield-check text-success me-2"></i> Plant Clinic Guidelines</h5>
+                    <ul class="list-unstyled small text-secondary mb-0">
+                        <li class="mb-2"><i class="bi bi-check2 text-success me-1"></i> <strong>Describe symptoms:</strong> Note discoloration, spots, or insects.</li>
+                        <li class="mb-2"><i class="bi bi-check2 text-success me-1"></i> <strong>Mention conditions:</strong> Light exposure, watering frequency, and pot drainage.</li>
+                        <li class="mb-2"><i class="bi bi-check2 text-success me-1"></i> <strong>Suggest organic first:</strong> Recommend neem oil, spacing, and pruning before harsh chemicals.</li>
+                        <li><i class="bi bi-check2 text-success me-1"></i> <strong>Be supportive:</strong> Every gardener was once a beginner!</li>
+                    </ul>
+                </div>
+
+                <div class="card card-garden p-4">
+                    <h5 class="fw-bold mb-2">Have Another Question?</h5>
+                    <p class="small text-muted mb-3">
+                        Ask about container setups, seedling care, or winter protection.
+                    </p>
+                    <a th:href="@{/discussions/new}" class="btn btn-garden-outline btn-sm w-100">
+                        <i class="bi bi-question-circle me-1"></i> Start New Discussion
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delete Question Modal -->
+        <div class="modal fade" id="deleteQuestionModal" tabindex="-1" aria-labelledby="deleteQuestionModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-danger fw-bold" id="deleteQuestionModalLabel">Confirm Deletion</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete this discussion thread? All replies will also be removed.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <form th:action="@{/discussions/{id}/delete(id=${question.id})}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-danger">Yes, Delete Thread</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

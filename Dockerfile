@@ -11,11 +11,11 @@ FROM eclipse-temurin:17-jdk-jammy AS builder
 WORKDIR /build
 
 # Copy Maven wrapper and POM configuration
-COPY Grow-Garden-main/Grow-Graden/.mvn/ Grow-Garden-main/Grow-Graden/.mvn/
-COPY Grow-Garden-main/Grow-Graden/mvnw Grow-Garden-main/Grow-Graden/mvnw
-COPY Grow-Garden-main/Grow-Graden/pom.xml Grow-Garden-main/Grow-Graden/pom.xml
+COPY Verdant-main/Grow-Graden/.mvn/ Verdant-main/Grow-Graden/.mvn/
+COPY Verdant-main/Grow-Graden/mvnw Verdant-main/Grow-Graden/mvnw
+COPY Verdant-main/Grow-Graden/pom.xml Verdant-main/Grow-Graden/pom.xml
 
-WORKDIR /build/Grow-Garden-main/Grow-Graden
+WORKDIR /build/Verdant-main/Grow-Graden
 
 # Ensure UNIX line endings and executable bit on wrapper
 RUN sed -i 's/\r$//' ./mvnw && chmod +x ./mvnw
@@ -24,7 +24,7 @@ RUN sed -i 's/\r$//' ./mvnw && chmod +x ./mvnw
 RUN ./mvnw dependency:go-offline -B || true
 
 # Copy application source code
-COPY Grow-Garden-main/Grow-Graden/src ./src
+COPY Verdant-main/Grow-Graden/src ./src
 
 # Compile and package Spring Boot executable JAR (skipping test execution during Docker build)
 RUN ./mvnw clean package -DskipTests -B
@@ -43,7 +43,7 @@ WORKDIR /app
 RUN mkdir -p /app/data && chown -R appuser:appgroup /app
 
 # Copy packaged Spring Boot JAR from builder stage
-COPY --from=builder --chown=appuser:appgroup /build/Grow-Garden-main/Grow-Graden/target/Grow-Graden-0.0.1-SNAPSHOT.jar /app/app.jar
+COPY --from=builder --chown=appuser:appgroup /build/Verdant-main/Grow-Graden/target/Grow-Graden-0.0.1-SNAPSHOT.jar /app/app.jar
 
 USER appuser
 

@@ -97,7 +97,7 @@ cd Verdant
 
 ### 2. Navigate to Project Directory
 ```bash
-cd Grow-Garden-main/Grow-Graden
+cd Verdant-main/Grow-Graden
 ```
 
 ### 3. Set `JAVA_HOME` (if not already set in environment)

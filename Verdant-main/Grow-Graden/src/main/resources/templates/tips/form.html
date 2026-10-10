@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${isEdit} ? 'Edit Tip - Verdant' : 'Share a Gardening Tip - Verdant')}">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav th:replace="~{fragments/layout :: navbar('tips')}"></nav>
+
+    <!-- Flash Alerts -->
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <main class="container my-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Breadcrumb -->
+                <div class="mb-3">
+                    <a th:href="@{/tips}" class="text-decoration-none text-muted small">
+                        <i class="bi bi-arrow-left me-1"></i> Back to tips
+                    </a>
+                </div>
+
+                <div class="form-card">
+                    <div class="d-flex align-items-center gap-2 mb-4">
+                        <div class="bg-success-subtle text-success p-2 rounded-circle">
+                            <i class="bi bi-pencil-fill fs-4"></i>
+                        </div>
+                        <div>
+                            <h3 class="fw-bold text-dark mb-0" th:text="${isEdit} ? 'Edit Gardening Tip' : 'Share a New Gardening Tip'">
+                                Share a New Gardening Tip
+                            </h3>
+                            <small class="text-muted">Contribute advice, recipes, and seasonal wisdom to fellow plant enthusiasts</small>
+                        </div>
+                    </div>
+
+                    <form th:action="${isEdit} ? @{/tips/{id}/edit(id=${tip.id})} : @{/tips/new}"
+                          th:object="${tip}" method="post">
+
+                        <!-- Title -->
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Tip Title <span class="text-danger">*</span></label>
+                            <input type="text" id="title" class="form-control" th:field="*{title}"
+                                   placeholder="e.g. 5 Organic Methods to Prevent Blossom End Rot in Tomatoes"
+                                   th:classappend="${#fields.hasErrors('title')} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
+                                Title error
+                            </div>
+                        </div>
+
+                        <!-- Row: Category & Difficulty -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="category" class="form-label">Category <span class="text-danger">*</span></label>
+                                <select id="category" class="form-select" th:field="*{category}"
+                                        th:classappend="${#fields.hasErrors('category')} ? 'is-invalid' : ''">
+                                    <option value="">Select a Category</option>
+                                    <option value="Plant Care">Plant Care</option>
+                                    <option value="Pest & Disease Control">Pest & Disease Control</option>
+                                    <option value="Soil & Fertilizer">Soil & Fertilizer</option>
+                                    <option value="Propagation">Propagation</option>
+                                    <option value="Seasonal Gardening">Seasonal Gardening</option>
+                                    <option value="Urban & Balcony">Urban & Balcony</option>
+                                </select>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('category')}" th:errors="*{category}">
+                                    Category error
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="difficultyLevel" class="form-label">Difficulty Level</label>
+                                <select id="difficultyLevel" class="form-select" th:field="*{difficultyLevel}">
+                                    <option value="Beginner">Beginner (Easy for anyone)</option>
+                                    <option value="Intermediate">Intermediate (Requires basic experience)</option>
+                                    <option value="Advanced">Advanced (Requires specialized tools or care)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Row: Author & Plant Type -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="author" class="form-label">Your Name / Handle <span class="text-danger">*</span></label>
+                                <input type="text" id="author" class="form-control" th:field="*{author}"
+                                       placeholder="e.g. GardenGuru Rajesh"
+                                       th:classappend="${#fields.hasErrors('author')} ? 'is-invalid' : ''">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">
+                                    Author error
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="plantType" class="form-label">Target Plant / Specimen</label>
+                                <input type="text" id="plantType" class="form-control" th:field="*{plantType}"
+                                       placeholder="e.g. Succulents, Roses, Tomato vines">
+                            </div>
+                        </div>
+
+                        <!-- Image URL -->
+                        <div class="mb-3">
+                            <label for="imageUrl" class="form-label">Banner Image URL (Optional)</label>
+                            <input type="url" id="imageUrl" class="form-control" th:field="*{imageUrl}"
+                                   placeholder="https://example.com/plant-image.jpg">
+                            <small class="text-muted">Paste an image link or leave blank for a default garden photo.</small>
+                        </div>
+
+                        <!-- Summary -->
+                        <div class="mb-3">
+                            <label for="summary" class="form-label">Short Summary <span class="text-danger">*</span></label>
+                            <input type="text" id="summary" class="form-control" th:field="*{summary}"
+                                   placeholder="A 1-2 sentence overview of this technique..."
+                                   th:classappend="${#fields.hasErrors('summary')} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('summary')}" th:errors="*{summary}">
+                                Summary error
+                            </div>
+                        </div>
+
+                        <!-- Full Content -->
+                        <div class="mb-4">
+                            <label for="content" class="form-label">Detailed Content & Instructions <span class="text-danger">*</span></label>
+                            <textarea id="content" class="form-control" rows="8" th:field="*{content}"
+                                      placeholder="Provide the step-by-step instructions, ingredients, watering schedule, or precautions..."
+                                      th:classappend="${#fields.hasErrors('content')} ? 'is-invalid' : ''"></textarea>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">
+                                Content error
+                            </div>
+                        </div>
+
+                        <!-- Form Buttons -->
+                        <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                            <a th:href="@{/tips}" class="btn btn-outline-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-garden-primary px-4">
+                                <i class="bi bi-check2-circle me-1"></i>
+                                <span th:text="${isEdit} ? 'Save Changes' : 'Publish Tip'">Publish Tip</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>
