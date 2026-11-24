@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.exception.ResourceNotFoundException;
 import com.example.model.DiscussionQuestion;
 import com.example.model.DiscussionReply;
+import com.example.security.OwnershipService;
 import com.example.service.DiscussionService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -16,9 +17,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class DiscussionController {
 
     private final DiscussionService discussionService;
+    private final OwnershipService ownershipService;
 
-    public DiscussionController(DiscussionService discussionService) {
+    public DiscussionController(DiscussionService discussionService, OwnershipService ownershipService) {
         this.discussionService = discussionService;
+        this.ownershipService = ownershipService;
     }
 
     @GetMapping
@@ -38,8 +41,14 @@ public class DiscussionController {
         try {
             DiscussionQuestion question = discussionService.getQuestionById(id);
             model.addAttribute("question", question);
+            model.addAttribute("canModify", ownershipService.canModify(question.getAuthorUsername()));
             if (!model.containsAttribute("newReply")) {
-                model.addAttribute("newReply", new DiscussionReply());
+                DiscussionReply reply = new DiscussionReply();
+                String currentUser = ownershipService.getCurrentUsername();
+                if (currentUser != null) {
+                    reply.setAuthor(currentUser);
+                }
+                model.addAttribute("newReply", reply);
             }
             return "discussions/detail";
         } catch (ResourceNotFoundException | IllegalArgumentException e) {
@@ -50,7 +59,12 @@ public class DiscussionController {
     @GetMapping("/new")
     public String newQuestionForm(Model model) {
         if (!model.containsAttribute("question")) {
-            model.addAttribute("question", new DiscussionQuestion());
+            DiscussionQuestion question = new DiscussionQuestion();
+            String currentUser = ownershipService.getCurrentUsername();
+            if (currentUser != null) {
+                question.setAuthor(currentUser);
+            }
+            model.addAttribute("question", question);
         }
         return "discussions/form";
     }
@@ -63,6 +77,7 @@ public class DiscussionController {
         if (bindingResult.hasErrors()) {
             return "discussions/form";
         }
+        question.setAuthorUsername(ownershipService.getCurrentUsername());
         DiscussionQuestion saved = discussionService.saveQuestion(question);
         redirectAttributes.addFlashAttribute("successMessage", "Your question has been posted to the gardening community!");
         return "redirect:/discussions/" + saved.getId();
@@ -77,6 +92,7 @@ public class DiscussionController {
             redirectAttributes.addFlashAttribute("errorMessage", "Reply content and author name cannot be empty.");
             return "redirect:/discussions/" + id;
         }
+        reply.setAuthorUsername(ownershipService.getCurrentUsername());
         discussionService.addReply(id, reply);
         redirectAttributes.addFlashAttribute("successMessage", "Your advice has been added to the discussion!");
         return "redirect:/discussions/" + id;
@@ -84,6 +100,9 @@ public class DiscussionController {
 
     @PostMapping("/{id}/toggle-resolve")
     public String toggleResolve(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        DiscussionQuestion question = discussionService.getQuestionById(id);
+        ownershipService.verifyCanModify(question.getAuthorUsername(), "discussion question");
+
         discussionService.toggleResolved(id);
         redirectAttributes.addFlashAttribute("successMessage", "Discussion status updated.");
         return "redirect:/discussions/" + id;
@@ -91,12 +110,11 @@ public class DiscussionController {
 
     @PostMapping("/{id}/delete")
     public String deleteQuestion(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-        try {
-            discussionService.deleteQuestion(id);
-            redirectAttributes.addFlashAttribute("successMessage", "Discussion question removed successfully.");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Could not delete question: " + e.getMessage());
-        }
+        DiscussionQuestion question = discussionService.getQuestionById(id);
+        ownershipService.verifyCanModify(question.getAuthorUsername(), "discussion question");
+
+        discussionService.deleteQuestion(id);
+        redirectAttributes.addFlashAttribute("successMessage", "Discussion question removed successfully.");
         return "redirect:/discussions";
     }
 
@@ -104,12 +122,11 @@ public class DiscussionController {
     public String deleteReply(@PathVariable("replyId") Long replyId,
                               @RequestParam("questionId") Long questionId,
                               RedirectAttributes redirectAttributes) {
-        try {
-            discussionService.deleteReply(replyId);
-            redirectAttributes.addFlashAttribute("successMessage", "Reply removed.");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Error: " + e.getMessage());
-        }
+        DiscussionReply reply = discussionService.getReplyById(replyId);
+        ownershipService.verifyCanModify(reply.getAuthorUsername(), "discussion reply");
+
+        discussionService.deleteReply(replyId);
+        redirectAttributes.addFlashAttribute("successMessage", "Reply removed.");
         return "redirect:/discussions/" + questionId;
     }
 

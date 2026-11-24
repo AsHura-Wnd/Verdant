@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.exception.ResourceNotFoundException;
 import com.example.model.GardeningTip;
+import com.example.security.OwnershipService;
 import com.example.service.GardeningTipService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -15,9 +16,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class GardeningTipController {
 
     private final GardeningTipService tipService;
+    private final OwnershipService ownershipService;
 
-    public GardeningTipController(GardeningTipService tipService) {
+    public GardeningTipController(GardeningTipService tipService, OwnershipService ownershipService) {
         this.tipService = tipService;
+        this.ownershipService = ownershipService;
     }
 
     @GetMapping
@@ -36,6 +39,7 @@ public class GardeningTipController {
             GardeningTip tip = tipService.getTipById(id);
             model.addAttribute("tip", tip);
             model.addAttribute("recentTips", tipService.getRecentTips());
+            model.addAttribute("canModify", ownershipService.canModify(tip.getAuthorUsername()));
             return "tips/detail";
         } catch (ResourceNotFoundException | IllegalArgumentException e) {
             return "redirect:/tips";
@@ -45,7 +49,12 @@ public class GardeningTipController {
     @GetMapping("/new")
     public String newTipForm(Model model) {
         if (!model.containsAttribute("tip")) {
-            model.addAttribute("tip", new GardeningTip());
+            GardeningTip tip = new GardeningTip();
+            String currentUsername = ownershipService.getCurrentUsername();
+            if (currentUsername != null) {
+                tip.setAuthor(currentUsername);
+            }
+            model.addAttribute("tip", tip);
         }
         model.addAttribute("isEdit", false);
         return "tips/form";
@@ -60,6 +69,7 @@ public class GardeningTipController {
             model.addAttribute("isEdit", false);
             return "tips/form";
         }
+        tip.setAuthorUsername(ownershipService.getCurrentUsername());
         GardeningTip saved = tipService.saveTip(tip);
         redirectAttributes.addFlashAttribute("successMessage", "Gardening tip '" + saved.getTitle() + "' published successfully!");
         return "redirect:/tips/" + saved.getId();
@@ -67,14 +77,11 @@ public class GardeningTipController {
 
     @GetMapping("/{id}/edit")
     public String editTipForm(@PathVariable("id") Long id, Model model) {
-        try {
-            GardeningTip tip = tipService.getTipById(id);
-            model.addAttribute("tip", tip);
-            model.addAttribute("isEdit", true);
-            return "tips/form";
-        } catch (ResourceNotFoundException | IllegalArgumentException e) {
-            return "redirect:/tips";
-        }
+        GardeningTip tip = tipService.getTipById(id);
+        ownershipService.verifyCanModify(tip.getAuthorUsername(), "gardening tip");
+        model.addAttribute("tip", tip);
+        model.addAttribute("isEdit", true);
+        return "tips/form";
     }
 
     @PostMapping("/{id}/edit")
@@ -83,10 +90,14 @@ public class GardeningTipController {
                             BindingResult bindingResult,
                             RedirectAttributes redirectAttributes,
                             Model model) {
+        GardeningTip existing = tipService.getTipById(id);
+        ownershipService.verifyCanModify(existing.getAuthorUsername(), "gardening tip");
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("isEdit", true);
             return "tips/form";
         }
+        tip.setAuthorUsername(existing.getAuthorUsername());
         tipService.updateTip(id, tip);
         redirectAttributes.addFlashAttribute("successMessage", "Gardening tip updated successfully!");
         return "redirect:/tips/" + id;
@@ -94,12 +105,11 @@ public class GardeningTipController {
 
     @PostMapping("/{id}/delete")
     public String deleteTip(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-        try {
-            tipService.deleteTip(id);
-            redirectAttributes.addFlashAttribute("successMessage", "Gardening tip deleted successfully.");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Could not delete tip: " + e.getMessage());
-        }
+        GardeningTip tip = tipService.getTipById(id);
+        ownershipService.verifyCanModify(tip.getAuthorUsername(), "gardening tip");
+
+        tipService.deleteTip(id);
+        redirectAttributes.addFlashAttribute("successMessage", "Gardening tip deleted successfully.");
         return "redirect:/tips";
     }
 

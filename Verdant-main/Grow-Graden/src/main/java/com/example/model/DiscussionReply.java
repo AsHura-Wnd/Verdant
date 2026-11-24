@@ -17,6 +17,9 @@ public class DiscussionReply {
     @Column(nullable = false, length = 60)
     private String author;
 
+    @Column(length = 50)
+    private String authorUsername;
+
     @NotBlank(message = "Reply content cannot be empty")
     @Lob
     @Column(columnDefinition = "TEXT", nullable = false)
@@ -25,6 +28,9 @@ public class DiscussionReply {
     private boolean expertAdvice = false;
 
     private int upvotes = 0;
+
+    @Version
+    private Long version;
 
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -103,5 +109,21 @@ public class DiscussionReply {
 
     public void setQuestion(DiscussionQuestion question) {
         this.question = question;
+    }
+
+    public String getAuthorUsername() {
+        return authorUsername;
+    }
+
+    public void setAuthorUsername(String authorUsername) {
+        this.authorUsername = authorUsername;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }

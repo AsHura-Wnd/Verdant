@@ -81,7 +81,7 @@
                         <a th:href="@{/tips}" class="btn btn-outline-secondary btn-sm">
                             <i class="bi bi-arrow-left me-1"></i> Back
                         </a>
-                        <div class="d-flex gap-2">
+                        <div class="d-flex gap-2" th:if="${canModify}">
                             <a th:href="@{/tips/{id}/edit(id=${tip.id})}" class="btn btn-outline-primary btn-sm">
                                 <i class="bi bi-pencil-square me-1"></i> Edit Tip
                             </a>

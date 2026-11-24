@@ -2,6 +2,7 @@ package com.example.repository;
 
 import com.example.model.GardeningTip;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -28,4 +29,8 @@ public interface GardeningTipRepository extends JpaRepository<GardeningTip, Long
     List<GardeningTip> findTop5ByOrderByCreatedAtDesc();
 
     long countByCategoryIgnoreCase(String category);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("UPDATE GardeningTip t SET t.likesCount = t.likesCount + 1 WHERE t.id = :id")
+    int incrementLikesCount(@Param("id") Long id);
 }

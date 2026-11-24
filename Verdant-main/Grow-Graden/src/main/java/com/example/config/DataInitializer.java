@@ -4,10 +4,13 @@ import com.example.model.DiscussionQuestion;
 import com.example.model.DiscussionReply;
 import com.example.model.GardenProject;
 import com.example.model.GardeningTip;
+import com.example.model.User;
 import com.example.repository.DiscussionQuestionRepository;
 import com.example.repository.GardenProjectRepository;
 import com.example.repository.GardeningTipRepository;
+import com.example.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -18,17 +21,24 @@ public class DataInitializer implements CommandLineRunner {
     private final GardeningTipRepository tipRepository;
     private final DiscussionQuestionRepository questionRepository;
     private final GardenProjectRepository projectRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public DataInitializer(GardeningTipRepository tipRepository,
                            DiscussionQuestionRepository questionRepository,
-                           GardenProjectRepository projectRepository) {
+                           GardenProjectRepository projectRepository,
+                           UserRepository userRepository,
+                           PasswordEncoder passwordEncoder) {
         this.tipRepository = tipRepository;
         this.questionRepository = questionRepository;
         this.projectRepository = projectRepository;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public void run(String... args) {
+        initUsers();
         if (tipRepository.count() == 0) {
             initGardeningTips();
         }
@@ -37,6 +47,45 @@ public class DataInitializer implements CommandLineRunner {
         }
         if (projectRepository.count() == 0) {
             initProjects();
+        }
+    }
+
+    private void initUsers() {
+        if (!userRepository.existsByUsername("admin")) {
+            userRepository.save(new User(
+                    "admin",
+                    passwordEncoder.encode("Admin@123"),
+                    "System Administrator",
+                    "admin@verdant.org",
+                    "ROLE_ADMIN"
+            ));
+        }
+        if (!userRepository.existsByUsername("elena")) {
+            userRepository.save(new User(
+                    "elena",
+                    passwordEncoder.encode("Elena@123"),
+                    "Elena Rostova",
+                    "elena@verdant.org",
+                    "ROLE_USER"
+            ));
+        }
+        if (!userRepository.existsByUsername("marcus")) {
+            userRepository.save(new User(
+                    "marcus",
+                    passwordEncoder.encode("Marcus@123"),
+                    "Dr. Marcus Chen",
+                    "marcus@verdant.org",
+                    "ROLE_USER"
+            ));
+        }
+        if (!userRepository.existsByUsername("chloe")) {
+            userRepository.save(new User(
+                    "chloe",
+                    passwordEncoder.encode("Chloe@123"),
+                    "Chloe Bennett",
+                    "chloe@verdant.org",
+                    "ROLE_USER"
+            ));
         }
     }
 
@@ -60,6 +109,7 @@ public class DataInitializer implements CommandLineRunner {
                 "Roses, Hibiscus & Veggies",
                 "https://images.unsplash.com/photo-1592417817098-8f3d6ef23117?auto=format&fit=crop&w=800&q=80"
         );
+        tip1.setAuthorUsername("elena");
         tip1.setLikesCount(42);
         tipRepository.save(tip1);
 
@@ -79,6 +129,7 @@ public class DataInitializer implements CommandLineRunner {
                 "Potted Houseplants & Herbs",
                 "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=800&q=80"
         );
+        tip2.setAuthorUsername("marcus");
         tip2.setLikesCount(35);
         tipRepository.save(tip2);
 
@@ -99,6 +150,7 @@ public class DataInitializer implements CommandLineRunner {
                 "Monstera, Pothos & Philodendron",
                 "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&w=800&q=80"
         );
+        tip3.setAuthorUsername("chloe");
         tip3.setLikesCount(58);
         tipRepository.save(tip3);
 
@@ -116,6 +168,7 @@ public class DataInitializer implements CommandLineRunner {
                 "Vegetables, Roses & Cucurbits",
                 "https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?auto=format&fit=crop&w=800&q=80"
         );
+        tip4.setAuthorUsername("marcus");
         tip4.setLikesCount(29);
         tipRepository.save(tip4);
 
@@ -133,6 +186,7 @@ public class DataInitializer implements CommandLineRunner {
                 "Cherry Tomatoes & Peppers",
                 "https://images.unsplash.com/photo-1592841200221-a6898f307baa?auto=format&fit=crop&w=800&q=80"
         );
+        tip5.setAuthorUsername("elena");
         tip5.setLikesCount(47);
         tipRepository.save(tip5);
     }
@@ -146,6 +200,7 @@ public class DataInitializer implements CommandLineRunner {
                 "Monstera Deliciosa",
                 "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&w=800&q=80"
         );
+        q1.setAuthorUsername("chloe");
         q1.setViewsCount(142);
         q1.setResolved(true);
 
@@ -154,6 +209,7 @@ public class DataInitializer implements CommandLineRunner {
                 "This is almost certainly early-stage overwatering leading to root suffocation. In indoor settings, watering every 5 days is typically too frequent unless the plant is in a terracotta pot in full sun. Check the soil depth with a wooden chopstick: only water when the top 2-3 inches are bone dry. Also ensure your pot has adequate drainage holes!",
                 true
         );
+        r1.setAuthorUsername("elena");
         r1.setUpvotes(18);
         q1.addReply(r1);
 
@@ -162,6 +218,7 @@ public class DataInitializer implements CommandLineRunner {
                 "Agree with Dr. Priya. Also, feel the brown patches: if they are soft/mushy, that confirms fungal edema from excess moisture. Trim off the completely yellow leaves with clean scissors and hold off watering for at least 10 days.",
                 false
         );
+        r2.setAuthorUsername("marcus");
         r2.setUpvotes(9);
         q1.addReply(r2);
 
@@ -175,6 +232,7 @@ public class DataInitializer implements CommandLineRunner {
                 "Hybrid Tea Roses",
                 "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80"
         );
+        q2.setAuthorUsername("elena");
         q2.setViewsCount(87);
         q2.setResolved(true);
 
@@ -183,6 +241,7 @@ public class DataInitializer implements CommandLineRunner {
                 "That is classic Powdery Mildew (Podosphaera pannosa). Prepare a mild bio-fungicide: dissolve 1 teaspoon potassium bicarbonate (or baking soda) and a few drops of dish soap in 1L water, and spray thoroughly in the morning. Also, prune the dense center of your rose bush so air can circulate freely.",
                 true
         );
+        r3.setAuthorUsername("marcus");
         r3.setUpvotes(12);
         q2.addReply(r3);
 
@@ -196,6 +255,7 @@ public class DataInitializer implements CommandLineRunner {
                 "Winter Greens",
                 null
         );
+        q3.setAuthorUsername("chloe");
         q3.setViewsCount(65);
         q3.setResolved(false);
 
@@ -204,6 +264,7 @@ public class DataInitializer implements CommandLineRunner {
                 "With 6 inches depth and 4 hours of morning sun, leafy greens will do exceptionally well! Spinach (Palak), Coriander (Dhania), Fenugreek (Methi), and loose-leaf lettuce have shallow fibrous root systems and love cool weather. Avoid deep taproot carrots or large brassicas like cauliflower.",
                 true
         );
+        r4.setAuthorUsername("elena");
         r4.setUpvotes(8);
         q3.addReply(r4);
 
@@ -217,6 +278,7 @@ public class DataInitializer implements CommandLineRunner {
                 "Citrus / Meyer Lemon",
                 null
         );
+        q4.setAuthorUsername("marcus");
         q4.setViewsCount(53);
         q4.setResolved(false);
 
@@ -225,6 +287,7 @@ public class DataInitializer implements CommandLineRunner {
                 "Yes, those fine webbings and stippled yellow dots are hallmark signs of spider mites! They thrive in hot, dry conditions. Immediately isolate the tree, give the entire canopy a strong spray with a hose to knock down the population, and follow up with cold-pressed neem oil or insecticidal soap.",
                 true
         );
+        r5.setAuthorUsername("elena");
         r5.setUpvotes(6);
         q4.addReply(r5);
 
@@ -244,6 +307,7 @@ public class DataInitializer implements CommandLineRunner {
                 "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=800&q=80",
                 "Rohan & Sneha"
         );
+        p1.setAuthorUsername("elena");
         projectRepository.save(p1);
 
         GardenProject p2 = new GardenProject(
@@ -258,6 +322,7 @@ public class DataInitializer implements CommandLineRunner {
                 "https://images.unsplash.com/photo-1592841200221-a6898f307baa?auto=format&fit=crop&w=800&q=80",
                 "Arun Mehta"
         );
+        p2.setAuthorUsername("marcus");
         projectRepository.save(p2);
 
         GardenProject p3 = new GardenProject(
@@ -272,6 +337,7 @@ public class DataInitializer implements CommandLineRunner {
                 "https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&w=800&q=80",
                 "Maya Kapoor"
         );
+        p3.setAuthorUsername("chloe");
         projectRepository.save(p3);
 
         GardenProject p4 = new GardenProject(
@@ -286,6 +352,7 @@ public class DataInitializer implements CommandLineRunner {
                 "https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?auto=format&fit=crop&w=800&q=80",
                 "Gurpreet Singh"
         );
+        p4.setAuthorUsername("admin");
         projectRepository.save(p4);
     }
 }

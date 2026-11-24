@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:fragment="head(title)">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -79,8 +79,38 @@
                 </ul>
             </nav>
 
+            <!-- User Authentication Section (Desktop) -->
+            <div class="sidebar-auth-wrapper mt-auto pt-2 border-top border-secondary border-opacity-25" style="padding: 0 10px;">
+                <div sec:authorize="isAuthenticated()" class="d-flex flex-column gap-2 mb-2">
+                    <div class="d-flex align-items-center gap-1 text-white-50 small sidebar-expand-text">
+                        <span class="badge bg-success-subtle text-success rounded-pill px-2 py-1"><i class="bi bi-person-check-fill me-1"></i><span sec:authentication="name">User</span></span>
+                        <span sec:authorize="hasRole('ADMIN')" class="badge bg-danger-subtle text-danger rounded-pill px-2 py-1">Admin</span>
+                    </div>
+                    <a sec:authorize="hasRole('ADMIN')" th:href="@{/h2-console}" target="_blank" class="sidebar-nav-link py-1 small" title="H2 Database Console">
+                        <span class="nav-icon-box" style="width: 24px; height: 24px;"><i class="bi bi-database text-warning" style="font-size: 0.85rem;"></i></span>
+                        <span class="nav-label sidebar-expand-text" style="font-size: 0.8rem;">H2 Console</span>
+                    </a>
+                    <form th:action="@{/logout}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-outline-light border-opacity-25 w-100 text-start d-flex align-items-center gap-2 py-1 px-2 sidebar-expand-text" style="font-size: 0.8rem;">
+                            <i class="bi bi-box-arrow-right text-danger"></i>
+                            <span>Sign Out</span>
+                        </button>
+                    </form>
+                </div>
+                <div sec:authorize="!isAuthenticated()" class="d-flex flex-column gap-2 mb-2">
+                    <a th:href="@{/login}" class="sidebar-nav-link py-1" title="Sign In">
+                        <span class="nav-icon-box" style="width: 28px; height: 28px;"><i class="bi bi-box-arrow-in-right text-success"></i></span>
+                        <span class="nav-label sidebar-expand-text" style="font-size: 0.85rem;">Sign In</span>
+                    </a>
+                    <a th:href="@{/register}" class="sidebar-nav-link py-1" title="Register Account">
+                        <span class="nav-icon-box" style="width: 28px; height: 28px;"><i class="bi bi-person-plus text-info"></i></span>
+                        <span class="nav-label sidebar-expand-text" style="font-size: 0.85rem;">Register</span>
+                    </a>
+                </div>
+            </div>
+
             <!-- Bottom Action CTA -->
-            <div class="sidebar-footer-cta mt-auto pt-2">
+            <div class="sidebar-footer-cta pt-2">
                 <a th:href="@{/projects/new}" class="sidebar-share-btn w-100" aria-label="Share Your Garden" title="Share Your Garden">
                     <span class="share-btn-icon-box"><i class="bi bi-plus-lg"></i></span>
                     <span class="sidebar-expand-text">Share Your Garden</span>
@@ -145,6 +175,38 @@
 
                 <hr class="border-secondary opacity-25 my-3">
 
+                <!-- Mobile Authentication Status -->
+                <div class="p-2 mb-3 bg-dark bg-opacity-50 rounded-3 border border-secondary border-opacity-25">
+                    <div sec:authorize="isAuthenticated()" class="d-flex flex-column gap-2">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center gap-2 text-white small">
+                                <i class="bi bi-person-circle text-success fs-5"></i>
+                                <div>
+                                    <div class="fw-semibold lh-1" sec:authentication="name">User</div>
+                                    <small class="text-white-50" style="font-size: 0.7rem;">Active Session</small>
+                                </div>
+                            </div>
+                            <span sec:authorize="hasRole('ADMIN')" class="badge bg-danger text-white">ADMIN</span>
+                        </div>
+                        <a sec:authorize="hasRole('ADMIN')" th:href="@{/h2-console}" target="_blank" class="btn btn-sm btn-outline-warning w-100 py-1" style="font-size: 0.75rem;">
+                            <i class="bi bi-database me-1"></i> H2 DB Console
+                        </a>
+                        <form th:action="@{/logout}" method="post" class="mt-1">
+                            <button type="submit" class="btn btn-sm btn-outline-light w-100 py-1" style="font-size: 0.8rem;">
+                                <i class="bi bi-box-arrow-right text-danger me-1"></i> Sign Out
+                            </button>
+                        </form>
+                    </div>
+                    <div sec:authorize="!isAuthenticated()" class="d-flex gap-2">
+                        <a th:href="@{/login}" class="btn btn-sm btn-garden-primary flex-grow-1 py-1 text-center" style="font-size: 0.85rem;">
+                            <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
+                        </a>
+                        <a th:href="@{/register}" class="btn btn-sm btn-outline-light flex-grow-1 py-1 text-center" style="font-size: 0.85rem;">
+                            <i class="bi bi-person-plus me-1"></i> Register
+                        </a>
+                    </div>
+                </div>
+
                 <!-- Prominent 'Share Your Garden' Mobile Button -->
                 <a th:href="@{/projects/new}" class="sidebar-share-btn w-100 justify-content-center py-2 mb-3">
                     <i class="bi bi-flower2"></i>
@@ -179,6 +241,11 @@
         <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show d-flex align-items-center shadow-sm" role="alert">
             <i class="bi bi-exclamation-triangle-fill fs-5 me-2"></i>
             <div th:text="${errorMessage}">Something went wrong!</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${param.forbidden}" class="alert alert-warning alert-dismissible fade show d-flex align-items-center shadow-sm" role="alert">
+            <i class="bi bi-shield-lock-fill fs-5 me-2 text-warning"></i>
+            <div><strong>Access Restricted:</strong> You do not have permission to modify or delete this community content.</div>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     </div>

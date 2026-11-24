@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Member Login - Verdant')}">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav th:replace="~{fragments/layout :: navbar('login')}"></nav>
+
+    <!-- Flash Alerts -->
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+
+    <main class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card card-garden p-4 p-md-5 shadow-sm border-0">
+                    <div class="text-center mb-4">
+                        <div class="brand-icon-box mx-auto mb-3" style="width: 56px; height: 56px; font-size: 1.75rem;">
+                            <i class="bi bi-flower1"></i>
+                        </div>
+                        <h2 class="fw-bold text-dark mb-1">Welcome Back</h2>
+                        <p class="text-muted small">Sign in to your Verdant botanical collective account</p>
+                    </div>
+
+                    <div th:if="${errorMessage}" class="alert alert-danger py-2 px-3 small d-flex align-items-center mb-4">
+                        <i class="bi bi-exclamation-circle-fill me-2"></i>
+                        <span th:text="${errorMessage}">Invalid credentials.</span>
+                    </div>
+
+                    <div th:if="${successMessage}" class="alert alert-success py-2 px-3 small d-flex align-items-center mb-4">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        <span th:text="${successMessage}">Logged out successfully.</span>
+                    </div>
+
+                    <form th:action="@{/login}" method="post">
+                        <!-- CSRF Token automatically injected by Thymeleaf th:action -->
+                        <div class="mb-3">
+                            <label for="username" class="form-label small fw-semibold">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-person text-muted"></i></span>
+                                <input type="text" class="form-control border-start-0" id="username" name="username" placeholder="e.g. elena, admin" required autofocus>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label for="password" class="form-label small fw-semibold">Password</label>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-lock text-muted"></i></span>
+                                <input type="password" class="form-control border-start-0" id="password" name="password" placeholder="Enter your password" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-garden-primary w-100 py-2 mb-3 fw-semibold">
+                            <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-3 pt-3 border-top">
+                        <span class="text-muted small">Don't have an account? </span>
+                        <a th:href="@{/register}" class="text-success fw-semibold small text-decoration-none">Create a Botanical Account</a>
+                    </div>
+
+                    <!-- Preconfigured Demo Accounts Card for Quick Evaluation -->
+                    <div class="mt-4 p-3 bg-light rounded-3 border">
+                        <div class="small fw-bold text-dark mb-2"><i class="bi bi-key-fill text-warning me-1"></i> Demo Access Credentials</div>
+                        <div class="small text-muted font-monospace" style="font-size: 0.78rem;">
+                            <div><strong>Admin:</strong> admin / Admin@123 <span class="badge bg-danger-subtle text-danger">ROLE_ADMIN</span></div>
+                            <div><strong>Member 1:</strong> elena / Elena@123 <span class="badge bg-success-subtle text-success">ROLE_USER</span></div>
+                            <div><strong>Member 2:</strong> marcus / Marcus@123 <span class="badge bg-success-subtle text-success">ROLE_USER</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <!-- Scripts -->
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

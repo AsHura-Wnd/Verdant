@@ -36,13 +36,20 @@ public class GardeningTip {
     @Column(nullable = false, length = 60)
     private String author;
 
+    @Column(length = 50)
+    private String authorUsername;
+
     private String difficultyLevel = "Beginner"; // Beginner, Intermediate, Advanced
 
     private String plantType; // e.g. Vegetables, Indoor Plants, Succulents, Flowers
 
+    @jakarta.validation.constraints.Pattern(regexp = "^(https?://.+)?$", message = "Image URL must start with http:// or https://")
     private String imageUrl;
 
     private int likesCount = 0;
+
+    @Version
+    private Long version;
 
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -170,5 +177,21 @@ public class GardeningTip {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getAuthorUsername() {
+        return authorUsername;
+    }
+
+    public void setAuthorUsername(String authorUsername) {
+        this.authorUsername = authorUsername;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }

@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.exception.ResourceNotFoundException;
 import com.example.model.GardenProject;
+import com.example.security.OwnershipService;
 import com.example.service.GardenProjectService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -15,9 +16,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class GardenProjectController {
 
     private final GardenProjectService projectService;
+    private final OwnershipService ownershipService;
 
-    public GardenProjectController(GardenProjectService projectService) {
+    public GardenProjectController(GardenProjectService projectService, OwnershipService ownershipService) {
         this.projectService = projectService;
+        this.ownershipService = ownershipService;
     }
 
     @GetMapping
@@ -39,6 +42,7 @@ public class GardenProjectController {
         try {
             GardenProject project = projectService.getProjectById(id);
             model.addAttribute("project", project);
+            model.addAttribute("canModify", ownershipService.canModify(project.getAuthorUsername()));
             return "projects/detail";
         } catch (ResourceNotFoundException | IllegalArgumentException e) {
             return "redirect:/projects";
@@ -48,7 +52,12 @@ public class GardenProjectController {
     @GetMapping("/new")
     public String newProjectForm(Model model) {
         if (!model.containsAttribute("project")) {
-            model.addAttribute("project", new GardenProject());
+            GardenProject project = new GardenProject();
+            String currentUser = ownershipService.getCurrentUsername();
+            if (currentUser != null) {
+                project.setGardenerName(currentUser);
+            }
+            model.addAttribute("project", project);
         }
         model.addAttribute("isEdit", false);
         return "projects/form";
@@ -59,10 +68,16 @@ public class GardenProjectController {
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes,
                                 Model model) {
+        if (project.getStartDate() != null && project.getTargetDate() != null
+                && project.getTargetDate().isBefore(project.getStartDate())) {
+            bindingResult.rejectValue("targetDate", "error.project", "Target completion date cannot be before start date");
+        }
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("isEdit", false);
             return "projects/form";
         }
+        project.setAuthorUsername(ownershipService.getCurrentUsername());
         GardenProject saved = projectService.saveProject(project);
         redirectAttributes.addFlashAttribute("successMessage", "Personal gardening project '" + saved.getTitle() + "' created successfully!");
         return "redirect:/projects/" + saved.getId();
@@ -70,14 +85,12 @@ public class GardenProjectController {
 
     @GetMapping("/{id}/edit")
     public String editProjectForm(@PathVariable("id") Long id, Model model) {
-        try {
-            GardenProject project = projectService.getProjectById(id);
-            model.addAttribute("project", project);
-            model.addAttribute("isEdit", true);
-            return "projects/form";
-        } catch (ResourceNotFoundException | IllegalArgumentException e) {
-            return "redirect:/projects";
-        }
+        GardenProject project = projectService.getProjectById(id);
+        ownershipService.verifyCanModify(project.getAuthorUsername(), "garden project");
+
+        model.addAttribute("project", project);
+        model.addAttribute("isEdit", true);
+        return "projects/form";
     }
 
     @PostMapping("/{id}/edit")
@@ -86,10 +99,19 @@ public class GardenProjectController {
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes,
                                 Model model) {
+        GardenProject existing = projectService.getProjectById(id);
+        ownershipService.verifyCanModify(existing.getAuthorUsername(), "garden project");
+
+        if (project.getStartDate() != null && project.getTargetDate() != null
+                && project.getTargetDate().isBefore(project.getStartDate())) {
+            bindingResult.rejectValue("targetDate", "error.project", "Target completion date cannot be before start date");
+        }
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("isEdit", true);
             return "projects/form";
         }
+        project.setAuthorUsername(existing.getAuthorUsername());
         projectService.updateProject(id, project);
         redirectAttributes.addFlashAttribute("successMessage", "Gardening project updated successfully!");
         return "redirect:/projects/" + id;
@@ -97,12 +119,11 @@ public class GardenProjectController {
 
     @PostMapping("/{id}/delete")
     public String deleteProject(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-        try {
-            projectService.deleteProject(id);
-            redirectAttributes.addFlashAttribute("successMessage", "Gardening project deleted successfully.");
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Could not delete project: " + e.getMessage());
-        }
+        GardenProject project = projectService.getProjectById(id);
+        ownershipService.verifyCanModify(project.getAuthorUsername(), "garden project");
+
+        projectService.deleteProject(id);
+        redirectAttributes.addFlashAttribute("successMessage", "Gardening project deleted successfully.");
         return "redirect:/projects";
     }
 }

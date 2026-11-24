@@ -20,6 +20,8 @@ public interface DiscussionService {
 
     DiscussionReply addReply(Long questionId, DiscussionReply reply);
 
+    DiscussionReply getReplyById(Long replyId);
+
     void deleteReply(Long replyId);
 
     void upvoteReply(Long replyId);

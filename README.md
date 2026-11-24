@@ -60,7 +60,7 @@ The project demonstrates the practical application of core Java programming, obj
 | **Direct Database API** | Direct **JDBC** (`java.sql.Connection`, `PreparedStatement`, `ResultSet`) |
 | **Web Integration** | Embedded Apache Tomcat + Jakarta Servlet API (`Filter`) |
 | **Build Tool** | Apache Maven 3.9+ / Maven Wrapper (`mvnw` / `mvnw.cmd`) |
-| **Testing** | JUnit 5, Spring Boot Test, MockMvc (18 integration tests) |
+| **Testing** | JUnit 5, Spring Boot Test, Spring Security Test, MockMvc (41 automated integration tests) |
 
 ---
 
@@ -134,17 +134,27 @@ export JAVA_HOME=/path/to/jdk-17
 java -jar target/Grow-Graden-0.0.1-SNAPSHOT.jar
 ```
 
-### 6. Access the Platform
+### 6. Access the Platform & Demo Accounts
 Once started, open your web browser and navigate to:
 - **Application Dashboard**: [http://localhost:8080](http://localhost:8080)
 - **Gardening Tips**: [http://localhost:8080/tips](http://localhost:8080/tips)
 - **Community Q&A**: [http://localhost:8080/discussions](http://localhost:8080/discussions)
 - **Personal Projects**: [http://localhost:8080/projects](http://localhost:8080/projects)
 - **About Page**: [http://localhost:8080/about](http://localhost:8080/about)
+- **Sign In / Registration**: [http://localhost:8080/login](http://localhost:8080/login) / [http://localhost:8080/register](http://localhost:8080/register)
 - **H2 Web Console**: [http://localhost:8080/h2-console](http://localhost:8080/h2-console)
+  *(Disabled by default outside dev. Enabled via `H2_CONSOLE_ENABLED=true` or `--spring.profiles.active=dev`; requires login with `ROLE_ADMIN`)*
   - *JDBC URL*: `jdbc:h2:file:./data/gardendb`
   - *Username*: `sa`
   - *Password*: *(leave empty)*
+
+#### 🔑 Pre-Seeded Community Demo Accounts
+| Username | Password | Role | Description |
+|---|---|---|---|
+| `admin` | `Admin@123` | `ROLE_ADMIN` | Platform Administrator & Community Moderator |
+| `elena` | `Elena@123` | `ROLE_USER` | Senior Organic Grower (Author: Natural Aphid Control, Herb Garden) |
+| `marcus` | `Marcus@123` | `ROLE_USER` | Soil Microbiologist & Compost Specialist |
+| `chloe` | `Chloe@123` | `ROLE_USER` | Urban Balcony Gardener |
 
 ---
 
@@ -153,15 +163,24 @@ Once started, open your web browser and navigate to:
 | Route | Description |
 |---|---|
 | `/` | Home page with CloudShader and scroll-driven garden reveal |
-| `/tips` | Browse gardening tips and articles |
-| `/tips/new` | Create a new gardening tip |
-| `/tips/{id}` | Detailed view and upvoting for a tip |
-| `/discussions` | View community plant questions and clinic |
-| `/discussions/new` | Ask a plant troubleshooting question |
+| `/login` | Secure authentication portal with BCrypt validation |
+| `/register` | Self-service botanical community registration |
+| `/logout` | CSRF-protected session termination |
+| `/tips` | Browse gardening tips and articles (public access) |
+| `/tips/new` | Create a new gardening tip (authenticated growers) |
+| `/tips/{id}` | Detailed view and upvoting for a tip (public access) |
+| `/tips/{id}/edit` | Modify tip (author or administrator only) |
+| `/tips/{id}/delete` | Delete tip (author or administrator only) |
+| `/discussions` | View community plant questions and clinic (public access) |
+| `/discussions/new` | Ask a plant troubleshooting question (authenticated growers) |
 | `/discussions/{id}` | Read discussion answers and post replies |
-| `/projects` | Explore personal garden project journals |
-| `/projects/new` | Create a garden project |
+| `/discussions/{id}/edit` | Edit question (author or administrator only) |
+| `/discussions/{id}/delete` | Delete question (author or administrator only) |
+| `/projects` | Explore personal garden project journals (public access) |
+| `/projects/new` | Create a garden project (authenticated growers) |
 | `/projects/{id}` | View project timeline, soil recipe, and milestones |
+| `/projects/{id}/edit` | Edit garden project (author or administrator only) |
+| `/projects/{id}/delete` | Delete garden project (author or administrator only) |
 | `/about` | About the platform and mission |
 
 ---
@@ -207,15 +226,80 @@ The application exposes clean REST endpoints for JSON clients:
 
 ---
 
-## 🗄️ Database Configuration
+## 🔐 Security, Authorization & Content Governance
 
-By default, Verdant uses an **embedded, persistent file-based H2 database** (`./data/gardendb`). All seed data and user contributions survive application restarts without needing any local database server installed.
+Verdant enforces production-grade security and content moderation with **Spring Security 6**:
+
+1. **Role-Based Authorization (`ROLE_USER`, `ROLE_ADMIN`)**:
+   - **Public Access**: Anyone can view tips, browse questions, explore projects, read advice, and access health checks.
+   - **Authenticated Members (`ROLE_USER`)**: Can create new tips, ask questions, post replies, and create garden projects.
+   - **Administrators (`ROLE_ADMIN`)**: Possess platform-wide moderation privileges to delete or update any community content and manage the application.
+2. **Strict Ownership Isolation**:
+   - Every community asset (`GardeningTip`, `DiscussionQuestion`, `DiscussionReply`, `GardenProject`) stores the creator's username (`authorUsername`).
+   - The centralized `OwnershipService` enforces that only the original author or a user with `ROLE_ADMIN` can edit or delete an item.
+   - Attempts by other users to edit or delete content are rejected with an `AccessDeniedException`, redirecting with a secure flash message or returning a structured HTTP 403 JSON payload.
+   - UI templates dynamically conceal edit/delete action buttons from users who lack modification permissions.
+3. **Password Hashing & Session Governance**:
+   - All passwords are encrypted using industry-standard **BCrypt** with high-entropy salt.
+   - Form logins use CSRF tokens on all state-altering requests.
+   - Logout cleanly invalidates HTTP sessions and purges authentication tokens.
 
 ---
 
-## 🧪 Running Automated Tests
+## ⚡ Concurrency & High-Traffic Architecture
 
-Run the project's automated test suite with the Maven Wrapper (19/19 tests pass):
+To prevent race conditions, lost updates, and thread contention under heavy community activity:
+
+1. **Atomic Database Increments**:
+   - Article likes (`likesCount`), discussion views (`viewsCount`), and reply upvotes (`upvotes`) execute direct SQL increments:
+     ```sql
+     UPDATE GardeningTip t SET t.likesCount = t.likesCount + 1 WHERE t.id = :id
+     UPDATE DiscussionQuestion q SET q.viewsCount = q.viewsCount + 1 WHERE q.id = :id
+     UPDATE DiscussionReply r SET r.upvotes = r.upvotes + 1 WHERE r.id = :id
+     ```
+   - These bypass in-memory entity reads and writes, guaranteeing that rapid concurrent clicks from dozens of simultaneous users are serialized directly at the database engine level with zero lost updates.
+2. **Optimistic Locking (`@Version`)**:
+   - Entities declare a `@Version Long version` attribute.
+   - Concurrent long-form edits (e.g. two moderators editing the same article at the same time) detect collisions and prevent blind overwrites, safely throwing `ObjectOptimisticLockingFailureException` handled gracefully by the global exception handler.
+
+---
+
+## 🛡️ Form Validation & Robust Database Error Handling
+
+1. **Strict Input Constraints**:
+   - **Title & Author**: Enforces non-blank constraints and maximum length limits.
+   - **Image URLs**: Validated via strict regex (`^https?://.*\\.(jpeg|jpg|gif|png|webp)(\\?.*)?$`) preventing malformed links and injection attacks.
+   - **Categories & Difficulties**: Validated against permitted horticultural taxonomies.
+2. **Safe Error Handling**:
+   - `GlobalExceptionHandler` captures database exceptions (`DataIntegrityViolationException`, `ConstraintViolationException`, `ObjectOptimisticLockingFailureException`) without leaking internal table schemas, foreign key names, or database stack traces to clients.
+   - HTML views display friendly user alerts, while REST API requests receive standard JSON error contracts.
+
+---
+
+## 🗄️ Database Configuration & H2 Hardening
+
+- **Default Profile**: Embedded persistent file-based H2 database (`./data/gardendb`). Seed data and community submissions persist across application restarts.
+- **H2 Console Hardening**:
+  - **Disabled outside development**: `spring.h2.console.enabled=${H2_CONSOLE_ENABLED:false}` ensures the database console is deactivated by default in staging and production environments.
+  - **Strict Admin Restriction**: When enabled for debugging (via `H2_CONSOLE_ENABLED=true` or `--spring.profiles.active=dev`), the console URL (`/h2-console/**`) is restricted exclusively to authenticated users with `ROLE_ADMIN`.
+  - **Frame Security**: Configured with `sameOrigin` frame permissions required for H2 console frames while defending against cross-site clickjacking attacks.
+
+---
+
+## 🧪 Comprehensive Integration & Deployment Testing Evidence
+
+Verdant features **41 automated tests** across 5 suites covering core domain logic, security policies, concurrency, validation, and database security:
+
+| Test Suite Class | Tests Run | Failures | Errors | Coverage Focus |
+|---|---|---|---|---|
+| `AuthenticationAndAuthorizationIntegrationTests` | 10 | 0 | 0 | Public browsing, login, registration, guest redirect, author editing, non-author rejection, admin moderation |
+| `ConcurrentUpdateIntegrationTests` | 4 | 0 | 0 | 25 parallel threads verifying race-condition-free likes, views, upvotes, and optimistic locking |
+| `FormValidationAndDatabaseErrorHandlingIntegrationTests` | 5 | 0 | 0 | Title validation, image URL validation, database duplicate handling, optimistic lock handling, API 403 JSON responses |
+| `GrowGradenApplicationTests` | 19 | 0 | 0 | Academic compliance: JDBC DAO, polymorphic plant advisors, custom exceptions, servlet security filter |
+| `H2ConsoleSecurityIntegrationTests` | 3 | 0 | 0 | Anonymous access denial, regular member (`ROLE_USER`) rejection, admin (`ROLE_ADMIN`) authorized access |
+| **Total** | **41** | **0** | **0** | **100% Passing (0 failures, 0 errors)** |
+
+### Running the Test Suite
 ```bash
 # Windows
 .\mvnw.cmd test

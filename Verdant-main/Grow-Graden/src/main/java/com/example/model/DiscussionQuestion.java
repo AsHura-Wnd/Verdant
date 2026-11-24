@@ -33,13 +33,20 @@ public class DiscussionQuestion {
     @Column(nullable = false, length = 60)
     private String author;
 
+    @Column(length = 50)
+    private String authorUsername;
+
     private String plantType; // e.g. "Monstera Deliciosa", "Rose Bush", "Tomato"
 
+    @jakarta.validation.constraints.Pattern(regexp = "^(https?://.+)?$", message = "Image URL must start with http:// or https://")
     private String imageUrl;
 
     private boolean resolved = false;
 
     private int viewsCount = 0;
+
+    @Version
+    private Long version;
 
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -178,5 +185,21 @@ public class DiscussionQuestion {
 
     public void setReplies(List<DiscussionReply> replies) {
         this.replies = replies;
+    }
+
+    public String getAuthorUsername() {
+        return authorUsername;
+    }
+
+    public void setAuthorUsername(String authorUsername) {
+        this.authorUsername = authorUsername;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }

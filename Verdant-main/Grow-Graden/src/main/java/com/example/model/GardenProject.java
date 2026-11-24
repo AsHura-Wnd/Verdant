@@ -48,11 +48,18 @@ public class GardenProject {
     @Column(columnDefinition = "TEXT")
     private String notes; // Care routine, soil mixture, milestones
 
+    @jakarta.validation.constraints.Pattern(regexp = "^(https?://.+)?$", message = "Image URL must start with http:// or https://")
     private String imageUrl;
 
     @NotBlank(message = "Gardener name is required")
     @Column(nullable = false, length = 60)
     private String gardenerName;
+
+    @Column(length = 50)
+    private String authorUsername;
+
+    @Version
+    private Long version;
 
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -194,5 +201,21 @@ public class GardenProject {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getAuthorUsername() {
+        return authorUsername;
+    }
+
+    public void setAuthorUsername(String authorUsername) {
+        this.authorUsername = authorUsername;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }

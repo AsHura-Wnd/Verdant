@@ -2,6 +2,7 @@ package com.example.repository;
 
 import com.example.model.DiscussionQuestion;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -27,4 +28,8 @@ public interface DiscussionQuestionRepository extends JpaRepository<DiscussionQu
     List<DiscussionQuestion> findTop5ByOrderByCreatedAtDesc();
 
     long countByResolved(boolean resolved);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("UPDATE DiscussionQuestion q SET q.viewsCount = q.viewsCount + 1 WHERE q.id = :id")
+    int incrementViewsCount(@Param("id") Long id);
 }

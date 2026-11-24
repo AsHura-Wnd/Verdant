@@ -42,10 +42,12 @@ public class DiscussionServiceImpl implements DiscussionService {
 
     @Override
     public DiscussionQuestion getQuestionById(Long id) {
-        DiscussionQuestion question = questionRepository.findById(id)
+        int updated = questionRepository.incrementViewsCount(id);
+        if (updated == 0) {
+            throw new DiscussionQuestionNotFoundException(id);
+        }
+        return questionRepository.findById(id)
                 .orElseThrow(() -> new DiscussionQuestionNotFoundException(id));
-        question.setViewsCount(question.getViewsCount() + 1);
-        return questionRepository.save(question);
     }
 
     @Override
@@ -90,16 +92,23 @@ public class DiscussionServiceImpl implements DiscussionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public DiscussionReply getReplyById(Long replyId) {
+        return replyRepository.findById(replyId)
+                .orElseThrow(() -> new ResourceNotFoundException("Discussion Reply", replyId));
+    }
+
+    @Override
     public void deleteReply(Long replyId) {
         replyRepository.deleteById(replyId);
     }
 
     @Override
     public void upvoteReply(Long replyId) {
-        DiscussionReply reply = replyRepository.findById(replyId)
-                .orElseThrow(() -> new ResourceNotFoundException("Discussion Reply", replyId));
-        reply.setUpvotes(reply.getUpvotes() + 1);
-        replyRepository.save(reply);
+        int updated = replyRepository.incrementUpvotes(replyId);
+        if (updated == 0) {
+            throw new ResourceNotFoundException("Discussion Reply", replyId);
+        }
     }
 
     @Override

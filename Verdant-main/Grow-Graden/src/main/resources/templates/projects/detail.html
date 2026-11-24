@@ -90,7 +90,7 @@
                         <a th:href="@{/projects}" class="btn btn-outline-secondary btn-sm">
                             <i class="bi bi-arrow-left me-1"></i> Back to Projects
                         </a>
-                        <div class="d-flex gap-2">
+                        <div class="d-flex gap-2" th:if="${canModify}">
                             <a th:href="@{/projects/{id}/edit(id=${project.id})}" class="btn btn-outline-primary btn-sm">
                                 <i class="bi bi-pencil-square me-1"></i> Edit Project
                             </a>

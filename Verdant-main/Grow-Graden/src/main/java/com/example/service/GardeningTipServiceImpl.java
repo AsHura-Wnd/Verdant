@@ -66,9 +66,10 @@ public class GardeningTipServiceImpl implements GardeningTipService {
 
     @Override
     public void likeTip(Long id) {
-        GardeningTip tip = getTipById(id);
-        tip.setLikesCount(tip.getLikesCount() + 1);
-        tipRepository.save(tip);
+        int updated = tipRepository.incrementLikesCount(id);
+        if (updated == 0) {
+            throw new GardeningTipNotFoundException(id);
+        }
     }
 
     @Override
