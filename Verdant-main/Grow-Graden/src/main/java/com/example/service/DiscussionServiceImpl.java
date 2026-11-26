@@ -11,6 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Transactional Spring Data JPA implementation of {@link DiscussionService}.
+ * Uses atomic repository queries for concurrent view and upvote increments.
+ */
 @Service
 @Transactional
 @SuppressWarnings("null")
@@ -19,12 +23,19 @@ public class DiscussionServiceImpl implements DiscussionService {
     private final DiscussionQuestionRepository questionRepository;
     private final DiscussionReplyRepository replyRepository;
 
+    /**
+     * Creates a new {@code DiscussionServiceImpl}.
+     *
+     * @param questionRepository JPA repository for discussion questions
+     * @param replyRepository JPA repository for discussion replies
+     */
     public DiscussionServiceImpl(DiscussionQuestionRepository questionRepository,
                                  DiscussionReplyRepository replyRepository) {
         this.questionRepository = questionRepository;
         this.replyRepository = replyRepository;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Transactional(readOnly = true)
     public List<DiscussionQuestion> getAllQuestions(String query, String category, Boolean resolved) {
@@ -40,6 +51,7 @@ public class DiscussionServiceImpl implements DiscussionService {
         return questionRepository.findAllByOrderByCreatedAtDesc();
     }
 
+    /** {@inheritDoc} */
     @Override
     public DiscussionQuestion getQuestionById(Long id) {
         int updated = questionRepository.incrementViewsCount(id);
@@ -50,11 +62,13 @@ public class DiscussionServiceImpl implements DiscussionService {
                 .orElseThrow(() -> new DiscussionQuestionNotFoundException(id));
     }
 
+    /** {@inheritDoc} */
     @Override
     public DiscussionQuestion saveQuestion(DiscussionQuestion question) {
         return questionRepository.save(question);
     }
 
+    /** {@inheritDoc} */
     @Override
     public DiscussionQuestion updateQuestion(Long id, DiscussionQuestion updatedQuestion) {
         DiscussionQuestion existing = questionRepository.findById(id)
@@ -70,11 +84,13 @@ public class DiscussionServiceImpl implements DiscussionService {
         return questionRepository.save(existing);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void deleteQuestion(Long id) {
         questionRepository.deleteById(id);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void toggleResolved(Long id) {
         DiscussionQuestion question = questionRepository.findById(id)
@@ -83,6 +99,7 @@ public class DiscussionServiceImpl implements DiscussionService {
         questionRepository.save(question);
     }
 
+    /** {@inheritDoc} */
     @Override
     public DiscussionReply addReply(Long questionId, DiscussionReply reply) {
         DiscussionQuestion question = questionRepository.findById(questionId)
@@ -91,6 +108,7 @@ public class DiscussionServiceImpl implements DiscussionService {
         return replyRepository.save(reply);
     }
 
+    /** {@inheritDoc} */
     @Override
     @Transactional(readOnly = true)
     public DiscussionReply getReplyById(Long replyId) {
@@ -98,11 +116,13 @@ public class DiscussionServiceImpl implements DiscussionService {
                 .orElseThrow(() -> new ResourceNotFoundException("Discussion Reply", replyId));
     }
 
+    /** {@inheritDoc} */
     @Override
     public void deleteReply(Long replyId) {
         replyRepository.deleteById(replyId);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void upvoteReply(Long replyId) {
         int updated = replyRepository.incrementUpvotes(replyId);
@@ -111,18 +131,21 @@ public class DiscussionServiceImpl implements DiscussionService {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     @Transactional(readOnly = true)
     public List<DiscussionQuestion> getRecentQuestions() {
         return questionRepository.findTop5ByOrderByCreatedAtDesc();
     }
 
+    /** {@inheritDoc} */
     @Override
     @Transactional(readOnly = true)
     public long countTotalQuestions() {
         return questionRepository.count();
     }
 
+    /** {@inheritDoc} */
     @Override
     @Transactional(readOnly = true)
     public long countResolvedQuestions() {

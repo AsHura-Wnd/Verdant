@@ -107,4 +107,26 @@ class FormValidationAndDatabaseErrorHandlingIntegrationTests {
                 .andExpect(jsonPath("$.message").value(containsString("888888")))
                 .andExpect(jsonPath("$.path").value("/api/tips/888888"));
     }
+
+    @Test
+    @DisplayName("REST @RestControllerAdvice: Missing required query parameter returns clean 400 JSON")
+    void testRestMissingRequestParameterReturnsBadRequest() throws Exception {
+        mockMvc.perform(get("/api/advisor/diagnose").param("plantType", "Tomato"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.error").value("Bad Request"))
+                .andExpect(jsonPath("$.message").value(containsString("symptom")))
+                .andExpect(jsonPath("$.path").value("/api/advisor/diagnose"));
+    }
+
+    @Test
+    @DisplayName("REST @RestControllerAdvice: Invalid path variable type returns clean 400 JSON")
+    void testRestTypeMismatchReturnsBadRequest() throws Exception {
+        mockMvc.perform(get("/api/tips/not-a-number"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.error").value("Bad Request"))
+                .andExpect(jsonPath("$.message").value(containsString("id")))
+                .andExpect(jsonPath("$.path").value("/api/tips/not-a-number"));
+    }
 }

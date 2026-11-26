@@ -5,6 +5,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
 
+/**
+ * JPA entity representing a community-authored gardening tip or horticultural guide.
+ * Includes validation constraints, author ownership metadata, and {@code @Version} optimistic locking.
+ */
 @Entity
 @Table(name = "gardening_tips")
 public class GardeningTip {

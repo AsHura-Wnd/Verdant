@@ -8,6 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Transactional Spring Data JPA implementation of {@link GardeningTipService}.
+ */
 @Service
 @Transactional
 @SuppressWarnings("null")
@@ -15,10 +18,16 @@ public class GardeningTipServiceImpl implements GardeningTipService {
 
     private final GardeningTipRepository tipRepository;
 
+    /**
+     * Creates a new {@code GardeningTipServiceImpl}.
+     *
+     * @param tipRepository JPA repository for gardening tips
+     */
     public GardeningTipServiceImpl(GardeningTipRepository tipRepository) {
         this.tipRepository = tipRepository;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Transactional(readOnly = true)
     public List<GardeningTip> getAllTips(String query, String category) {
@@ -31,6 +40,7 @@ public class GardeningTipServiceImpl implements GardeningTipService {
         return tipRepository.findAllByOrderByCreatedAtDesc();
     }
 
+    /** {@inheritDoc} */
     @Override
     @Transactional(readOnly = true)
     public GardeningTip getTipById(Long id) {
@@ -38,11 +48,13 @@ public class GardeningTipServiceImpl implements GardeningTipService {
                 .orElseThrow(() -> new GardeningTipNotFoundException(id));
     }
 
+    /** {@inheritDoc} */
     @Override
     public GardeningTip saveTip(GardeningTip tip) {
         return tipRepository.save(tip);
     }
 
+    /** {@inheritDoc} */
     @Override
     public GardeningTip updateTip(Long id, GardeningTip updatedTip) {
         GardeningTip existing = getTipById(id);
@@ -59,11 +71,13 @@ public class GardeningTipServiceImpl implements GardeningTipService {
         return tipRepository.save(existing);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void deleteTip(Long id) {
         tipRepository.deleteById(id);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void likeTip(Long id) {
         int updated = tipRepository.incrementLikesCount(id);
@@ -72,18 +86,21 @@ public class GardeningTipServiceImpl implements GardeningTipService {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     @Transactional(readOnly = true)
     public List<GardeningTip> getFeaturedTips() {
         return tipRepository.findTop4ByOrderByLikesCountDesc();
     }
 
+    /** {@inheritDoc} */
     @Override
     @Transactional(readOnly = true)
     public List<GardeningTip> getRecentTips() {
         return tipRepository.findTop5ByOrderByCreatedAtDesc();
     }
 
+    /** {@inheritDoc} */
     @Override
     @Transactional(readOnly = true)
     public long countTotalTips() {

@@ -12,15 +12,31 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * Spring MVC controller handling user sign-in and self-registration flows.
+ */
 @Controller
 public class AuthController {
 
     private final UserService userService;
 
+    /**
+     * Creates a new {@code AuthController}.
+     *
+     * @param userService service handling member registration and lookup
+     */
     public AuthController(UserService userService) {
         this.userService = userService;
     }
 
+    /**
+     * Renders the login form and displays optional authentication or logout status messages.
+     *
+     * @param error present when Spring Security redirects after invalid credentials
+     * @param logout present after successful logout
+     * @param model Thymeleaf view model
+     * @return the {@code auth/login} template name
+     */
     @GetMapping("/login")
     public String loginPage(@RequestParam(value = "error", required = false) String error,
                             @RequestParam(value = "logout", required = false) String logout,
@@ -34,6 +50,12 @@ public class AuthController {
         return "auth/login";
     }
 
+    /**
+     * Renders the member registration form.
+     *
+     * @param model Thymeleaf view model
+     * @return the {@code auth/register} template name
+     */
     @GetMapping("/register")
     public String registerPage(Model model) {
         if (!model.containsAttribute("registerDto")) {
@@ -42,6 +64,15 @@ public class AuthController {
         return "auth/register";
     }
 
+    /**
+     * Validates and registers a new {@code ROLE_USER} community account.
+     *
+     * @param registerDto validated registration form data
+     * @param bindingResult validation errors holder
+     * @param redirectAttributes flash attributes for post-redirect feedback
+     * @param model Thymeleaf view model
+     * @return redirect to {@code /login} on success, or {@code auth/register} on validation/duplicate error
+     */
     @PostMapping("/register")
     public String processRegistration(@Valid @ModelAttribute("registerDto") RegisterDto registerDto,
                                       BindingResult bindingResult,

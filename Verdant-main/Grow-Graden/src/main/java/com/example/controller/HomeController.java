@@ -7,6 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+/**
+ * Spring MVC controller serving the public dashboard landing page and about page.
+ */
 @Controller
 public class HomeController {
 
@@ -14,6 +17,13 @@ public class HomeController {
     private final DiscussionService discussionService;
     private final GardenProjectService projectService;
 
+    /**
+     * Creates a new {@code HomeController}.
+     *
+     * @param tipService service for featured tips and totals
+     * @param discussionService service for recent questions and totals
+     * @param projectService service for recent projects and totals
+     */
     public HomeController(GardeningTipService tipService,
                           DiscussionService discussionService,
                           GardenProjectService projectService) {
@@ -22,6 +32,12 @@ public class HomeController {
         this.projectService = projectService;
     }
 
+    /**
+     * Renders the community landing dashboard with summary metrics and featured items.
+     *
+     * @param model Thymeleaf view model
+     * @return the {@code home} template name
+     */
     @GetMapping("/")
     public String home(Model model) {
         model.addAttribute("totalTips", tipService.countTotalTips());
@@ -36,6 +52,12 @@ public class HomeController {
         return "home";
     }
 
+    /**
+     * Renders the static mission and architecture overview page.
+     *
+     * @param model Thymeleaf view model
+     * @return the {@code about} template name
+     */
     @GetMapping("/about")
     public String about(Model model) {
         return "about";

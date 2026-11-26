@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
+/**
+ * JPA entity representing a community reply or expert diagnosis within a discussion thread.
+ */
 @Entity
 @Table(name = "discussion_replies")
 public class DiscussionReply {

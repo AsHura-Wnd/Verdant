@@ -1,33 +1,27 @@
 package com.example.controller;
 
-import com.example.domain.advisor.AbstractPlantAdvisor;
-import com.example.domain.advisor.CarePlan;
-import com.example.domain.advisor.DiagnosticResult;
-import com.example.domain.advisor.PlantAdvisorRegistry;
 import com.example.model.DiscussionQuestion;
 import com.example.model.GardenProject;
 import com.example.model.GardeningTip;
-import com.example.repository.jdbc.CategoryMetric;
-import com.example.repository.jdbc.GardenJdbcDao;
-import com.example.repository.jdbc.JdbcTipSummary;
-import com.example.repository.jdbc.ProjectStatusMetric;
 import com.example.service.DiscussionService;
 import com.example.service.GardenProjectService;
 import com.example.service.GardeningTipService;
-import com.example.util.SearchResultWrapper;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * REST API Controller demonstrating:
- * - Direct JDBC Data Access via GardenJdbcDao (PreparedStatement, Connection, ResultSet)
- * - Polymorphic Domain Dispatch via PlantAdvisorRegistry and AbstractPlantAdvisor
- * - Student-written Generics via SearchResultWrapper<T>
- * - Standard Spring MVC REST endpoints with ResponseEntity
+ * Core REST API controller providing health checks, platform statistics,
+ * and read access to gardening tips, discussions, and personal garden projects.
+ * JDBC analytics and plant advisory endpoints are separated into
+ * {@link JdbcAnalyticsRestController} and {@link PlantAdvisorRestController}.
  */
 @RestController
 @RequestMapping("/api")
@@ -36,25 +30,27 @@ public class RestApiController {
     private final GardeningTipService tipService;
     private final DiscussionService discussionService;
     private final GardenProjectService projectService;
-    private final GardenJdbcDao gardenJdbcDao;
-    private final PlantAdvisorRegistry advisorRegistry;
 
+    /**
+     * Creates a new {@code RestApiController}.
+     *
+     * @param tipService service for gardening tips
+     * @param discussionService service for community discussions
+     * @param projectService service for garden projects
+     */
     public RestApiController(GardeningTipService tipService,
                              DiscussionService discussionService,
-                             GardenProjectService projectService,
-                             GardenJdbcDao gardenJdbcDao,
-                             PlantAdvisorRegistry advisorRegistry) {
+                             GardenProjectService projectService) {
         this.tipService = tipService;
         this.discussionService = discussionService;
         this.projectService = projectService;
-        this.gardenJdbcDao = gardenJdbcDao;
-        this.advisorRegistry = advisorRegistry;
     }
 
-    // ==========================================
-    // 0. Platform Health Check Endpoint
-    // ==========================================
-
+    /**
+     * Lightweight platform health-check endpoint for container and cloud probes.
+     *
+     * @return status map indicating application readiness
+     */
     @GetMapping("/health")
     public ResponseEntity<Map<String, Object>> healthCheck() {
         Map<String, Object> health = new HashMap<>();
@@ -64,67 +60,11 @@ public class RestApiController {
         return ResponseEntity.ok(health);
     }
 
-    // ==========================================
-    // 1. Direct JDBC Endpoints
-    // ==========================================
-
-    @GetMapping("/jdbc/metrics")
-    public ResponseEntity<Map<String, Object>> getJdbcMetrics() {
-        List<CategoryMetric> categoryMetrics = gardenJdbcDao.getCategoryMetrics();
-        List<ProjectStatusMetric> projectMetrics = gardenJdbcDao.getProjectStatusMetrics();
-        long directTipCount = gardenJdbcDao.getTipCountDirect();
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("provider", "Direct JDBC via java.sql.PreparedStatement & Connection");
-        response.put("directTipCount", directTipCount);
-        response.put("categoryAnalytics", categoryMetrics);
-        response.put("projectStatusBreakdown", projectMetrics);
-
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/jdbc/tips/search")
-    public ResponseEntity<SearchResultWrapper<JdbcTipSummary>> searchTipsJdbc(
-            @RequestParam(value = "keyword", required = false) String keyword,
-            @RequestParam(value = "difficulty", required = false) String difficulty) {
-
-        List<JdbcTipSummary> rawResults = gardenJdbcDao.searchTipsJdbc(keyword, difficulty);
-        SearchResultWrapper<JdbcTipSummary> wrapped = SearchResultWrapper.of(rawResults, keyword);
-
-        return ResponseEntity.ok(wrapped);
-    }
-
-    // ==========================================
-    // 2. Polymorphic Advisory Engine Endpoints
-    // ==========================================
-
-    @GetMapping("/advisor/diagnose")
-    public ResponseEntity<DiagnosticResult> diagnosePlant(
-            @RequestParam("plantType") String plantType,
-            @RequestParam("symptom") String symptom) {
-
-        // Polymorphic dynamic method dispatch: resolveAdvisor returns an AbstractPlantAdvisor subclass
-        AbstractPlantAdvisor advisor = advisorRegistry.resolveAdvisor(plantType);
-        DiagnosticResult diagnosis = advisor.diagnoseSymptom(symptom);
-
-        return ResponseEntity.ok(diagnosis);
-    }
-
-    @GetMapping("/advisor/care-plan")
-    public ResponseEntity<CarePlan> generateCarePlan(
-            @RequestParam("plantType") String plantType,
-            @RequestParam(value = "spaceType", defaultValue = "Balcony") String spaceType) {
-
-        AbstractPlantAdvisor advisor = advisorRegistry.resolveAdvisor(plantType);
-        CarePlan plan = advisor.generateCarePlan(spaceType);
-
-        return ResponseEntity.ok(plan);
-    }
-
-    // ==========================================
-    // 3. Existing JPA / MVC REST Endpoints
-    // ==========================================
-
+    /**
+     * Returns aggregate counts across tips, discussions, resolved cases, and projects.
+     *
+     * @return summary statistics map
+     */
     @GetMapping("/stats")
     public ResponseEntity<Map<String, Object>> getStats() {
         Map<String, Object> stats = new HashMap<>();
@@ -135,6 +75,13 @@ public class RestApiController {
         return ResponseEntity.ok(stats);
     }
 
+    /**
+     * Lists gardening tips with optional keyword search or category filter.
+     *
+     * @param search optional search keyword
+     * @param category optional category filter
+     * @return matching gardening tips
+     */
     @GetMapping("/tips")
     public ResponseEntity<List<GardeningTip>> getAllTips(
             @RequestParam(value = "search", required = false) String search,
@@ -142,11 +89,25 @@ public class RestApiController {
         return ResponseEntity.ok(tipService.getAllTips(search, category));
     }
 
+    /**
+     * Retrieves a single gardening tip by ID.
+     *
+     * @param id tip identifier
+     * @return matching gardening tip
+     */
     @GetMapping("/tips/{id}")
     public ResponseEntity<GardeningTip> getTipById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(tipService.getTipById(id));
     }
 
+    /**
+     * Lists community discussion questions with optional search, category, and resolved filters.
+     *
+     * @param search optional search keyword
+     * @param category optional category filter
+     * @param resolved optional resolution status filter
+     * @return matching discussion questions
+     */
     @GetMapping("/discussions")
     public ResponseEntity<List<DiscussionQuestion>> getAllDiscussions(
             @RequestParam(value = "search", required = false) String search,
@@ -155,11 +116,24 @@ public class RestApiController {
         return ResponseEntity.ok(discussionService.getAllQuestions(search, category, resolved));
     }
 
+    /**
+     * Retrieves a single discussion question by ID and atomically increments its view counter.
+     *
+     * @param id discussion question identifier
+     * @return matching discussion question
+     */
     @GetMapping("/discussions/{id}")
     public ResponseEntity<DiscussionQuestion> getDiscussionById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(discussionService.getQuestionById(id));
     }
 
+    /**
+     * Lists garden projects with optional keyword search or status filter.
+     *
+     * @param search optional search keyword
+     * @param status optional project status filter
+     * @return matching garden projects
+     */
     @GetMapping("/projects")
     public ResponseEntity<List<GardenProject>> getAllProjects(
             @RequestParam(value = "search", required = false) String search,
@@ -167,6 +141,12 @@ public class RestApiController {
         return ResponseEntity.ok(projectService.getAllProjects(search, status));
     }
 
+    /**
+     * Retrieves a single garden project by ID.
+     *
+     * @param id garden project identifier
+     * @return matching garden project
+     */
     @GetMapping("/projects/{id}")
     public ResponseEntity<GardenProject> getProjectById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(projectService.getProjectById(id));

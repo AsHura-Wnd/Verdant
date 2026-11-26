@@ -7,6 +7,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * JPA entity representing a community plant-clinic discussion thread with cascading replies,
+ * resolution status, ownership tracking, and {@code @Version} optimistic locking.
+ */
 @Entity
 @Table(name = "discussion_questions")
 public class DiscussionQuestion {

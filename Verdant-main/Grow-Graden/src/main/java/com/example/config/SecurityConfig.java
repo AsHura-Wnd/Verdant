@@ -106,7 +106,7 @@ public class SecurityConfig {
 
                 // Public platform health and REST APIs
                 .requestMatchers(HttpMethod.GET, "/api/health", "/api/stats", "/api/jdbc/**", "/api/advisor/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/tips", "/api/tips/{id:[0-9]+}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/tips/**", "/api/discussions/**", "/api/projects/**").permitAll()
 
                 // Public login and self-registration
                 .requestMatchers("/login", "/register").permitAll()

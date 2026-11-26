@@ -8,6 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Transactional Spring Data JPA implementation of {@link GardenProjectService}.
+ */
 @Service
 @Transactional
 @SuppressWarnings("null")
@@ -15,10 +18,16 @@ public class GardenProjectServiceImpl implements GardenProjectService {
 
     private final GardenProjectRepository projectRepository;
 
+    /**
+     * Creates a new {@code GardenProjectServiceImpl}.
+     *
+     * @param projectRepository JPA repository for garden projects
+     */
     public GardenProjectServiceImpl(GardenProjectRepository projectRepository) {
         this.projectRepository = projectRepository;
     }
 
+    /** {@inheritDoc} */
     @Override
     @Transactional(readOnly = true)
     public List<GardenProject> getAllProjects(String query, String status) {
@@ -31,6 +40,7 @@ public class GardenProjectServiceImpl implements GardenProjectService {
         return projectRepository.findAllByOrderByCreatedAtDesc();
     }
 
+    /** {@inheritDoc} */
     @Override
     @Transactional(readOnly = true)
     public GardenProject getProjectById(Long id) {
@@ -38,11 +48,13 @@ public class GardenProjectServiceImpl implements GardenProjectService {
                 .orElseThrow(() -> new GardenProjectNotFoundException(id));
     }
 
+    /** {@inheritDoc} */
     @Override
     public GardenProject saveProject(GardenProject project) {
         return projectRepository.save(project);
     }
 
+    /** {@inheritDoc} */
     @Override
     public GardenProject updateProject(Long id, GardenProject updatedProject) {
         GardenProject existing = getProjectById(id);
@@ -61,23 +73,27 @@ public class GardenProjectServiceImpl implements GardenProjectService {
         return projectRepository.save(existing);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void deleteProject(Long id) {
         projectRepository.deleteById(id);
     }
 
+    /** {@inheritDoc} */
     @Override
     @Transactional(readOnly = true)
     public List<GardenProject> getRecentProjects() {
         return projectRepository.findTop4ByOrderByCreatedAtDesc();
     }
 
+    /** {@inheritDoc} */
     @Override
     @Transactional(readOnly = true)
     public long countTotalProjects() {
         return projectRepository.count();
     }
 
+    /** {@inheritDoc} */
     @Override
     @Transactional(readOnly = true)
     public long countProjectsByStatus(String status) {

@@ -9,6 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * Transactional implementation of {@link UserService} using BCrypt password hashing.
+ */
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
@@ -16,11 +19,18 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Creates a new {@code UserServiceImpl}.
+     *
+     * @param userRepository JPA repository for user accounts
+     * @param passwordEncoder password encoder used to hash credentials
+     */
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
+    /** {@inheritDoc} */
     @Override
     public User registerUser(RegisterDto dto) {
         if (userRepository.existsByUsername(dto.getUsername().trim())) {
@@ -40,6 +50,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    /** {@inheritDoc} */
     @Override
     @Transactional(readOnly = true)
     public Optional<User> findByUsername(String username) {
@@ -49,18 +60,21 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username.trim());
     }
 
+    /** {@inheritDoc} */
     @Override
     @Transactional(readOnly = true)
     public boolean existsByUsername(String username) {
         return username != null && userRepository.existsByUsername(username.trim());
     }
 
+    /** {@inheritDoc} */
     @Override
     @Transactional(readOnly = true)
     public boolean existsByEmail(String email) {
         return email != null && userRepository.existsByEmail(email.trim().toLowerCase());
     }
 
+    /** {@inheritDoc} */
     @Override
     public User save(User user) {
         return userRepository.save(user);

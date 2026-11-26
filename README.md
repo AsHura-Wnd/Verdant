@@ -60,7 +60,7 @@ The project demonstrates the practical application of core Java programming, obj
 | **Direct Database API** | Direct **JDBC** (`java.sql.Connection`, `PreparedStatement`, `ResultSet`) |
 | **Web Integration** | Embedded Apache Tomcat + Jakarta Servlet API (`Filter`) |
 | **Build Tool** | Apache Maven 3.9+ / Maven Wrapper (`mvnw` / `mvnw.cmd`) |
-| **Testing** | JUnit 5, Spring Boot Test, Spring Security Test, MockMvc (41 automated integration tests) |
+| **Testing** | JUnit 5, Spring Boot Test, Spring Security Test, MockMvc (43 automated integration tests) |
 
 ---
 
@@ -69,13 +69,13 @@ The project demonstrates the practical application of core Java programming, obj
 Verdant uses a clean, layered architecture separating concerns across tiers:
 
 - **Filter / Web Tier**: `GardenSecurityHeadersFilter` intercepts incoming HTTP requests, adding security headers (`X-Content-Type-Options`, `X-Frame-Options`) and measuring execution time (`X-Response-Time-Ms`).
-- **Controller Layer (`com.example.controller`)**: Spring MVC controllers handle web requests, validate forms, and render Thymeleaf views; `RestApiController` provides JSON endpoints.
+- **Controller Layer (`com.example.controller`)**: Spring MVC controllers handle web requests, validate forms, and render Thymeleaf views; REST endpoints are cleanly separated across `RestApiController` (`/api/*`), `JdbcAnalyticsRestController` (`/api/jdbc/*`), and `PlantAdvisorRestController` (`/api/advisor/*`).
 - **Service Layer (`com.example.service`)**: Encapsulates business logic and coordinates database transactions.
 - **Persistence Layer (`com.example.repository`)**:
   - **Spring Data JPA**: High-level repository abstraction for standard entity CRUD operations.
   - **Direct JDBC DAO (`com.example.repository.jdbc.GardenJdbcDao`)**: Executes raw SQL with `PreparedStatement` and `ResultSet` for analytical grouping and optimized search.
 - **Domain & Advisor Layer (`com.example.domain.advisor`)**: Abstract base class `AbstractPlantAdvisor` with 4 polymorphic subclasses dynamically resolved via `PlantAdvisorRegistry`.
-- **Exception Layer (`com.example.exception`)**: `ResourceNotFoundException` hierarchy mapped via `@ControllerAdvice` (`GlobalExceptionHandler`) to standard HTTP 404 JSON error responses.
+- **Exception Layer (`com.example.exception`)**: Dedicated `@RestControllerAdvice` (`RestApiExceptionHandler`) for JSON REST errors (`400`, `403`, `404`, `409`, `500`) and `@ControllerAdvice` (`GlobalExceptionHandler`) for MVC browser redirects and flash alerts.
 
 ---
 
@@ -288,16 +288,16 @@ To prevent race conditions, lost updates, and thread contention under heavy comm
 
 ## 🧪 Comprehensive Integration & Deployment Testing Evidence
 
-Verdant features **41 automated tests** across 5 suites covering core domain logic, security policies, concurrency, validation, and database security:
+Verdant features **43 automated tests** across 5 suites covering core domain logic, security policies, concurrency, validation, and database security:
 
 | Test Suite Class | Tests Run | Failures | Errors | Coverage Focus |
 |---|---|---|---|---|
 | `AuthenticationAndAuthorizationIntegrationTests` | 10 | 0 | 0 | Public browsing, login, registration, guest redirect, author editing, non-author rejection, admin moderation |
 | `ConcurrentUpdateIntegrationTests` | 4 | 0 | 0 | 25 parallel threads verifying race-condition-free likes, views, upvotes, and optimistic locking |
-| `FormValidationAndDatabaseErrorHandlingIntegrationTests` | 5 | 0 | 0 | Title validation, image URL validation, database duplicate handling, optimistic lock handling, API 403 JSON responses |
+| `FormValidationAndDatabaseErrorHandlingIntegrationTests` | 7 | 0 | 0 | Title validation, image URL validation, database duplicate handling, `@RestControllerAdvice` 400/404 JSON responses |
 | `GrowGradenApplicationTests` | 19 | 0 | 0 | Academic compliance: JDBC DAO, polymorphic plant advisors, custom exceptions, servlet security filter |
 | `H2ConsoleSecurityIntegrationTests` | 3 | 0 | 0 | Anonymous access denial, regular member (`ROLE_USER`) rejection, admin (`ROLE_ADMIN`) authorized access |
-| **Total** | **41** | **0** | **0** | **100% Passing (0 failures, 0 errors)** |
+| **Total** | **43** | **0** | **0** | **100% Passing (0 failures, 0 errors)** |
 
 ### Running the Test Suite
 ```bash

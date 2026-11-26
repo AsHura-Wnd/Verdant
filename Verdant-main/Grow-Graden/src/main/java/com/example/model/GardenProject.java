@@ -8,6 +8,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * JPA entity representing a personal garden project journal with timeline dates,
+ * growing space metadata, ownership tracking, and {@code @Version} optimistic locking.
+ */
 @Entity
 @Table(name = "gardening_projects")
 public class GardenProject {

@@ -12,6 +12,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * Spring MVC controller managing community plant clinic discussions and replies.
+ * Handles listing, question creation, reply posting, resolution toggles, upvoting,
+ * and ownership-protected deletion.
+ */
 @Controller
 @RequestMapping("/discussions")
 public class DiscussionController {
@@ -19,11 +24,26 @@ public class DiscussionController {
     private final DiscussionService discussionService;
     private final OwnershipService ownershipService;
 
+    /**
+     * Creates a new {@code DiscussionController}.
+     *
+     * @param discussionService service managing discussion questions and replies
+     * @param ownershipService helper enforcing author and admin modification rules
+     */
     public DiscussionController(DiscussionService discussionService, OwnershipService ownershipService) {
         this.discussionService = discussionService;
         this.ownershipService = ownershipService;
     }
 
+    /**
+     * Displays community discussion questions filtered by keyword, category, or resolution state.
+     *
+     * @param search optional search keyword
+     * @param category optional category filter
+     * @param resolved optional resolution status filter
+     * @param model Thymeleaf view model
+     * @return the {@code discussions/list} template name
+     */
     @GetMapping
     public String listQuestions(@RequestParam(value = "search", required = false) String search,
                                 @RequestParam(value = "category", required = false) String category,
@@ -36,6 +56,13 @@ public class DiscussionController {
         return "discussions/list";
     }
 
+    /**
+     * Displays a discussion question thread with replies and increments its view count.
+     *
+     * @param id question identifier
+     * @param model Thymeleaf view model
+     * @return the {@code discussions/detail} template name, or redirect if not found
+     */
     @GetMapping("/{id}")
     public String viewQuestion(@PathVariable("id") Long id, Model model) {
         try {
@@ -56,6 +83,12 @@ public class DiscussionController {
         }
     }
 
+    /**
+     * Displays the form for posting a new plant clinic question.
+     *
+     * @param model Thymeleaf view model
+     * @return the {@code discussions/form} template name
+     */
     @GetMapping("/new")
     public String newQuestionForm(Model model) {
         if (!model.containsAttribute("question")) {
@@ -69,6 +102,15 @@ public class DiscussionController {
         return "discussions/form";
     }
 
+    /**
+     * Validates and persists a new discussion question attributed to the authenticated user.
+     *
+     * @param question submitted question entity
+     * @param bindingResult validation errors holder
+     * @param redirectAttributes flash attributes for post-redirect feedback
+     * @param model Thymeleaf view model
+     * @return redirect to the new thread, or form view on validation errors
+     */
     @PostMapping("/new")
     public String createQuestion(@Valid @ModelAttribute("question") DiscussionQuestion question,
                                  BindingResult bindingResult,
@@ -83,6 +125,15 @@ public class DiscussionController {
         return "redirect:/discussions/" + saved.getId();
     }
 
+    /**
+     * Appends a validated community reply to an existing discussion question.
+     *
+     * @param id parent question identifier
+     * @param reply submitted reply payload
+     * @param bindingResult validation errors holder
+     * @param redirectAttributes flash attributes for post-redirect feedback
+     * @return redirect to the parent discussion detail view
+     */
     @PostMapping("/{id}/reply")
     public String addReply(@PathVariable("id") Long id,
                            @Valid @ModelAttribute("newReply") DiscussionReply reply,
@@ -98,6 +149,13 @@ public class DiscussionController {
         return "redirect:/discussions/" + id;
     }
 
+    /**
+     * Toggles the resolved status of a discussion question after verifying ownership.
+     *
+     * @param id question identifier
+     * @param redirectAttributes flash attributes for post-redirect feedback
+     * @return redirect to the discussion detail view
+     */
     @PostMapping("/{id}/toggle-resolve")
     public String toggleResolve(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         DiscussionQuestion question = discussionService.getQuestionById(id);
@@ -108,6 +166,13 @@ public class DiscussionController {
         return "redirect:/discussions/" + id;
     }
 
+    /**
+     * Deletes a discussion question after verifying ownership or administrator privileges.
+     *
+     * @param id question identifier
+     * @param redirectAttributes flash attributes for post-redirect feedback
+     * @return redirect to {@code /discussions}
+     */
     @PostMapping("/{id}/delete")
     public String deleteQuestion(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         DiscussionQuestion question = discussionService.getQuestionById(id);
@@ -118,6 +183,14 @@ public class DiscussionController {
         return "redirect:/discussions";
     }
 
+    /**
+     * Deletes a specific reply after verifying reply authorship or administrator privileges.
+     *
+     * @param replyId reply identifier
+     * @param questionId parent question identifier for redirect
+     * @param redirectAttributes flash attributes for post-redirect feedback
+     * @return redirect to the parent discussion detail view
+     */
     @PostMapping("/replies/{replyId}/delete")
     public String deleteReply(@PathVariable("replyId") Long replyId,
                               @RequestParam("questionId") Long questionId,
@@ -130,6 +203,14 @@ public class DiscussionController {
         return "redirect:/discussions/" + questionId;
     }
 
+    /**
+     * Atomically increments the upvote count for a helpful reply.
+     *
+     * @param replyId reply identifier
+     * @param questionId parent question identifier for redirect
+     * @param redirectAttributes flash attributes for post-redirect feedback
+     * @return redirect to the parent discussion detail view
+     */
     @PostMapping("/replies/{replyId}/upvote")
     public String upvoteReply(@PathVariable("replyId") Long replyId,
                               @RequestParam("questionId") Long questionId,

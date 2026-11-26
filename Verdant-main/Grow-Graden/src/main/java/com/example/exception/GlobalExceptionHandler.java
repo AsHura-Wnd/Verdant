@@ -1,6 +1,8 @@
 package com.example.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +20,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Global Exception Handler demonstrating Spring MVC @ControllerAdvice,
- * centralized error translation, database exception shielding, and distinct
- * handling for REST API vs HTML Browser clients.
+ * Global MVC exception handler providing user-friendly redirects, flash messages,
+ * and error views for browser clients. REST API exceptions thrown from
+ * {@code @RestController} endpoints are handled separately with higher precedence
+ * by {@link RestApiExceptionHandler}.
  */
 @ControllerAdvice
+@Order(Ordered.LOWEST_PRECEDENCE)
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)

@@ -15,6 +15,10 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
+/**
+ * Seeds initial demo accounts, gardening tips, plant-clinic discussions, and projects
+ * on application startup when the corresponding database tables are empty.
+ */
 @Component
 public class DataInitializer implements CommandLineRunner {
 
@@ -24,6 +28,15 @@ public class DataInitializer implements CommandLineRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Creates a new {@code DataInitializer}.
+     *
+     * @param tipRepository repository for gardening tips
+     * @param questionRepository repository for discussion questions
+     * @param projectRepository repository for garden projects
+     * @param userRepository repository for user accounts
+     * @param passwordEncoder BCrypt password encoder for demo user passwords
+     */
     public DataInitializer(GardeningTipRepository tipRepository,
                            DiscussionQuestionRepository questionRepository,
                            GardenProjectRepository projectRepository,
@@ -36,6 +49,11 @@ public class DataInitializer implements CommandLineRunner {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Executes startup seeding idempotently across users and community content.
+     *
+     * @param args application startup arguments
+     */
     @Override
     public void run(String... args) {
         initUsers();
